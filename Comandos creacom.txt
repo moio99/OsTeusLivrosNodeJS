@@ -1,0 +1,14 @@
+
+https://blog.logrocket.com/build-rest-api-node-express-mysql/
+
+npm init -y     // asistente para crear o projecto
+
+npm i express
+
+Instaladas extensions:
+ REST Client
+
+npm i nodemon
+
+npm i mysql2
+

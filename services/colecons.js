@@ -1,0 +1,145 @@
+const db = require('./db');
+const helper = require('../helper');
+
+async function getColecons(){
+  console.log('Petiçom de getColecons ' + new Date().toJSON());
+  const dadosLivro = await db.query(
+    `SELECT c.idColecom as id, c.Nome as nome, c.web  
+      FROM Colecom c
+      WHERE c.fkUsuario = 2   
+      ORDER BY lower(c.Nome) ASC;`
+  );
+  
+  const data = helper.emptyOrRows(dadosLivro);
+  console.log(data.length + ' elementos devoltos');
+
+  const meta = {'nada': 'nada'};
+
+  return {
+    data,
+    meta
+  }
+}
+
+async function getColecom(id){
+  console.log('Petiçom de getColecom ' + new Date().toJSON());
+  const dadosColecom = await db.query(
+    `SELECT c.idColecom as id, c.Nome as nome, c.ISBN as isbn, c.web, c.Comentario as comentario
+      FROM Colecom c
+      WHERE c.fkUsuario = 2 AND c.idColecom = ${id} ;`
+  );
+  
+  const colecom = helper.emptyOrRows(dadosColecom);
+  console.log(colecom.length + ' elementos devoltos');
+
+  const meta = {'id': id};
+
+  return {
+    colecom,
+    meta
+  }
+}
+
+async function getColeconsCosLivros(){
+  console.log('Petiçom de getColeconsCosLivros ' + new Date().toJSON());
+  const dadosLivro = await db.query(
+    `SELECT c.idColecom as id, c.Nome as nome, c.web, COUNT(l.idLivro) as quantidadeLivros
+      FROM Colecom c
+      LEFT JOIN Livro l on l.fkColecom = c.idColecom
+      WHERE c.fkUsuario = 2
+      GROUP BY c.idColecom
+      ORDER BY lower(c.Nome) ASC;`
+  );
+
+  const data = helper.emptyOrRows(dadosLivro);
+  console.log(data.length + ' elementos devoltos');
+
+  const meta = {'nada': 'nada'};
+
+  return {
+    data,
+    meta
+  }
+}
+
+async function postColecom(colecom){
+  console.log('Petiçom de postColecom ' + colecom.nome + ' data: ' + new Date().toJSON());
+  let idResult = 0;
+  const queryInsert = `INSERT INTO Colecom
+    (fkUsuario, Nome, ISBN, web, Comentario)
+  VALUES (2, ?, ?, ?, ?)`;
+
+  const dadosInsert = [
+    colecom.nome,
+    db.stringOuNullSimple(colecom.isbn),
+    db.stringOuNullSimple(colecom.web),
+    db.stringOuNullSimple(colecom.comentario)
+  ];
+
+  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+      if (ResultSetHeader.affectedRows == 1)
+        idResult = ResultSetHeader.insertId
+      }
+    );
+  
+  console.log('id: ' + idResult + ' colecom creada');
+  const meta = {'id': idResult};
+  return {
+    idResult,
+    meta
+  }
+}
+
+async function putColecom(colecom){
+  console.log('Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
+  let idResult = 0;
+  const queryInsert = `UPDATE Colecom SET
+      Nome = ?,
+      ISBN = ?,
+      web = ?,
+      Comentario = ?
+    WHERE idColecom = ?;`;
+
+  const dadosInsert = [
+    db.stringOuNullSimple(colecom.nome),    
+    db.stringOuNullSimple(colecom.isbn),
+    db.stringOuNullSimple(colecom.web),
+    db.stringOuNullSimple(colecom.comentario),    
+    colecom.id
+  ];
+  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
+        idResult = colecom.id;
+    }
+  );
+  
+  console.log('id: ' + idResult + ' colecom actualizada');
+  const meta = {'id': idResult};
+  return {
+    idResult,
+    meta
+  }
+}
+
+async function borrarColecom(id) {
+  console.log('id pra borrar: ' + id);
+  let idResult = 0;
+  await db.query(
+    `DELETE FROM Colecom WHERE idColecom = ${id};`
+  ).then(ResultSetHeader => {
+      if (ResultSetHeader.affectedRows == 1)
+        idResult = id;
+    }
+  );
+
+  console.log('id: ' + idResult + ' colecom borrada');
+  const meta = {'id': idResult};
+  return {
+    idResult,
+    meta
+  }
+}
+
+module.exports = {
+  getColecons, getColeconsCosLivros, getColecom, postColecom, putColecom, borrarColecom
+}

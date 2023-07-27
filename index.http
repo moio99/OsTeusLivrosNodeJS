@@ -1,0 +1,43 @@
+GET http://localhost:5002
+
+###
+
+GET http://localhost:5002/api/Estadisticas?tipo=2
+
+###
+
+GET http://localhost:5002/api/Livros/PorAno?Ano=2020
+###
+GET http://localhost:5002/api/Livros/PorIdioma?Idioma=2
+###
+GET http://localhost:5002/api/Livros/PorEditorial?id=4
+
+###
+
+GET http://localhost:5002/api/Livros/Livro?id=390
+
+###
+
+GET http://localhost:5002/api/Autores
+###
+GET http://localhost:5002/api/Autores/Autor?id=5
+
+###
+
+GET http://localhost:5002/api/Editoriais
+###
+GET http://localhost:5002/api/Editoriais/EditoriaisCosLivros
+
+###
+
+GET http://localhost:5002/api/Editoriais/Editorial?id=5
+
+###
+
+GET http://localhost:5002/api/Outros/Nacionalidades
+###
+GET http://localhost:5002/api/Outros/Paises
+###
+GET http://localhost:5002/api/Outros/Bibliotecas
+###
+GET http://localhost:5002/api/Outros/Todo

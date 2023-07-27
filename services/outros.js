@@ -1,0 +1,222 @@
+const db = require('./db');
+const helper = require('../helper');
+
+async function getNacionalidades(){
+  console.log('Petiçom de getNacionalidades ' + new Date().toJSON());
+  const dadosNacionalidades = await db.query(
+    `SELECT n.idNacionalidade as id, n.Nome as nome
+       , n.fkPais, p.Nome as nomePais, n.fkContinente, c.Nome as nomeContinente
+      FROM Nacionalidade n
+      LEFT JOIN Pais p ON n.fkPais = p.idPais
+      LEFT JOIN Continente c ON n.fkContinente = c.idContinente
+      ORDER BY lower(n.Nome) ASC;`
+  );
+  return getGenerico(dadosNacionalidades);
+}
+
+async function getNacionalidadeNome(id){
+  console.log(`Petiçom de getNacionalidadeNome id: ${id} data: ${new Date().toJSON()}`);
+  const dadosNacionalidade = await db.query(
+    `SELECT n.Nome as nome
+      FROM Nacionalidade n
+      WHERE n.idNacionalidade = ${id} ;`
+  );
+  
+  const nacionalidade = helper.emptyOrRows(dadosNacionalidade);
+  if (nacionalidade) {
+    console.log(`Nome ${nacionalidade[0].nome} obtido`);
+    return nacionalidade[0].nome;
+  }
+  else
+    return null;
+}
+
+async function getPaises(){
+  console.log('Petiçom de getPaises ' + new Date().toJSON());
+  const dadosPaises = await db.query(
+    `SELECT p.idPais as id, p.Nome as nome, p.fkContinente, c.Nome as nomeContinente
+      FROM Pais p
+      LEFT JOIN Continente c ON p.fkContinente = c.idContinente
+      ORDER BY lower(p.Nome) ASC;`
+  );
+  return getGenerico(dadosPaises);
+}
+
+async function getPaisNome(id){
+  console.log(`Petiçom de getPaisNome id: ${id} data: ${new Date().toJSON()}`);
+  const dadosPais = await db.query(
+    `SELECT p.Nome as nome
+      FROM Pais p
+      WHERE p.idPais = ${id} ;`
+  );
+  
+  const pais = helper.emptyOrRows(dadosPais);
+  if (pais) {
+    console.log(`Nome ${pais[0].nome} obtido`);
+    return pais[0].nome;
+  }
+  else
+    return null;
+}
+
+async function getAutores(){
+  console.log('Petiçom de getAutores ' + new Date().toJSON());
+  const dadosAutores = await db.query(
+    `SELECT a.idAutor id, a.Nome as nome, a.Comentario as comentario
+      FROM Autor a
+      WHERE a.fkUsuario = 2
+      ORDER BY lower(a.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosAutores);
+}
+
+async function getBibliotecas(){
+  console.log('Petiçom de getBibliotecas ' + new Date().toJSON());
+  const dadosBibliotecas = await db.query(
+    `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as endereco, b.Localidade as localidade
+        , b.Telefone as telefone, b.DataAsociamento as dataAsociamento
+        , b.DataRenovacom as dataRenovacom, b.Comentario as comentario
+      FROM Biblioteca b
+      WHERE b.fkUsuario = 2
+      ORDER BY lower(b.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosBibliotecas);
+}
+
+async function getEditoriais(){
+  console.log('Petiçom de getEditoriais ' + new Date().toJSON());
+  const dadosEditoriais = await db.query(
+    `SELECT e.idEditorial id, e.Nome as nome, e.Direicom as direicom, e.web
+        , e.Comentario as comentario
+      FROM Editorial e
+      WHERE e.fkUsuario = 2
+      ORDER BY lower(e.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosEditoriais);
+}
+
+async function getGeneros(){
+  console.log('Petiçom de getGeneros ' + new Date().toJSON());
+  const dadosGeneros = await db.query(
+    `SELECT g.idGenero id, g.Nome as nome, g.Comentario as comentario
+      FROM Genero g
+      WHERE g.fkUsuario = 2
+      ORDER BY lower(g.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosGeneros);
+}
+
+async function getColecons(){
+  console.log('Petiçom de getColecons ' + new Date().toJSON());
+  const dadosEditoriais = await db.query(
+    `SELECT c.idColecom id, c.Nome as nome, c.ISBN, c.web, c.Comentario as comentario
+      FROM Colecom c
+      WHERE c.fkUsuario = 2
+      ORDER BY lower(c.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosEditoriais);
+}
+
+async function getIdiomas(){
+  console.log('Petiçom de getIdiomas ' + new Date().toJSON());
+  const dados = await db.query(
+    `SELECT i.idIdioma id, i.Nome as nome, i.Codigo as codigo
+      FROM Idioma i
+      ORDER BY lower(i.Nome) ASC;`
+  );
+  
+  return getGenerico(dados);
+}
+
+async function getIdiomaNome(id){
+  console.log(`Petiçom de getIdiomaNome id: ${id} data: ${new Date().toJSON()}`);
+  const dadosIdioma = await db.query(
+    `SELECT i.Nome as nome
+      FROM Idioma i
+      WHERE i.idIdioma = ${id} ;`
+  );
+  
+  const idioma = helper.emptyOrRows(dadosIdioma);
+  if (idioma) {
+    console.log(`Nome ${idioma[0].nome} obtido`);
+    return idioma[0].nome;
+  }
+  else
+    return null;
+}
+
+async function getSeriesLivro(){
+  console.log('Petiçom de getSeriesLivro ' + new Date().toJSON());
+  const dados = await db.query(
+    `SELECT l.idLivro id, l.Titulo as titulo
+      FROM Livro l
+      WHERE l.fkUsuario = 2 AND l.SomSerie = 1 AND l.idSerie = 0
+      ORDER BY lower(l.Titulo) ASC;`
+  );
+  
+  return getGenerico(dados);
+}
+
+async function getUltimaLeitura(){
+  console.log('Petiçom de getUltimaLeitura ' + new Date().toJSON());
+  const dados = await db.query(
+    `SELECT MAX(l.DataFimLeitura) as ultimaLeitura
+      FROM Livro l
+      WHERE l.fkUsuario = 2`
+  );
+  
+  const data = helper.emptyOrRows(dados);
+  if (data.length > 0)
+    return data[0].ultimaLeitura;
+  else
+    return '';
+}
+
+async function getTodo() {
+  console.log('Petiçom de getTodo ' + new Date().toJSON());
+  const nacionalidades = await getNacionalidades();
+  const paises = await getPaises();
+  const autores = await getAutores();
+  const bibliotecas = await getBibliotecas();
+  const editoriais = await getEditoriais();
+  const generos = await getGeneros();
+  const colecons = await getColecons();
+  const idiomas = await getIdiomas();
+  const seriesLivro = await getSeriesLivro();
+  const ultimaLeitura = await getUltimaLeitura();
+  
+  return {
+    nacionalidades: nacionalidades,
+    paises: paises,
+    autores: autores,
+    bibliotecas: bibliotecas,
+    editoriais: editoriais,
+    generos: generos,
+    colecons: colecons,
+    idiomas: idiomas,
+    seriesLivro: seriesLivro,
+    ultimaLeitura: ultimaLeitura
+  }
+}
+
+async function getGenerico(datos){
+  const data = helper.emptyOrRows(datos);
+  console.log(data.length + ' elementos devoltos');
+
+  const meta = {'quantidade': data.length};
+
+  return {
+    data,
+    meta
+  }
+}
+
+module.exports = {
+  getNacionalidades, getNacionalidadeNome, getPaises, getPaisNome, getAutores, getBibliotecas, getEditoriais
+  , getGeneros, getColecons, getIdiomas, getIdiomaNome, getSeriesLivro, getTodo
+}
