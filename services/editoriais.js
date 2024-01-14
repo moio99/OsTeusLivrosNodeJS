@@ -98,8 +98,8 @@ async function putEditorial(editorial){
       Nome = ?,
       Direicom = ?,
       web = ?,
-      Comentario = ?,
-    WHERE idEditorial = ?`
+      Comentario = ?
+    WHERE idEditorial = ?;`;
   const dadosInsert = [
     db.stringOuNullSimple(editorial.nome),
     db.stringOuNullSimple(editorial.direicom),
