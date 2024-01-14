@@ -52,7 +52,7 @@ async function getLivrosUltimaLectura(){
 async function getLivrosPorIdioma(idioma){
   console.log('Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
       , ar.idAutor, ar.Nome as nomeAutor
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l
@@ -78,7 +78,7 @@ async function getLivrosPorIdioma(idioma){
 async function getLivrosPorAno(ano){
   console.log('Petiçom de getLivrosPorAno para o ano: ' + ano);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
       , ar.idAutor, ar.Nome as nomeAutor
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l
@@ -128,7 +128,7 @@ async function getLivrosPorAutor(id){
 async function getLivrosPorGenero(genero){
   console.log('Petiçom de getLivrosPorGenero para o genero: ' + genero);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
       , ar.idAutor, ar.Nome as nomeAutor
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l

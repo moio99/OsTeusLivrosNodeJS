@@ -165,6 +165,11 @@ async function getSeriesLivro(){
 async function getUltimaLeitura(){
   console.log('Petiçom de getUltimaLeitura ' + new Date().toJSON());
   const dados = await db.query(
+    /*
+    *****************************************************
+    TODO: Este MAX nom funciona
+    *****************************************************
+    */
     `SELECT MAX(l.DataFimLeitura) as ultimaLeitura
       FROM Livro l
       WHERE l.fkUsuario = 2`
@@ -175,6 +180,20 @@ async function getUltimaLeitura(){
     return data[0].ultimaLeitura;
   else
     return '';
+}
+
+
+async function getUltimasLeituras(){
+  console.log('Petiçom de getUltimasLeituras ' + new Date().toJSON());
+  const ultimasLeituras = await db.query(
+    `SELECT l.DataFimLeitura as dataDoLivro, l.idLivro as id
+      FROM osteuslivros.livro l
+      WHERE l.fkUsuario = 2
+       AND (YEAR(l.DataFimLeitura) = YEAR(CURDATE()) 
+       OR YEAR(l.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))`
+  );
+  
+  return helper.emptyOrRows(ultimasLeituras);
 }
 
 async function getTodo() {
@@ -189,6 +208,8 @@ async function getTodo() {
   const idiomas = await getIdiomas();
   const seriesLivro = await getSeriesLivro();
   const ultimaLeitura = await getUltimaLeitura();
+  const ultimasLeituras = await getUltimasLeituras();
+  console.log('ultimaLeitura ' + ultimaLeitura);
   
   return {
     nacionalidades: nacionalidades,
@@ -200,7 +221,8 @@ async function getTodo() {
     colecons: colecons,
     idiomas: idiomas,
     seriesLivro: seriesLivro,
-    ultimaLeitura: ultimaLeitura
+    ultimaLeitura: ultimaLeitura,
+    ultimasLeituras: ultimasLeituras
   }
 }
 
