@@ -40,6 +40,26 @@ async function getEditorial(id){
   }
 }
 
+// Para evitar ter na BD dous co mesmo nome.
+async function getEditorialPorNome(nome){
+  console.log('Petiçom de getEditorialPorNome ' + new Date().toJSON());
+  const dadosEditorial = await db.query(
+    `SELECT e.idEditorial as id
+      FROM Editorial e
+      WHERE e.fkUsuario = 2 AND e.Nome like '%${nome}%' ;`
+  );
+  
+  const editorial = helper.emptyOrRows(dadosEditorial);
+  console.log(editorial.length + ' elementos devoltos');
+
+  const meta = {'id': editorial.length > 0 ? editorial[0].id : 0, 'quantidade': editorial.length};
+
+  return {
+    editorial,
+    meta
+  }
+}
+
 async function getEditoriaisCosLivros(){
   console.log('Petiçom de getEditoriaisCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
@@ -141,5 +161,5 @@ async function borrarEditorial(id) {
 }
 
 module.exports = {
-  getEditoriais, getEditoriaisCosLivros, getEditorial, postEditorial, putEditorial, borrarEditorial
+  getEditoriais, getEditoriaisCosLivros, getEditorial, getEditorialPorNome, postEditorial, putEditorial, borrarEditorial
 }

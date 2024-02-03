@@ -42,6 +42,19 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+/**
+ * GET
+ */
+router.get('/GeneroPorNome', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await generos.getGeneroPorNome(req.query.nome));
+  } catch (err) {
+    console.error(`Erro ao obter o genero polo nome `, err.message);
+    next(err);
+  }
+});
+
 router.get('/GeneroNome', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));

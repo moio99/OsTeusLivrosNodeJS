@@ -40,6 +40,26 @@ async function getGenero(id){
   }
 }
 
+// Para evitar ter na BD dous co mesmo nome.
+async function getGeneroPorNome(nome){
+  console.log('Petiçom de getGeneroPorNome ' + new Date().toJSON());
+  const dadosGenero = await db.query(
+    `SELECT e.idGenero as id
+      FROM Genero e
+      WHERE e.fkUsuario = 2 AND e.Nome like '%${nome}%' ;`
+  );
+  
+  const genero = helper.emptyOrRows(dadosGenero);
+  console.log(genero.length + ' elementos devoltos');
+
+  const meta = {'id': genero.length > 0 ? genero[0].id : 0, 'quantidade': genero.length};
+
+  return {
+    genero,
+    meta
+  }
+}
+
 async function getGeneroNome(id){
   console.log('Petiçom de getGeneroNome ' + new Date().toJSON());
   const dadosGenero = await db.query(
@@ -153,5 +173,6 @@ async function borrarGenero(id) {
 }
 
 module.exports = {
-  getGeneros, getGenerosCosLivros, getGenero, getGeneroNome, postGenero, putGenero, borrarGenero
+  getGeneros, getGenerosCosLivros, getGenero, getGeneroPorNome, getGeneroNome
+  , postGenero, putGenero, borrarGenero
 }

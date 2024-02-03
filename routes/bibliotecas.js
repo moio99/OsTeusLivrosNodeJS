@@ -15,6 +15,19 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+/**
+ * GET
+ */
+router.get('/BibliotecaPorNome', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await bibliotecas.getBibliotecaPorNome(req.query.nome));
+  } catch (err) {
+    console.error(`Erro ao obter a biblioteca polo nome `, err.message);
+    next(err);
+  }
+});
+
 
 /**
  * GET

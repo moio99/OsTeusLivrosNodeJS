@@ -15,6 +15,19 @@ router.get('/', async function(req, res, next) {
   }
 });
 
+/**
+ * GET
+ */
+router.get('/AutorPorNome', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await autores.getAutorPorNome(req.query.nome));
+  } catch (err) {
+    console.error(`Erro ao obter o autor polo nome `, err.message);
+    next(err);
+  }
+});
+
 
 /**
  * GET

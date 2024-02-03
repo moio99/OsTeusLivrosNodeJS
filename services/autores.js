@@ -25,6 +25,26 @@ async function getAutores(){
   }
 }
 
+// Para evitar ter na BD dous co mesmo nome.
+async function getAutorPorNome(nome){
+  console.log('Petiçom de getAutorPorNome ' + new Date().toJSON());
+  const dadosAutor = await db.query(
+    `SELECT a.idAutor as id
+      FROM Autor a
+      WHERE a.fkUsuario = 2 AND a.Nome like '%${nome}%' ;`
+  );
+  
+  const autor = helper.emptyOrRows(dadosAutor);
+  console.log(autor.length + ' elementos devoltos');
+
+  const meta = {'id': autor.length > 0 ? autor[0].id : 0, 'quantidade': autor.length};
+
+  return {
+    autor,
+    meta
+  }
+}
+
 async function getAutoresFiltrados(id, tipo){
   console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
   const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, SUM(l.Lido) as quantidadeLidos
@@ -235,6 +255,6 @@ async function borrarAutor(id) {
 }
 
 module.exports = {
-  getAutores, getAutoresFiltrados, getAutoresPorNacons, getAutoresPorPaises, getAutor
+  getAutores, getAutorPorNome, getAutoresFiltrados, getAutoresPorNacons, getAutoresPorPaises, getAutor
   , postAutor, putAutor, borrarAutor
 }

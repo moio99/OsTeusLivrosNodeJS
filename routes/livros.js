@@ -16,6 +16,19 @@ const livros = require('../services/livros');
 });
 
 /**
+ * GET
+ */
+router.get('/LivroPorTitulo', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await livros.getLivroPorTitulo(req.query.titulo));
+  } catch (err) {
+    console.error(`Erro ao obter o livro polo título `, err.message);
+    next(err);
+  }
+});
+
+/**
  * GET por última lectura.
  */
  router.get('/UltimaLectura', async function(req, res, next) {

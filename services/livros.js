@@ -25,6 +25,27 @@ async function getLivros(){
   }
 }
 
+// Para evitar ter na BD dous co mesmo Titulo.
+async function getLivroPorTitulo(titulo){
+  console.log(titulo + ' <<<<<<<<< titulo');
+  console.log('Petiçom de getLivroPorTitulo ' + new Date().toJSON());
+  const dadosLivro = await db.query(
+    `SELECT l.idLivro as id
+      FROM Livro l
+      WHERE l.fkUsuario = 2 AND l.Titulo like '%${titulo}%' ;`
+  );
+  
+  const livro = helper.emptyOrRows(dadosLivro);
+  console.log(livro.length + ' elementos devoltos');
+
+  const meta = {'id': livro.length > 0 ? livro[0].id : 0, 'quantidade': livro.length};
+
+  return {
+    livro,
+    meta
+  }
+}
+
 async function getLivrosUltimaLectura(){
   console.log('Petiçom de getLivrosUltimaLectura');
   const dados = await db.query(
@@ -585,6 +606,6 @@ async function borrarLivro(id) {
 }
 
 module.exports = {
-  getLivros, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
+  getLivros, getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
   getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorAutor, getLivro, postLivro, putLivro, borrarLivro
 }

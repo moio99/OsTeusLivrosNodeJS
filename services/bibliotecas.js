@@ -42,6 +42,26 @@ async function getBiblioteca(id){
   }
 }
 
+// Para evitar ter na BD dous co mesmo nome.
+async function getBibliotecaPorNome(nome){
+  console.log('Petiçom de getBibliotecaPorNome ' + new Date().toJSON());
+  const dadosBiblioteca = await db.query(
+    `SELECT b.idBiblioteca as id
+      FROM Biblioteca b
+      WHERE b.fkUsuario = 2 AND b.Nome like '%${nome}%' ;`
+  );
+  
+  const biblioteca = helper.emptyOrRows(dadosBiblioteca);
+  console.log(biblioteca.length + ' elementos devoltos');
+
+  const meta = {'id': biblioteca.length > 0 ? biblioteca[0].id : 0, 'quantidade': biblioteca.length};
+
+  return {
+    biblioteca,
+    meta
+  }
+}
+
 async function getBibliotecasCosLivros(){
   console.log('Petiçom de getBibliotecasCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
@@ -153,5 +173,5 @@ async function borrarBiblioteca(id) {
 }
 
 module.exports = {
-  getBibliotecas, getBibliotecasCosLivros, getBiblioteca, postBiblioteca, putBiblioteca, borrarBiblioteca
+  getBibliotecas, getBibliotecasCosLivros, getBiblioteca, getBibliotecaPorNome, postBiblioteca, putBiblioteca, borrarBiblioteca
 }

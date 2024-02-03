@@ -40,6 +40,26 @@ async function getColecom(id){
   }
 }
 
+// Para evitar ter na BD dous co mesmo nome.
+async function getColecomPorNome(nome){
+  console.log('Petiçom de getColecomPorNome ' + new Date().toJSON());
+  const dadosColecom = await db.query(
+    `SELECT c.idColecom as id
+      FROM Colecom c
+      WHERE c.fkUsuario = 2 AND c.Nome like '%${nome}%' ;`
+  );
+  
+  const colecom = helper.emptyOrRows(dadosColecom);
+  console.log(colecom.length + ' elementos devoltos');
+
+  const meta = {'id': colecom.length > 0 ? colecom[0].id : 0, 'quantidade': colecom.length};
+
+  return {
+    colecom,
+    meta
+  }
+}
+
 async function getColeconsCosLivros(){
   console.log('Petiçom de getColeconsCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
@@ -141,5 +161,5 @@ async function borrarColecom(id) {
 }
 
 module.exports = {
-  getColecons, getColeconsCosLivros, getColecom, postColecom, putColecom, borrarColecom
+  getColecons, getColeconsCosLivros, getColecom, getColecomPorNome, postColecom, putColecom, borrarColecom
 }
