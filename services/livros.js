@@ -456,10 +456,8 @@ async function postLivro(livro){
     
   console.log('id: ' + idResult + ' livro creado');
   
-  const meta = {'id': idResult};
   return {
-    idResult,
-    meta
+    idResult
   }
 }
 
@@ -541,10 +539,8 @@ async function putLivro(livro){
   );
   
   console.log('id: ' + idResult + ' livro actualizado');
-  const meta = {'id': idResult};
   return {
-    idResult,
-    meta
+    idResult
   }
 }
 

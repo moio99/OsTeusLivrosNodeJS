@@ -44,9 +44,9 @@ async function getGenero(id){
 async function getGeneroPorNome(nome){
   console.log('Petiçom de getGeneroPorNome ' + new Date().toJSON());
   const dadosGenero = await db.query(
-    `SELECT e.idGenero as id
-      FROM Genero e
-      WHERE e.fkUsuario = 2 AND e.Nome like '%${nome}%' ;`
+    `SELECT g.idGenero as id
+      FROM Genero g
+      WHERE g.fkUsuario = 2 AND g.Nome like '%${nome}%' ;`
   );
   
   const genero = helper.emptyOrRows(dadosGenero);
