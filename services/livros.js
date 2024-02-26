@@ -125,6 +125,7 @@ async function getLivrosPorAutor(id){
   console.log('Petiçom de getLivrosPorAutor para o idAutor: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+      , l.lido
       , ar.idAutor, ar.Nome as nomeAutor
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l
