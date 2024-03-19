@@ -7,9 +7,10 @@ async function getLivros(){
     , l.DataFimLeitura as dataFimLeitura
     , ar.idAutor, ar.Nome as nomeAutor
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+    , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
     FROM Livro l
     LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
-    LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
+    LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
     WHERE l.fkUsuario = 2 
     ORDER BY lower(l.Titulo) ASC;`;
   const dados = await db.query(select);

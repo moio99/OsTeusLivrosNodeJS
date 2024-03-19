@@ -9,6 +9,7 @@ const generosRouter = require("./routes/generos");
 const bibliotecasRouter = require("./routes/bibliotecas");
 const coleconsRouter = require("./routes/colecons");
 const outrosRouter = require("./routes/outros");
+const relecturasRouter = require("./routes/relecturas");
 
 app.use(express.json());
 /* app.use(
@@ -54,6 +55,7 @@ app.use("/api/Generos", generosRouter);
 app.use("/api/Bibliotecas", bibliotecasRouter);
 app.use("/api/Colecons", coleconsRouter);
 app.use("/api/Outros", outrosRouter);
+app.use("/api/Relecturas", relecturasRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
