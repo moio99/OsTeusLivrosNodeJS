@@ -1,40 +1,81 @@
 const db = require('./db');
 const helper = require('../helper');
 
-const queryPorIdioma = `SELECT Livro.fkIdioma as id, Idioma.Nome as nome
-    , COUNT(Livro.idLivro) as quantidade, CONVERT(SUM(Livro.PaginasLidas), UNSIGNED) as quantidadePaginas
-  FROM Livro, Idioma
-  WHERE Livro.fkUsuario = 2
-  AND Livro.fkIdioma = Idioma.idIdioma
-  AND Livro.Lido = 1
-  -- AND (Livro.idSerie IS NULL OR Livro.idSerie =  0)
-  GROUP BY Livro.fkIdioma
-  ORDER BY quantidade DESC, lower(nome) ASC;`;
-const queryPorGenero = `SELECT g.idGenero as id, g.Nome as nome, COUNT(l.idLivro) as quantidade
-    , CONVERT(SUM(l.PaginasLidas), UNSIGNED) as quantidadePaginas
-  FROM Livro l
-  INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
-  INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-  WHERE l.fkUsuario = 2
-  AND l.Lido = 1
-  GROUP BY g.idGenero
-  ORDER BY quantidade DESC, lower(g.Nome) ASC`;
-const queryPorAno = `SELECT YEAR(DataFimLeitura) as id, YEAR(DataFimLeitura) as nome, COUNT(Livro.idLivro) as quantidade
-    , CONVERT(SUM(Livro.PaginasLidas), UNSIGNED) as quantidadePaginas
-  FROM Livro
-  WHERE Livro.fkUsuario = 2
-  AND Livro.Lido = 1
-  GROUP BY YEAR(DataFimLeitura)
-  ORDER BY YEAR(DataFimLeitura) DESC;`;
-const queryPorAutor = `SELECT Autor.idAutor as id, Autor.Nome as nome, COUNT(Livro.idLivro) as quantidade
-    , CONVERT(SUM(Livro.PaginasLidas), UNSIGNED) as quantidadePaginas
-  FROM Livro, Autores, Autor
-  WHERE Livro.fkUsuario = 2
-  AND Livro.idLivro = Autores.fkLivro
-  AND Autores.fkAutor = Autor.idAutor
-  AND Livro.Lido = 1
-  -- AND (Livro.idSerie IS NULL OR Livro.idSerie =  0)
-  GROUP BY Autor.idAutor
+const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
+, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadePaginas
+, CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS quantidadeRelecturas
+FROM (
+  SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
+    FROM Livro l
+        RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
+    WHERE l.fkUsuario = 2
+    AND l.Lido = 1
+    -- AND (l.idSerie IS NULL OR l.idSerie =  0)
+  UNION ALL
+    SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas
+    FROM Relectura r
+        RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
+    WHERE r.fkUsuario = 2
+    AND r.Lido = 1
+    -- AND (r.idSerie IS NULL OR r.idSerie =  0)
+  ) AS uu
+GROUP BY uu.id
+ORDER BY quantidade DESC, lower(nome) ASC;`;
+const queryPorGenero = `SELECT uu.id, uu.nome
+  , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadePaginas
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as quantidadeRelecturas
+  FROM (
+      SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, 0 as numRelecturas
+      FROM Livro l
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
+      WHERE l.fkUsuario = 2  AND l.Lido = 1
+    UNION ALL
+      SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, 1 as numRelecturas
+      FROM Relectura r  
+        INNER JOIN Livro l ON r.fkLivro = l.idLivro
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
+      WHERE l.fkUsuario = 2
+      AND l.Lido = 1
+  ) as uu
+  GROUP BY uu.id
+  ORDER BY quantidade DESC, lower(uu.nome) ASC`;
+const queryPorAno = `SELECT uu.id, uu.nome
+  , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadePaginas
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as quantidadeRelecturas
+  FROM (
+      SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome, l.PaginasLidas, 0 as numRelecturas
+      FROM Livro l
+      WHERE l.fkUsuario = 2
+      AND l.Lido = 1
+    UNION ALL
+      SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome, r.PaginasLidas, 1 as numRelecturas
+      FROM Relectura r
+      WHERE r.fkUsuario = 2
+      AND r.Lido = 1
+    ) AS uu
+  GROUP BY uu.id
+  ORDER BY uu.id DESC;`;
+const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
+  , CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadePaginas
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS quantidadeRelecturas 
+  FROM (
+    SELECT ar.idAutor as id, ar.Nome as nome, l.PaginasLidas, 0 AS numRelecturas
+      FROM Livro l
+      RIGHT JOIN Autores ars ON l.idLivro = ars.fkLivro
+      RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+      WHERE l.fkUsuario = 2 AND l.Lido = 1
+      -- AND (l.idSerie IS NULL OR l.idSerie =  0)
+    UNION ALL
+    SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas
+      FROM Relectura r
+      RIGHT JOIN Autores ars ON r.fkLivro = ars.fkLivro
+      RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+      WHERE r.fkUsuario = 2 AND r.Lido = 1
+      -- AND (r.idSerie IS NULL OR r.idSerie =  0)
+  ) as uu
+  GROUP BY uu.id
   ORDER BY quantidade DESC, lower(nome) ASC;`;
 
 async function getEstadisticas(tipo){
