@@ -102,7 +102,7 @@ async function postColecom(colecom){
       }
     );
   
-  console.log('id: ' + idResult + ' colecom creada');
+  console.log('id: ' + idResult + ' colecom creado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -133,7 +133,7 @@ async function putColecom(colecom){
     }
   );
   
-  console.log('id: ' + idResult + ' colecom actualizada');
+  console.log('id: ' + idResult + ' colecom actualizado');
   const meta = {'id': idResult};
   return {
     idResult,

@@ -132,6 +132,19 @@ router.get('/PorColecom', async function(req, res, next) {
   }
 });
 
+/**
+ * GET por estiloLiterario
+ */
+router.get('/PorEstiloLiterario', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await livros.getLivrosPorEstiloLiterario(req.query.id));
+  } catch (err) {
+    console.error(`Erro ao obter os livros `, err.message);
+    next(err);
+  }
+});
+
 
 /**
  * GET Livro

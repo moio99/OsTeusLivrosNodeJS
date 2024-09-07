@@ -37,8 +37,8 @@ router.get('/AutorPorNome', async function(req, res, next) {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
     res.json(await autores.getAutoresPorNacons());
   } catch (err) {
-    console.error(`Erro ao obter as autores por naçons`, err.message);
-    next(err);
+   /*  console.error(`Erro ao obter as autores por naçons`, err.message);
+    next(err); */
   }
 });
 

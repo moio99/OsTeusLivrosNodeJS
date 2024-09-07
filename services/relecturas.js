@@ -9,11 +9,12 @@ async function getRelectura(idRelectura){
       , e.idEditorial, e.Nome as editorial
       , c.idColecom, c.Nome as colecom
       , r.ISBN as isbn
-      , r.Paginas as paginas, r.PaginasLidas as paginasLidas, r.Lido as lido, r.TempoLeitura as tempoLeitura
+      , r.Paginas as paginas, r.PaginasLidas as paginasLidas, r.Lido as lido, r.TempoLeitura as diasLeitura
       , DATE_FORMAT(r.DataFimLeitura,'%d/%m/%Y') as dataFimLeitura
+      , r.fkIdioma as idIdioma
       , DATE_FORMAT(r.DataEdicom,'%d/%m/%Y') as dataEdicom
       , r.NumeroEdicom as numeroEdicom, r.Electronico as electronico
-      , r.SomSerie, r.idSerie, r.Comentario as comentario, r.Pontuacom as pontuacom
+      , r.SomSerie as somSerie, r.idSerie, r.Comentario as comentario, r.Pontuacom as pontuacom
     FROM Relectura r
     LEFT JOIN Biblioteca b ON r.fkBiblioteca = b.idBiblioteca 
     LEFT JOIN Editorial e ON r.fkEditorial = e.idEditorial 
@@ -35,7 +36,7 @@ async function getRelectura(idRelectura){
 async function getRelecturas(idLivro){
   console.log('Petiçom de getRelecturas ' + new Date().toJSON() + ' idLivro: ' + idLivro);
   const dadosRelecturas = await db.query(
-    `SELECT r.idRelectura id, r.titulo, r.paginas, r.lido, r.dataFimLeitura, r.TempoLeitura as diasLeitura, r.pontuacom 
+    `SELECT r.idRelectura id, r.titulo, r.paginas, r.lido, r.dataFimLeitura, r.TempoLeitura as diasLeitura, r.pontuacom
       FROM Relectura r
       WHERE r.fkUsuario = 2 AND r.fkLivro =  ${idLivro}
       ORDER BY lower(r.dataFimLeitura) ASC;`

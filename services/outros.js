@@ -112,14 +112,26 @@ async function getGeneros(){
 
 async function getColecons(){
   console.log('Petiçom de getColecons ' + new Date().toJSON());
-  const dadosEditoriais = await db.query(
+  const dadosColecons = await db.query(
     `SELECT c.idColecom id, c.Nome as nome, c.ISBN, c.web, c.Comentario as comentario
       FROM Colecom c
       WHERE c.fkUsuario = 2
       ORDER BY lower(c.Nome) ASC;`
   );
   
-  return getGenerico(dadosEditoriais);
+  return getGenerico(dadosColecons);
+}
+
+async function getEstilosLiterarios(){
+  console.log('Petiçom de getEstilosLiterarios ' + new Date().toJSON());
+  const dadosEstilos = await db.query(
+    `SELECT e.idEstilo id, e.Nome as nome, e.Comentario as comentario
+      FROM EstiloLiterario e
+      WHERE e.fkUsuario = 2
+      ORDER BY lower(e.Nome) ASC;`
+  );
+  
+  return getGenerico(dadosEstilos);
 }
 
 async function getIdiomas(){
@@ -205,6 +217,7 @@ async function getTodo() {
   const editoriais = await getEditoriais();
   const generos = await getGeneros();
   const colecons = await getColecons();
+  const estilos = await getEstilosLiterarios();
   const idiomas = await getIdiomas();
   const seriesLivro = await getSeriesLivro();
   const ultimaLeitura = await getUltimaLeitura();
@@ -219,6 +232,7 @@ async function getTodo() {
     editoriais: editoriais,
     generos: generos,
     colecons: colecons,
+    estilos: estilos,
     idiomas: idiomas,
     seriesLivro: seriesLivro,
     ultimaLeitura: ultimaLeitura,

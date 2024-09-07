@@ -10,6 +10,7 @@ const bibliotecasRouter = require("./routes/bibliotecas");
 const coleconsRouter = require("./routes/colecons");
 const outrosRouter = require("./routes/outros");
 const relecturasRouter = require("./routes/relecturas");
+const estilosLiterariosRouter = require("./routes/estilosLiterarios");
 
 app.use(express.json());
 /* app.use(
@@ -18,13 +19,20 @@ app.use(express.json());
   })
 ); */
 
-app.use(function (req, res, next) {
+const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
 
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4210');
+
+app.use(function (req, res, next) {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+  }
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // Request headers you wish to allow
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
@@ -56,6 +64,7 @@ app.use("/api/Bibliotecas", bibliotecasRouter);
 app.use("/api/Colecons", coleconsRouter);
 app.use("/api/Outros", outrosRouter);
 app.use("/api/Relecturas", relecturasRouter);
+app.use("/api/EstilosLiterarios", estilosLiterariosRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

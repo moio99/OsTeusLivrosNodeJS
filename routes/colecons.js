@@ -18,7 +18,7 @@ const colecons = require('../services/colecons');
 /**
  * GET
  */
-/* router.get('/ColecomPorNome', async function(req, res, next) {
+router.get('/ColecomPorNome', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
     res.json(await colecons.getColecomPorNome(req.query.nome));
@@ -26,7 +26,7 @@ const colecons = require('../services/colecons');
     console.error(`Erro ao obter a colecom polo nome `, err.message);
     next(err);
   }
-}); */
+});
 
 
 /**

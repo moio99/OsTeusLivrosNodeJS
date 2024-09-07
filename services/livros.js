@@ -74,18 +74,33 @@ async function getLivrosUltimaLectura(){
 async function getLivrosPorIdioma(idioma){
   console.log('Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
-      , ar.idAutor, ar.Nome as nomeAutor
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-      FROM Livro l
-      INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
-      LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE l.fkUsuario = 2
-      AND i.idIdioma = ${idioma}
-      ORDER BY l.Titulo, lower(ar.Nome) ASC;`
+    `SELECT uu.* FROM (
+      SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+        , '0' as idRelectura
+        FROM Livro l
+        INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+        WHERE l.fkUsuario = 2
+        AND i.idIdioma = ${idioma}
+    UNION ALL
+      SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas, r.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+        , r.idRelectura as idRelectura
+        FROM Relectura r
+        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
+        INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+        WHERE l.fkUsuario = 2
+        AND i.idIdioma = ${idioma}
+    ) AS uu
+    ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
   );
-  
+
   let data = helper.emptyOrRows(dados);
   data = LibroConMaisDeUnAutor(data);
   console.log(data.length + ' elementos devoltos');
@@ -100,15 +115,29 @@ async function getLivrosPorIdioma(idioma){
 async function getLivrosPorAno(ano){
   console.log('Petiçom de getLivrosPorAno para o ano: ' + ano);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
-      , ar.idAutor, ar.Nome as nomeAutor
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-      FROM Livro l
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
-      LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
-      AND YEAR(DataFimLeitura) = ${ano} AND Lido = '1'  
-      ORDER BY l.Titulo, lower(ar.Nome) ASC;`
+    `SELECT uu.* FROM (
+      SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+        , '0' as idRelectura
+        FROM Livro l
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
+        WHERE l.fkUsuario = 2 
+        AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = '1'
+    UNION ALL
+      SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas, r.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = r.idRelectura) as quantidadeSerie
+        , r.idRelectura as idRelectura
+        FROM Relectura r
+        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
+        WHERE r.fkUsuario = 2 
+        AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = '1'  
+    ) AS uu
+    ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
   );
 
   let data = helper.emptyOrRows(dados);
@@ -151,17 +180,35 @@ async function getLivrosPorAutor(id){
 async function getLivrosPorGenero(genero){
   console.log('Petiçom de getLivrosPorGenero para o genero: ' + genero);
   const dados = await db.query(
-    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
-      , ar.idAutor, ar.Nome as nomeAutor
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-      FROM Livro l
-      INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
-      INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
-      LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE l.fkUsuario = 2 
-      AND gs.fkGenero = ${genero}
-      ORDER BY l.Titulo, lower(ar.Nome) ASC;`
+    `SELECT uu.* FROM (
+      SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas, l.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+        , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+        , '0' as idRelectura
+        FROM Livro l
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+        WHERE l.fkUsuario = 2 
+        AND gs.fkGenero = ${genero}
+    UNION ALL
+      SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas, r.DataFimLeitura as dataFimLeitura
+        , ar.idAutor, ar.Nome as nomeAutor
+        , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+        , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+        , r.idRelectura as idRelectura
+        FROM Relectura r
+        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+        WHERE l.fkUsuario = 2 
+        AND gs.fkGenero = ${genero}
+    ) AS uu
+    ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
   );
 
   let data = helper.emptyOrRows(dados);
@@ -253,6 +300,32 @@ async function getLivrosPorColecom(id){
   }
 }
 
+async function getLivrosPorEstiloLiterario(id){
+  console.log('Petiçom de getLivrosPorEstiloLiterario para a idEstiloLiterario: ' + id);
+  const dados = await db.query(
+    `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+      , ar.idAutor, ar.Nome as nomeAutor      
+      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      FROM Livro l
+      INNER JOIN estiloLiterario e ON l.fkEstilo = e.idEstilo
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
+      WHERE l.fkUsuario = 2 
+      AND e.idEstilo = ${id}
+      ORDER BY l.Titulo, lower(ar.Nome) ASC;`
+  );
+
+  let data = helper.emptyOrRows(dados);
+  data = LibroConMaisDeUnAutor(data);
+  console.log(data.length + ' elementos devoltos');
+  const meta = {'id': id, 'quantidade': data.length};
+
+  return {
+    data,
+    meta
+  }
+}
+
 async function getLivrosSerie(id){
   console.log('Petiçom de getLivrosSerie para o idLivro: ' + id);
   const dados = await db.query(
@@ -308,7 +381,8 @@ async function getLivro(id){
       , b.idBiblioteca, b.Nome as biblioteca
       , e.idEditorial, e.Nome as editorial
       , c.idColecom, c.Nome as colecom
-      , l.fkBiblioteca, l.fkEditorial, l.fkColecom, l.ISBN
+      , el.idEstilo, el.Nome as estilo
+      , l.fkBiblioteca, l.fkEditorial, l.fkColecom, l.fkEstilo, l.ISBN
       , l.Paginas, l.PaginasLidas, l.Lido, l.TempoLeitura
       , DATE_FORMAT(l.DataFimLeitura,'%d/%m/%Y') as DataFimLeitura
       , l.fkIdioma, l.fkIdiomaOriginal
@@ -326,6 +400,7 @@ async function getLivro(id){
     LEFT JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca 
     LEFT JOIN Editorial e ON l.fkEditorial = e.idEditorial 
     LEFT JOIN Colecom c ON l.fkColecom = c.idColecom 
+    LEFT JOIN EstiloLiterario el ON l.fkEstilo = el.idEstilo 
     WHERE l.idLivro = ${id};`;
   const dadosLivro = await db.query(query);
   
@@ -359,7 +434,7 @@ async function getLivro(id){
     console.log(generos)
 
     var livro = {
-      id: data[0].idLivro,
+      id: String(data[0].idLivro),
       titulo: data[0].Titulo,
       autores: autores,
       tituloOriginal: data[0].TituloOriginal,
@@ -371,6 +446,8 @@ async function getLivro(id){
       editorial: data[0].editorial,
       idColecom: data[0].idColecom,
       colecom: data[0].colecom,
+      idEstilo: data[0].idEstilo,
+      estilo: data[0].estilo,
       isbn: data[0].ISBN,
       paginas: data[0].Paginas,
       paginasLidas: data[0].PaginasLidas,
@@ -404,11 +481,11 @@ async function postLivro(livro){
   let idResult = 0;
   const queryInsert = `
     INSERT INTO Livro
-      (fkUsuario, Titulo, TituloOriginal, fkBiblioteca, fkEditorial, fkColecom, ISBN, 
+      (fkUsuario, Titulo, TituloOriginal, fkBiblioteca, fkEditorial, fkColecom, fkEstilo, ISBN, 
        Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DataFimLeitura, fkIdioma, fkIdiomaOriginal, DataCriacom, 
        DataEdicom, NumeroEdicom, Premios, Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie)
      VALUES
-      (2, ?, ?, ?, ?, ?, ?, 
+      (2, ?, ?, ?, ?, ?, ?, ?,
        ?, ?, ?, ?, ?, ?, ?, ?, ?,
        ?, ?, ?, ?, ?, ?, 3, ?, ?);`;
 
@@ -418,6 +495,7 @@ async function postLivro(livro){
     db.numberOuNull(livro.idBiblioteca),
     db.numberOuNull(livro.idEditorial),
     db.numberOuNull(livro.idColecom),
+    db.numberOuNull(livro.idEstilo),
     db.stringOuNullSimple(livro.isbn),
     livro.electronico ? 1 : 0,
 
@@ -485,6 +563,7 @@ async function putLivro(livro){
     fkBiblioteca = ?,
     fkEditorial = ?,
     fkColecom = ?,
+    fkEstilo = ?,
     ISBN = ?,
     Electronico = ?,
     Paginas = ?,
@@ -512,6 +591,7 @@ async function putLivro(livro){
     db.numberOuNull(livro.idBiblioteca),
     db.numberOuNull(livro.idEditorial),
     db.numberOuNull(livro.idColecom),
+    db.numberOuNull(livro.idEstilo),
     db.stringOuNullSimple(livro.isbn),
     livro.electronico ? 1 : 0,
     db.numberOuNull(livro.paginas),
@@ -605,5 +685,6 @@ async function borrarLivro(id) {
 
 module.exports = {
   getLivros, getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
-  getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorAutor, getLivro, postLivro, putLivro, borrarLivro
+  getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, 
+  getLivro, postLivro, putLivro, borrarLivro
 }
