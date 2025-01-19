@@ -198,11 +198,20 @@ async function getUltimaLeitura(){
 async function getUltimasLeituras(){
   console.log('Petiçom de getUltimasLeituras ' + new Date().toJSON());
   const ultimasLeituras = await db.query(
-    `SELECT l.DataFimLeitura as dataDoLivro, l.idLivro as id
-      FROM osteuslivros.livro l
-      WHERE l.fkUsuario = 2
-       AND (YEAR(l.DataFimLeitura) = YEAR(CURDATE()) 
-       OR YEAR(l.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))`
+    `SELECT uu.dataDoLivro, uu.id
+      FROM (
+        SELECT l.DataFimLeitura as dataDoLivro, l.idLivro as id
+          FROM Livro l
+          WHERE l.fkUsuario = 2
+          AND (YEAR(l.DataFimLeitura) = YEAR(CURDATE()) 
+          OR YEAR(l.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))
+        UNION ALL
+        SELECT r.DataFimLeitura as dataDoLivro, r.idRelectura as id
+          FROM Relectura r
+          WHERE r.fkUsuario = 2
+          AND (YEAR(r.DataFimLeitura) = YEAR(CURDATE()) 
+          OR YEAR(r.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))
+      ) AS uu`
   );
   
   return helper.emptyOrRows(ultimasLeituras);

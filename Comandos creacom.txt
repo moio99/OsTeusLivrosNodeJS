@@ -12,3 +12,4 @@ npm i nodemon
 
 npm i mysql2
 
+para lanzar     nodemon ./app.js

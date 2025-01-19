@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 5002;
 const estadisticasRouter = require("./routes/estadisticas");
+const graficosRouter = require("./routes/graficos");
 const livrosRouter = require("./routes/livros");
 const autoresRouter = require("./routes/autores");
 const editoriaisRouter = require("./routes/editoriais");
@@ -56,6 +57,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/Estadisticas", estadisticasRouter);
+app.use("/api/Graficos", graficosRouter);
 app.use("/api/Livros", livrosRouter);
 app.use("/api/Autores", autoresRouter);
 app.use("/api/Editoriais", editoriaisRouter);

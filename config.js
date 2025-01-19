@@ -6,7 +6,7 @@ const config = {
       database: "osteuslivros" */
       user: "root",               // windows
       password: "neveira",
-      // database: "bd-2022-08-27",
+      //database: "bd-2024-09-12",
       database: "osteuslivros",
       //connectionLimit : 10,
     },
