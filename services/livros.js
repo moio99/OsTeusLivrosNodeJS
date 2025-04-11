@@ -16,9 +16,46 @@ async function getLivros(){
   const dados = await db.query(select);
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': 0, 'quantidade': data.length};
+
+  return {
+    data,
+    meta
+  }
+}
+
+async function getLivrosParaMovel(){
+  console.log('Petiçom de getLivros');
+  let select = `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas
+    , l.DataFimLeitura as dataFimLeitura, l.Electronico
+    , l.SomSerie, l.Premios, l.Descricom, l.Comentario, l.Pontuacom
+    , i.Nome as idioma, io.Nome as idiomaOriginal
+    , ar.idAutor, ar.Nome as nomeAutor
+    , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+    , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+    FROM Livro l
+    LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
+    LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
+    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+    LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
+    WHERE l.fkUsuario = 2
+    ORDER BY lower(l.Titulo) ASC;`;
+  const dados = await db.query(select);
+
+  let data = helper.emptyOrRows(dados);
+  data = LivroComMaisDumAutor(data);
+  console.log(data.length + ' elementos devoltos');
+
+  const date = new Date();
+  const dateFormatada = date.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).replace(/\//g, '/');
+
+  const meta = {'id': 0, 'quantidade': data.length, 'data': dateFormatada};
 
   return {
     data,
@@ -61,7 +98,7 @@ async function getLivrosUltimaLectura(){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': 0, 'quantidade': data.length};
 
@@ -104,7 +141,7 @@ async function getLivrosPorIdioma(idioma){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'Idioma': idioma};
 
@@ -147,7 +184,7 @@ async function getLivrosPorAno(ano){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'Ano': ano};
 
@@ -173,7 +210,7 @@ async function getLivrosPorAutor(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -222,7 +259,7 @@ async function getLivrosPorGenero(genero){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'Genero': genero};
 
@@ -248,7 +285,7 @@ async function getLivrosPorEditorial(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -274,7 +311,7 @@ async function getLivrosPorBiblioteca(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -300,7 +337,7 @@ async function getLivrosPorColecom(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -326,7 +363,7 @@ async function getLivrosPorEstiloLiterario(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -347,7 +384,7 @@ async function getLivrosSerie(id){
   );
 
   let data = helper.emptyOrRows(dados);
-  data = LibroConMaisDeUnAutor(data);
+  data = LivroComMaisDumAutor(data);
   console.log(data.length + ' elementos devoltos');
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -362,7 +399,7 @@ async function getLivrosSerie(id){
  * @param {*} data dados da consulta.
  * @returns Listado cos livros.
  */
-function LibroConMaisDeUnAutor(data) {
+function LivroComMaisDumAutor(data) {
   let resultados = [];
   let idLivroAnterior = 0;
   //let nRepeticons = 1;
@@ -694,7 +731,8 @@ async function borrarLivro(id) {
 }
 
 module.exports = {
-  getLivros, getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
+  getLivros, getLivrosParaMovel, 
+  getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
   getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, 
   getLivro, postLivro, putLivro, borrarLivro
 }

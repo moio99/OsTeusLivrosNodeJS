@@ -91,6 +91,7 @@ router.get('/IdiomaNome', async function(req, res, next) {
  */
  router.get('/Todo', async function(req, res, next) {
   try {
+    console.log('aaaa');
     res.json(await outros.getTodo());
   } catch (err) {
     console.error(`Erro ao obter os dados de Outros`, err.message);

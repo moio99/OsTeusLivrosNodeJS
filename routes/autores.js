@@ -114,4 +114,14 @@ router.delete('/Autor', async function(req, res, next) {
   }
 });
 
+router.get('/proba', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await autores.getProba());
+  } catch (err) {
+    console.error(`Erro ao obter a proba`, err.message);
+    next(err);
+  }
+});
+
 module.exports = router;

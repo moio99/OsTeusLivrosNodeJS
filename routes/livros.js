@@ -18,6 +18,19 @@ const livros = require('../services/livros');
 /**
  * GET
  */
+router.get('/LivrosParaMovel', async function(req, res, next) {
+  try {
+    // res.json(await programmingLanguages.getMultiple(req.query.page));
+    res.json(await livros.getLivrosParaMovel());
+  } catch (err) {
+    console.error(`Erro ao obter os livros `, err.message);
+    next(err);
+  }
+});
+
+/**
+ * GET
+ */
 router.get('/LivroPorTitulo', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));

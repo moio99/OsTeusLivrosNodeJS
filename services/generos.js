@@ -46,7 +46,7 @@ async function getGeneroPorNome(nome){
   const dadosGenero = await db.query(
     `SELECT g.idGenero as id
       FROM Genero g
-      WHERE g.fkUsuario = 2 AND g.Nome like '%${nome}%' ;`
+      WHERE g.fkUsuario = 2 AND LOWER(g.Nome) = LOWER('${nome}') ;`
   );
   
   const genero = helper.emptyOrRows(dadosGenero);

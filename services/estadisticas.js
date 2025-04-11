@@ -94,6 +94,8 @@ async function getEstadisticas(tipo){
     case '4':
       dados = await db.query(queryPorAutor);
       break;
+    default:
+      return ''
   }
   const data = helper.emptyOrRows(dados);
   const meta = {'tipo': tipo};

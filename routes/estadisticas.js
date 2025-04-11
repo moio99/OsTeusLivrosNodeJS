@@ -17,7 +17,13 @@ router.get('/', async function(req, res, next) {
     console.log('rolroleiro:', rol);
     console.log('authorization:', auth);
 
-    res.json(await estadisticas.getEstadisticas(req.query.tipo));
+    const resultado = await estadisticas.getEstadisticas(req.query.tipo);
+    if (resultado === '') {
+      res.statusMessage = `O tipo ${req.query.tipo} nom é um dos válidos`
+      res.status(404).end()
+    }
+    else 
+      res.json(resultado);
   } catch (err) {
     console.error(`Erro ao obter as estadísticas `, err.message);
     next(err);
