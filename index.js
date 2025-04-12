@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require('dotenv').config(); // para usar o .env
-const port = 5002;
+const port = process.env.PORT || 5002;
 const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
 const graficosRouter = require("./routes/graficos");
