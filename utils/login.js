@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 const loginRouter = require('express').Router()
 
 loginRouter.post('/', async (request, response) => {
-  console.log('Petiçom de login');
   const { nome, contrasinal } = request.body
 
   if (!(nome && contrasinal)) {
@@ -13,7 +12,6 @@ loginRouter.post('/', async (request, response) => {
     })
   }
 
-  console.log('Vou a pola query');
   const rows = await db.query(
     `SELECT * FROM Usuario WHERE Nome = '${nome}' AND Pass = '${contrasinal}' AND Ativado = 1;`
   );
