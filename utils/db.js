@@ -13,11 +13,13 @@ const { configLocal, configRailway } = require('./config');
 // }
 
 async function query(sql, params) {
+  console.log('sql');
   let connection;
   try {
     if (process.env.NODE_ENTORNO === 'local') {
       connection = await mysql.createConnection(configLocal.db);
     } else {
+      console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO);
       connection = await mysql.createConnection(configRailway);
     }
     const [rows] = await connection.execute(sql, params);
