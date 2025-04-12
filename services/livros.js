@@ -1,17 +1,17 @@
-const db = require('./db');
-const helper = require('../helper');
+const db = require('../utils/db');
+const helper = require('../utils/helper');
 
-async function getLivros(){
+async function getLivros(idUsuario){
   console.log('Petiçom de getLivros');
   let select = `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas
     , l.DataFimLeitura as dataFimLeitura
     , ar.idAutor, ar.Nome as nomeAutor
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-    , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
     FROM Livro l
     LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-    WHERE l.fkUsuario = 2 
+    WHERE l.fkUsuario = ${idUsuario} 
     ORDER BY lower(l.Titulo) ASC;`;
   const dados = await db.query(select);
 
@@ -26,7 +26,7 @@ async function getLivros(){
   }
 }
 
-async function getLivrosParaMovel(){
+async function getLivrosParaMovel(idUsuario){
   console.log('Petiçom de getLivros');
   let select = `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas
     , l.DataFimLeitura as dataFimLeitura, l.Electronico
@@ -34,13 +34,13 @@ async function getLivrosParaMovel(){
     , i.Nome as idioma, io.Nome as idiomaOriginal
     , ar.idAutor, ar.Nome as nomeAutor
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-    , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
     FROM Livro l
     LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
     LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
     LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-    WHERE l.fkUsuario = 2
+    WHERE l.fkUsuario = ${idUsuario}
     ORDER BY lower(l.Titulo) ASC;`;
   const dados = await db.query(select);
 
@@ -64,13 +64,13 @@ async function getLivrosParaMovel(){
 }
 
 // Para evitar ter na BD dous co mesmo Titulo.
-async function getLivroPorTitulo(titulo){
+async function getLivroPorTitulo(idUsuario, titulo){
   console.log(titulo + ' <<<<<<<<< titulo');
   console.log('Petiçom de getLivroPorTitulo ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT l.idLivro as id
       FROM Livro l
-      WHERE l.fkUsuario = 2 AND l.Titulo like '%${titulo}%' ;`
+      WHERE l.fkUsuario = ${idUsuario} AND l.Titulo like '%${titulo}%' ;`
   );
   
   const livro = helper.emptyOrRows(dadosLivro);
@@ -84,7 +84,7 @@ async function getLivroPorTitulo(titulo){
   }
 }
 
-async function getLivrosUltimaLectura(){
+async function getLivrosUltimaLectura(idUsuario){
   console.log('Petiçom de getLivrosUltimaLectura');
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -93,7 +93,7 @@ async function getLivrosUltimaLectura(){
       FROM Livro l
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 AND l.Lido = 1
+      WHERE l.fkUsuario = ${idUsuario} AND l.Lido = 1
       ORDER BY DataFimLeitura DESC;`
   );
 
@@ -108,7 +108,7 @@ async function getLivrosUltimaLectura(){
   }
 }
 
-async function getLivrosPorIdioma(idioma){
+async function getLivrosPorIdioma(idUsuario, idioma){
   console.log('Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
   const dados = await db.query(
     `SELECT uu.* FROM (
@@ -121,7 +121,7 @@ async function getLivrosPorIdioma(idioma){
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = 2
+        WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma}
     UNION ALL
       SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas
@@ -134,7 +134,7 @@ async function getLivrosPorIdioma(idioma){
         INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = 2
+        WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma}
     ) AS uu
     ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
@@ -151,7 +151,7 @@ async function getLivrosPorIdioma(idioma){
   }
 }
 
-async function getLivrosPorAno(ano){
+async function getLivrosPorAno(idUsuario, ano){
   console.log('Petiçom de getLivrosPorAno para o ano: ' + ano);
   const dados = await db.query(
     `SELECT uu.* FROM (
@@ -164,7 +164,7 @@ async function getLivrosPorAno(ano){
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
-        WHERE l.fkUsuario = 2 
+        WHERE l.fkUsuario = ${idUsuario} 
         AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = '1'
     UNION ALL
       SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas
@@ -177,7 +177,7 @@ async function getLivrosPorAno(ano){
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON r.fkIdioma = i.idIdioma
-        WHERE r.fkUsuario = 2 
+        WHERE r.fkUsuario = ${idUsuario} 
         AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = '1'  
     ) AS uu
     ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
@@ -194,7 +194,7 @@ async function getLivrosPorAno(ano){
   }
 }
 
-async function getLivrosPorAutor(id){
+async function getLivrosPorAutor(idUsuario, id){
   console.log('Petiçom de getLivrosPorAutor para o idAutor: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -204,7 +204,7 @@ async function getLivrosPorAutor(id){
       FROM Livro l
       INNER JOIN Autores ars ON l.idLivro = ars.fkLivro 
       INNER JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND ar.idAutor = ${id}
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -220,7 +220,7 @@ async function getLivrosPorAutor(id){
   }
 }
 
-async function getLivrosPorGenero(genero){
+async function getLivrosPorGenero(idUsuario, genero){
   console.log('Petiçom de getLivrosPorGenero para o genero: ' + genero);
   const dados = await db.query(
     `SELECT uu.* FROM (
@@ -228,7 +228,7 @@ async function getLivrosPorGenero(genero){
         , l.DataFimLeitura as dataFimLeitura, l.fkIdioma as idioma, i.Nome as nomeIdioma
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-        , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+        , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
         , '0' as idRelectura
         FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
@@ -236,14 +236,14 @@ async function getLivrosPorGenero(genero){
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = 2 
+        WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero}
     UNION ALL
       SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas
         , r.DataFimLeitura as dataFimLeitura, r.fkIdioma as idioma, i.Nome as nomeIdioma
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-        , (SELECT COUNT(rr.idRelectura) FROM relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
+        , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
         , r.idRelectura as idRelectura
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
@@ -252,7 +252,7 @@ async function getLivrosPorGenero(genero){
         INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = 2 
+        WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero}
     ) AS uu
     ORDER BY uu.Titulo, lower(uu.nomeAutor) ASC;`
@@ -269,7 +269,7 @@ async function getLivrosPorGenero(genero){
   }
 }
 
-async function getLivrosPorEditorial(id){
+async function getLivrosPorEditorial(idUsuario, id){
   console.log('Petiçom de getLivrosPorEditorial para o idEditorial: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -279,7 +279,7 @@ async function getLivrosPorEditorial(id){
       INNER JOIN Editorial e ON l.fkEditorial = e.idEditorial 
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND e.idEditorial = ${id}
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -295,7 +295,7 @@ async function getLivrosPorEditorial(id){
   }
 }
 
-async function getLivrosPorBiblioteca(id){
+async function getLivrosPorBiblioteca(idUsuario, id){
   console.log('Petiçom de getLivrosPorBiblioteca para a idBiblioteca: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -305,7 +305,7 @@ async function getLivrosPorBiblioteca(id){
       INNER JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND b.idBiblioteca = ${id}
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -321,7 +321,7 @@ async function getLivrosPorBiblioteca(id){
   }
 }
 
-async function getLivrosPorColecom(id){
+async function getLivrosPorColecom(idUsuario, id){
   console.log('Petiçom de getLivrosPorColecom para a idColecom: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -331,7 +331,7 @@ async function getLivrosPorColecom(id){
       INNER JOIN Colecom c ON l.fkColecom = c.idColecom
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND c.idColecom = ${id}
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -347,7 +347,7 @@ async function getLivrosPorColecom(id){
   }
 }
 
-async function getLivrosPorEstiloLiterario(id){
+async function getLivrosPorEstiloLiterario(idUsuario, id){
   console.log('Petiçom de getLivrosPorEstiloLiterario para a idEstiloLiterario: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
@@ -357,7 +357,7 @@ async function getLivrosPorEstiloLiterario(id){
       INNER JOIN estiloLiterario e ON l.fkEstilo = e.idEstilo
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND e.idEstilo = ${id}
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -373,12 +373,12 @@ async function getLivrosPorEstiloLiterario(id){
   }
 }
 
-async function getLivrosSerie(id){
+async function getLivrosSerie(idUsuario, id){
   console.log('Petiçom de getLivrosSerie para o idLivro: ' + id);
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, ar.idAutor, ar.Nome as nomeAutor
       FROM Livro l
-      WHERE l.fkUsuario = 2 
+      WHERE l.fkUsuario = ${idUsuario} 
       AND l.idSerie = ${id} 
       ORDER BY l.Titulo, lower(ar.Nome) ASC;`
   );
@@ -421,7 +421,7 @@ function LivroComMaisDumAutor(data) {
   return resultados;
 }
 
-async function getLivro(id){
+async function getLivro(idUsuario, id){
   console.log('Petiçom de getLivro para o id: ' + id);
   let query = `SELECT
       l.idLivro, l.Titulo, l.TituloOriginal
@@ -448,7 +448,7 @@ async function getLivro(id){
     LEFT JOIN Editorial e ON l.fkEditorial = e.idEditorial 
     LEFT JOIN Colecom c ON l.fkColecom = c.idColecom 
     LEFT JOIN EstiloLiterario el ON l.fkEstilo = el.idEstilo 
-    WHERE l.idLivro = ${id};`;
+    WHERE l.idLivro = ${id} AND l.fkUsuario = ${idUsuario};`;
   const dadosLivro = await db.query(query);
   
   const data = helper.emptyOrRows(dadosLivro);
@@ -523,7 +523,7 @@ async function getLivro(id){
   }
 }
 
-async function postLivro(livro){
+async function postLivro(idUsuario, livro){
   console.log('Petiçom de postLivro ' + livro.titulo + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `
@@ -532,11 +532,12 @@ async function postLivro(livro){
        Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DataFimLeitura, fkIdioma, fkIdiomaOriginal, DataCriacom, 
        DataEdicom, NumeroEdicom, Premios, Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie)
      VALUES
-      (2, ?, ?, ?, ?, ?, ?, ?,
+      (?, ?, ?, ?, ?, ?, ?, ?,
        ?, ?, ?, ?, ?, ?, ?, ?, ?,
        ?, ?, ?, ?, ?, ?, 3, ?, ?);`;
 
   const dadosInsert = [
+    idUsuario,
     livro.titulo,
     db.stringOuNullSimple(livro.tituloOriginal),
     db.numberOuNull(livro.idBiblioteca),
@@ -573,11 +574,11 @@ async function postLivro(livro){
     );
 
   if (livro.autores.length > 0) {
-    let qAutores = guardarAutores(livro.autores, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
+    let qAutores = guardarAutores(idUsuario, livro.autores, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
     await db.query(qAutores);
   }
   if (livro.generos.length > 0) {
-    let qGeneros = guardarGeneros(livro.generos, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
+    let qGeneros = guardarGeneros(idUsuario, livro.generos, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
     await db.query(qGeneros);
   }
     
@@ -588,18 +589,18 @@ async function postLivro(livro){
   }
 }
 
-async function putLivro(livro){
+async function putLivro(idUsuario, livro){
   console.log('Petiçom de putLivro ' + livro.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   
-  await borrarAutoresAsigandos(livro.id);
+  await borrarAutoresAsigandos(idUsuario, livro.id);
   if (livro.autores.length > 0) {
-    let qAutores = guardarAutores(livro.autores, livro.id);
+    let qAutores = guardarAutores(idUsuario, livro.autores, livro.id);
     await db.query(qAutores);
   }
-  await borrarGenerosAsigandos(livro.id);
+  await borrarGenerosAsigandos(idUsuario, livro.id);
   if (livro.generos.length > 0) {
-    let qGeneros = guardarGeneros(livro.generos, livro.id);
+    let qGeneros = guardarGeneros(idUsuario, livro.generos, livro.id);
     console.log(qGeneros)
     await db.query(qGeneros);
   }
@@ -630,7 +631,7 @@ async function putLivro(livro){
     fkIdiomaDaEntrada = 3,
     SomSerie = ?,
     idSerie = ?
-    WHERE idLivro = ?;`;
+    WHERE idLivro = ? AND fkUsuario = ?;`;
 
   const dadosInsert = [
     livro.titulo,
@@ -657,7 +658,8 @@ async function putLivro(livro){
     db.numberOuNull(livro.pontuacom),
     livro.somSerie ? 1 : 0,
     livro.idSerie,
-    livro.id
+    livro.id,
+    idUsuario
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
@@ -673,20 +675,20 @@ async function putLivro(livro){
   }
 }
 
-async function borrarAutoresAsigandos(id) {  
-  await db.query(`DELETE FROM Autores WHERE fkLivro = ${id};`);
+async function borrarAutoresAsigandos(idUsuario, id) {  
+  await db.query(`DELETE FROM Autores WHERE fkLivro = ${id} AND fkUsuario = ${idUsuario};`);
   console.log('borrados autores');
 }
 
-async function borrarGenerosAsigandos(id) {  
-  await db.query(`DELETE FROM Generos WHERE fkLivro = ${id};`);
+async function borrarGenerosAsigandos(idUsuario, id) {  
+  await db.query(`DELETE FROM Generos WHERE fkLivro = ${id} AND fkUsuario = ${idUsuario};`);
   console.log('borrados generos');
 }
 
-function guardarAutores(autores, idLivro) {
+function guardarAutores(idUsuario, autores, idLivro) {
   let queryInsert = '';
   autores.forEach(function (autor) {
-    queryInsert += ', (2,' + idLivro + ',' + autor.id + ')';
+    queryInsert += `, (${idUsuario}, ${idLivro}, ${autor.id})`;
   }); 
   if (queryInsert.length > 0) {
     queryInsert = 'INSERT INTO Autores(fkUsuario, fkLivro, fkAutor) VALUES' + queryInsert.substring(1) + '; ';
@@ -695,10 +697,10 @@ function guardarAutores(autores, idLivro) {
   return queryInsert;
 }
 
-function guardarGeneros(generos, idLivro) {
+function guardarGeneros(idUsuario, generos, idLivro) {
   let queryInsert = '';
   generos.forEach(function (genero) {
-    queryInsert += ', (2,' + idLivro + ',' + genero.id + ')';
+    queryInsert += `, (${idUsuario}, ${idLivro}, ${genero.id})`;
   }); 
   if (queryInsert.length > 0) {
     queryInsert = 'INSERT INTO Generos(fkUsuario, fkLivro, fkGenero) VALUES' + queryInsert.substring(1) + '; ';
@@ -707,15 +709,15 @@ function guardarGeneros(generos, idLivro) {
   return queryInsert;
 }
 
-async function borrarLivro(id) {
+async function borrarLivro(idUsuario, id) {
   console.log('id para borrar: ' + id);
   let idResult = 0;
 
-  borrarAutoresAsigandos(id);
-  borrarGenerosAsigandos(id);
+  borrarAutoresAsigandos(idUsuario, id);
+  borrarGenerosAsigandos(idUsuario, id);
 
   await db.query(
-    `DELETE FROM Livro WHERE idLivro = ${id};`
+    `DELETE FROM Livro WHERE idLivro = ${id} AND fkUsuario = ${idUsuario};`
   ).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1)
         idResult = id;

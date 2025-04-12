@@ -1,15 +1,15 @@
-const db = require('./db');
-const helper = require('../helper');
+const db = require('../utils/db');
+const helper = require('../utils/helper');
 const livro = require('./livros');
 
-async function getAutores(){
+async function getAutores(idUsuario){
   console.log('Petiçom de getAutores ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos
       FROM Autor a
       LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
       LEFT JOIN Livro l ON ars.fkLivro = l.idLivro
-      WHERE a.fkUsuario = 2
+      WHERE a.fkUsuario = ${idUsuario}
       GROUP BY a.idAutor
       ORDER BY lower(a.Nome) ASC;`
   );
@@ -26,12 +26,12 @@ async function getAutores(){
 }
 
 // Para evitar ter na BD dous co mesmo nome.
-async function getAutorPorNome(nome){
+async function getAutorPorNome(idUsuario, nome){
   console.log('Petiçom de getAutorPorNome ' + new Date().toJSON());
   const dadosAutor = await db.query(
     `SELECT a.idAutor as id
       FROM Autor a
-      WHERE a.fkUsuario = 2 AND a.Nome like '%${nome}%' ;`
+      WHERE a.fkUsuario = ${idUsuario} AND a.Nome like '%${nome}%' ;`
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
@@ -45,13 +45,13 @@ async function getAutorPorNome(nome){
   }
 }
 
-async function getAutoresFiltrados(id, tipo){
+async function getAutoresFiltrados(idUsuario, id, tipo){
   console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
   const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, SUM(l.Lido) as quantidadeLidos
     FROM Autor a
     LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
     LEFT JOIN Livro l ON ars.fkLivro = l.idLivro`;
-  let queryB = ' WHERE a.fkUsuario = 2';
+  let queryB = ` WHERE a.fkUsuario = ${idUsuario}`;
   const queryC = ` GROUP BY a.idAutor
     ORDER BY lower(a.Nome) ASC;`;
 
@@ -74,13 +74,13 @@ async function getAutoresFiltrados(id, tipo){
   }
 }
 
-async function getAutoresPorNacons(){
+async function getAutoresPorNacons(idUsuario){
   console.log('Petiçom de getAutoresPorNacions ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT n.idNacionalidade as id, n.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
       FROM Autor a
       LEFT JOIN Nacionalidade n ON a.fkNacionalidade = n.idNacionalidade
-      WHERE a.fkUsuario = 2
+      WHERE a.fkUsuario = ${idUsuario}
       GROUP BY n.idNacionalidade
       ORDER BY COUNT(a.idAutor) DESC, lower(a.Nome) ASC;;`
   );
@@ -96,13 +96,13 @@ async function getAutoresPorNacons(){
   }
 }
 
-async function getAutoresPorPaises(){
+async function getAutoresPorPaises(idUsuario){
   console.log('Petiçom de getAutoresPorPaises ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT p.idPais as id, p.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
       FROM Autor a
       LEFT JOIN Pais p ON a.fkPais = p.idPais
-      WHERE a.fkUsuario = 2
+      WHERE a.fkUsuario = ${idUsuario}
       GROUP BY p.idPais
       ORDER BY COUNT(a.idAutor) DESC, p.Nome ASC;`
   );
@@ -118,7 +118,7 @@ async function getAutoresPorPaises(){
   }
 }
 
-async function getAutor(id){
+async function getAutor(idUsuario, id){
   console.log('Petiçom de getAutor id: ' + id + ' tempo ' + new Date().toJSON());
   const dadosAutor = await db.query(
     `SELECT a.idAutor as id, a.Nome as nome, a.NomeReal as nomeReal, a.LugarNacemento as lugarNacemento
@@ -133,7 +133,7 @@ async function getAutor(id){
       LEFT JOIN Pais p ON a.fkPais = p.idPais
       LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
       LEFT JOIN Livro l ON ars.fkLivro = l.idLivro
-      WHERE a.idAutor = ${id}
+      WHERE a.fkUsuario = ${idUsuario} AND a.idAutor = ${id}
       GROUP BY a.idAutor;`
   );
   
@@ -149,7 +149,7 @@ async function getAutor(id){
   }
 }
 
-async function postAutor(autor){
+async function postAutor(idUsuario, autor){
   console.log('Petiçom de postAutor ' + autor.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
@@ -157,7 +157,7 @@ async function postAutor(autor){
     (fkUsuario, Nome, NomeReal, LugarNacemento, DataNacemento, dataDefuncom, Premios, web, Comentario
       , fkNacionalidade, fkPais)
     VALUES
-      (2, ?, ?, ?, ?, ?, ?, ?, ?
+      (${idUsuario}, ?, ?, ?, ?, ?, ?, ?, ?
       , ?, ?);`;
 
   const dadosInsert = [
@@ -187,14 +187,14 @@ async function postAutor(autor){
   }
 }
 
-async function putAutor(autor){
+async function putAutor(idUsuario, autor){
   console.log('Petiçom de putAutor ' + autor.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
   const queryInsert = `UPDATE Autor SET
       Nome = ?, NomeReal = ?, LugarNacemento = ?, DataNacemento = ?, DataDefuncom = ?, Premios = ?
     , Web = ?, Comentario = ?, fkNacionalidade = ?, fkPais = ?
-    WHERE idAutor = ?;`;
+    WHERE idAutor = ? AND fkUsuario = ?;`;
 
   const dadosInsert = [
     autor.nome,
@@ -207,7 +207,8 @@ async function putAutor(autor){
     db.stringOuNullSimple(autor.comentario),
     db.numberOuNull(autor.idNacionalidade),
     db.numberOuNull(autor.idPais),
-    autor.id
+    autor.id,
+    idUsuario
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
@@ -224,7 +225,7 @@ async function putAutor(autor){
   }
 }
 
-async function borrarAutor(id) {
+async function borrarAutor(idUsuario, id) {
   console.log('id pra borrar: ' + id);
   let idResult = 0;
 
@@ -238,7 +239,7 @@ async function borrarAutor(id) {
   }
   else {
     await db.query(
-      `DELETE FROM Autor WHERE idAutor = ${id};`
+      `DELETE FROM Autor WHERE idAutor = ${id} AND fkUsuario = ${idUsuario};`
     ).then(ResultSetHeader => {
         if (ResultSetHeader.affectedRows == 1)
           idResult = id;

@@ -8,7 +8,7 @@ const livros = require('../services/livros');
  router.get('/', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivros());
+    res.json(await livros.getLivros(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -20,8 +20,11 @@ const livros = require('../services/livros');
  */
 router.get('/LivrosParaMovel', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosParaMovel());
+    if (process.env.NODE_ENTORNO === 'local') {
+      res.json(await livros.getLivrosParaMovel(req.idUsuario));
+    } else {
+      res.status(404).send({ error: 'unknown endpoint' });
+    }
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -34,7 +37,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
 router.get('/LivroPorTitulo', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivroPorTitulo(req.query.titulo));
+    res.json(await livros.getLivroPorTitulo(req.idUsuario, req.query.titulo));
   } catch (err) {
     console.error(`Erro ao obter o livro polo título `, err.message);
     next(err);
@@ -47,7 +50,7 @@ router.get('/LivroPorTitulo', async function(req, res, next) {
  router.get('/UltimaLectura', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosUltimaLectura());
+    res.json(await livros.getLivrosUltimaLectura(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -60,7 +63,7 @@ router.get('/LivroPorTitulo', async function(req, res, next) {
 router.get('/PorIdioma', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorIdioma(req.query.Idioma));
+    res.json(await livros.getLivrosPorIdioma(req.idUsuario, req.query.Idioma));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -73,7 +76,7 @@ router.get('/PorIdioma', async function(req, res, next) {
 router.get('/PorAno', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorAno(req.query.Ano));
+    res.json(await livros.getLivrosPorAno(req.idUsuario, req.query.Ano));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -86,7 +89,7 @@ router.get('/PorAno', async function(req, res, next) {
 router.get('/PorAutor', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorAutor(req.query.id));
+    res.json(await livros.getLivrosPorAutor(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -98,8 +101,8 @@ router.get('/PorAutor', async function(req, res, next) {
  */
 router.get('/PorGenero', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorGenero(req.query.Genero));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivrosPorGenero(req.idUsuario, req.query.Genero));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -111,8 +114,8 @@ router.get('/PorGenero', async function(req, res, next) {
  */
 router.get('/PorEditorial', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorEditorial(req.query.id));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivrosPorEditorial(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -124,8 +127,8 @@ router.get('/PorEditorial', async function(req, res, next) {
  */
 router.get('/PorBiblioteca', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorBiblioteca(req.query.id));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivrosPorBiblioteca(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -137,8 +140,8 @@ router.get('/PorBiblioteca', async function(req, res, next) {
  */
 router.get('/PorColecom', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorColecom(req.query.id));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivrosPorColecom(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -150,8 +153,8 @@ router.get('/PorColecom', async function(req, res, next) {
  */
 router.get('/PorEstiloLiterario', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivrosPorEstiloLiterario(req.query.id));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivrosPorEstiloLiterario(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter os livros `, err.message);
     next(err);
@@ -164,8 +167,8 @@ router.get('/PorEstiloLiterario', async function(req, res, next) {
  */
  router.get('/Livro', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await livros.getLivro(req.query.id));
+    // res.json(await programmingLanguages.getMultiple(req.idUsuario, req.query.page));
+    res.json(await livros.getLivro(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o livro `, err.message);
     next(err);
@@ -175,7 +178,7 @@ router.get('/PorEstiloLiterario', async function(req, res, next) {
 /* POST Livro */
 router.post('/Livro', async function(req, res, next) {
   try {
-    res.json(await livros.postLivro(req.body));
+    res.json(await livros.postLivro(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando criar um livro`, err.message);
     next(err);
@@ -185,7 +188,7 @@ router.post('/Livro', async function(req, res, next) {
 /* PUT Livro */
 router.put('/Livro', async function(req, res, next) {
   try {
-    res.json(await livros.putLivro(req.body));
+    res.json(await livros.putLivro(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando actualizar um livro`, err.message);
     next(err);
@@ -196,7 +199,7 @@ router.put('/Livro', async function(req, res, next) {
 router.delete('/Livro', async function(req, res, next) {
   try {
     if (req.query.id != undefined)
-      res.json(await livros.borrarLivro(req.query.id));
+      res.json(await livros.borrarLivro(req.idUsuario, req.query.id));
     else
       console.error('Nom chegou o id');
   } catch (err) {

@@ -8,7 +8,7 @@ const estiloLiterario = require('../services/estilosLiterarios');
 router.get('/', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstilosLiterarios());
+    res.json(await estiloLiterario.getEstilosLiterarios(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter os Estilos Literarios `, err.message);
     next(err);
@@ -22,7 +22,7 @@ router.get('/', async function(req, res, next) {
  router.get('/EstilosLiterariosCosLivros', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstilosLiterariosCosLivros());
+    res.json(await estiloLiterario.getEstilosLiterariosCosLivros(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter os Estilos Literarios cos livros`, err.message);
     next(err);
@@ -35,7 +35,7 @@ router.get('/', async function(req, res, next) {
  router.get('/EstiloLiterario', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstiloLiterario(req.query.id));
+    res.json(await estiloLiterario.getEstiloLiterario(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o EstiloLiterario `, err.message);
     next(err);
@@ -48,7 +48,7 @@ router.get('/', async function(req, res, next) {
 router.get('/EstiloLiterarioPorNome', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstiloLiterarioPorNome(req.query.nome));
+    res.json(await estiloLiterario.getEstiloLiterarioPorNome(req.idUsuario, req.query.nome));
   } catch (err) {
     console.error(`Erro ao obter o Estilo Literario polo nome `, err.message);
     next(err);
@@ -58,7 +58,7 @@ router.get('/EstiloLiterarioPorNome', async function(req, res, next) {
 /* router.get('/GeneroNome', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getGeneroNome(req.query.id));
+    res.json(await estiloLiterario.getGeneroNome(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o generoNome `, err.message);
     next(err);
@@ -68,7 +68,7 @@ router.get('/EstiloLiterarioPorNome', async function(req, res, next) {
 /* POST EstiloLiterario */
 router.post('/EstiloLiterario', async function(req, res, next) {
   try {
-    res.json(await estiloLiterario.postEstiloLiterario(req.body));
+    res.json(await estiloLiterario.postEstiloLiterario(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando criar um Estilo Literario`, err.message);
     next(err);
@@ -78,7 +78,7 @@ router.post('/EstiloLiterario', async function(req, res, next) {
 /* PUT EstiloLiterario */
 router.put('/EstiloLiterario', async function(req, res, next) {
   try {
-    res.json(await estiloLiterario.putEstiloLiterario(req.body));
+    res.json(await estiloLiterario.putEstiloLiterario(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando actualizar um Estilo Literario`, err.message);
     next(err);
@@ -89,7 +89,7 @@ router.put('/EstiloLiterario', async function(req, res, next) {
 router.delete('/EstiloLiterario', async function(req, res, next) {
   try {
     if (req.query.id != undefined)
-      res.json(await estiloLiterario.borrarEstiloLiterario(req.query.id));
+      res.json(await estiloLiterario.borrarEstiloLiterario(req.idUsuario, req.query.id));
     else
       console.error('Nom chegou o id');
   } catch (err) {

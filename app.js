@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
+require('dotenv').config(); // para usar o .env
 const port = 5002;
+const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
 const graficosRouter = require("./routes/graficos");
 const livrosRouter = require("./routes/livros");
@@ -21,6 +23,7 @@ app.use(express.json());
 ); */
 
 const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
+const middleware = require('./utils/middleware')
 
 
 app.use(function (req, res, next) {
@@ -43,27 +46,19 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/", (req, res) => {
-
-  /* var afterLoad=require('after-load');
-  afterLoad('https://www.google.es/',function(html){
-     console.log(html);
-  }) */
-
-  res.json({ message: "ok" });
-});
-
-app.use("/api/Estadisticas", estadisticasRouter);
-app.use("/api/Graficos", graficosRouter);
-app.use("/api/Livros", livrosRouter);
-app.use("/api/Autores", autoresRouter);
-app.use("/api/Editoriais", editoriaisRouter);
-app.use("/api/Generos", generosRouter);
-app.use("/api/Bibliotecas", bibliotecasRouter);
-app.use("/api/Colecons", coleconsRouter);
-app.use("/api/Outros", outrosRouter);
-app.use("/api/Relecturas", relecturasRouter);
-app.use("/api/EstilosLiterarios", estilosLiterariosRouter);
+app.use(middleware.requestLogger)
+app.use('/api/login', loginRouter)
+app.use("/api/Estadisticas", middleware.userExtractor, estadisticasRouter);
+app.use("/api/Graficos", middleware.userExtractor, graficosRouter);
+app.use("/api/Livros", middleware.userExtractor, livrosRouter);
+app.use("/api/Autores", middleware.userExtractor, autoresRouter);
+app.use("/api/Editoriais", middleware.userExtractor, editoriaisRouter);
+app.use("/api/Generos", middleware.userExtractor, generosRouter);
+app.use("/api/Bibliotecas", middleware.userExtractor, bibliotecasRouter);
+app.use("/api/Colecons", middleware.userExtractor, coleconsRouter);
+app.use("/api/Outros", middleware.userExtractor, outrosRouter);
+app.use("/api/Relecturas", middleware.userExtractor, relecturasRouter);
+app.use("/api/EstilosLiterarios", middleware.userExtractor, estilosLiterariosRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

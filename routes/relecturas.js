@@ -8,7 +8,7 @@ const relecturas = require('../services/relecturas');
 /* router.get('/', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await relecturas.getColecons());
+    res.json(await relecturas.getColecons(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter as relecturas `, err.message);
     next(err);
@@ -21,7 +21,7 @@ const relecturas = require('../services/relecturas');
 router.get('/Relectura', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await relecturas.getRelectura(req.query.id));
+    res.json(await relecturas.getRelectura(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter umha relectura `, err.message);
     next(err);
@@ -34,7 +34,7 @@ router.get('/Relectura', async function(req, res, next) {
  router.get('/Relecturas', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await relecturas.getRelecturas(req.query.id));
+    res.json(await relecturas.getRelecturas(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter as relecturas `, err.message);
     next(err);
@@ -45,7 +45,7 @@ router.get('/Relectura', async function(req, res, next) {
 router.post('/Relectura', async function(req, res, next) {
   console.log('chega post');
   try {
-    res.json(await relecturas.postRelectura(req.body));
+    res.json(await relecturas.postRelectura(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando criar umha relectura`, err.message);
     next(err);
@@ -55,7 +55,7 @@ router.post('/Relectura', async function(req, res, next) {
 /* PUT Relectura */
 router.put('/Relectura', async function(req, res, next) {
   try {
-    res.json(await relecturas.putRelectura(req.body));
+    res.json(await relecturas.putRelectura(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando actualizar umha relectura`, err.message);
     next(err);
@@ -66,7 +66,7 @@ router.put('/Relectura', async function(req, res, next) {
 router.delete('/Relectura', async function(req, res, next) {
   try {
     if (req.query.id != undefined)
-      res.json(await relecturas.borrarRelectura(req.query.id));
+      res.json(await relecturas.borrarRelectura(req.idUsuario, req.query.id));
     else
       console.error('Nom chegou o id');
   } catch (err) {

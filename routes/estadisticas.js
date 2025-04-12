@@ -8,16 +8,7 @@ const estadisticas = require('../services/estadisticas');
 router.get('/', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-
-    const usuario = req.headers['usuarinho'];
-    const rol = req.headers['rolroleiro'];
-    const auth = req.headers['authorization'];
-
-    console.log('usuarinho:', usuario);
-    console.log('rolroleiro:', rol);
-    console.log('authorization:', auth);
-
-    const resultado = await estadisticas.getEstadisticas(req.query.tipo);
+    const resultado = await estadisticas.getEstadisticas(req.idUsuario, req.query.tipo);
     if (resultado === '') {
       res.statusMessage = `O tipo ${req.query.tipo} nom é um dos válidos`
       res.status(404).end()

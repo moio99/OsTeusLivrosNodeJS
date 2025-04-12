@@ -12,4 +12,18 @@ npm i nodemon
 
 npm i mysql2
 
+Para usar o .env
+npm i dotenv
+
+para o token
+npm install jsonwebtoken
+
+para poder lanzar o     "dev": "cross-env NODE_ENTORNO=local nodemon ./app.js",     do package.json
+npm install cross-env --save-dev
+
+
+
+
 para lanzar     nodemon ./app.js
+ou
+npm dev       que lanza o nodemon ./app.js

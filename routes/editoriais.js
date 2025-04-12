@@ -35,7 +35,7 @@ router.get('/EditorialPorNome', async function(req, res, next) {
  router.get('/EditoriaisCosLivros', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await editoriais.getEditoriaisCosLivros());
+    res.json(await editoriais.getEditoriaisCosLivros(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter as editoriais cos livros`, err.message);
     next(err);
@@ -48,7 +48,7 @@ router.get('/EditorialPorNome', async function(req, res, next) {
  router.get('/Editorial', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await editoriais.getEditorial(req.query.id));
+    res.json(await editoriais.getEditorial(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter a editorial `, err.message);
     next(err);
@@ -68,7 +68,7 @@ router.post('/Editorial', async function(req, res, next) {
 /* PUT Editorial */
 router.put('/Editorial', async function(req, res, next) {
   try {
-    res.json(await editoriais.putEditorial(req.body));
+    res.json(await editoriais.putEditorial(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando actualizar umha editorial`, err.message);
     next(err);
@@ -79,7 +79,7 @@ router.put('/Editorial', async function(req, res, next) {
 router.delete('/Editorial', async function(req, res, next) {
   try {
     if (req.query.id != undefined)
-      res.json(await editoriais.borrarEditorial(req.query.id));
+      res.json(await editoriais.borrarEditorial(req.idUsuario, req.query.id));
     else
       console.error('Nom chegou o id');
   } catch (err) {
