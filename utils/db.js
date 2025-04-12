@@ -17,6 +17,7 @@ async function query(sql, params) {
   let connection;
   try {
     if (process.env.NODE_ENTORNO === 'local') {
+      console.log('process.env.NODE_ENTORNOlocal: ' + process.env.NODE_ENTORNO);
       connection = await mysql.createConnection(configLocal.db);
     } else {
       console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO);
