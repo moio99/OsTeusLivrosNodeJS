@@ -13,7 +13,6 @@ const { configLocal, configRailway } = require('./config');
 // }
 
 async function query(sql, params) {
-  console.log('sql');
   let connection;
   try {
     if (process.env.NODE_ENTORNO === 'local') {
@@ -23,7 +22,9 @@ async function query(sql, params) {
       console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO);
       connection = await mysql.createConnection(configRailway);
     }
+    console.log('vai executar: ');
     const [rows] = await connection.execute(sql, params);
+    console.log('algo conseguiu ');
 
     return rows;
   } catch (err) {
