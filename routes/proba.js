@@ -551,7 +551,6 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
   }
 });
 
-
 router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
   try {
     const livrosData = await livros.getLivrosParaMovel(2);
