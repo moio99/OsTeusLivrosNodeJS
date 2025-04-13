@@ -41,7 +41,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Listado de Libros</title>
+      <title>Listado de Livros</title>
       <style>
         :root {
           --bg-color: #121212;
@@ -176,15 +176,15 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
     </head>
     <body>
       <div class="container">
-        <h1>Listado de Libros</h1>
+        <h1>Listado de Livros</h1>
         <div class="filters">
           <div class="filter-group">
-            <label for="titleFilter">Filtrar por título:</label>
-            <input type="text" id="titleFilter" oninput="filterBooks()" placeholder="Escribe parte del título...">
+            <label for="titleFilter">Filtrar polo título:</label>
+            <input type="text" id="titleFilter" oninput="filterBooks()" placeholder="Escrebe parte do título...">
           </div>
           <div class="filter-group">
-            <label for="authorFilter">Filtrar por autor:</label>
-            <input type="text" id="authorFilter" oninput="filterBooks()" placeholder="Escribe parte del nombre del autor...">
+            <label for="authorFilter">Filtrar polo autor:</label>
+            <input type="text" id="authorFilter" oninput="filterBooks()" placeholder="Escrebe parte do nome do autor...">
           </div>
         </div>
         <table>
@@ -193,7 +193,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
               <th>Título</th>
               <th>Páginas</th>
               <th>Idioma</th>
-              <th>Fecha Lectura</th>
+              <th>Data Lectura</th>
               <th>Autor</th>
             </tr>
           </thead>
@@ -201,13 +201,13 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
     `;
     
     livrosData.data.forEach(libro => {
-      const fecha = new Date(libro.dataFimLeitura).toLocaleDateString();
+      const dataForma = new Date(libro.dataFimLeitura).toLocaleDateString();
       html += `
             <tr>
               <td>${libro.titulo}</td>
               <td>${libro.paginas}</td>
               <td>${libro.idioma}</td>
-              <td>${fecha}</td>
+              <td>${dataForma}</td>
               <td>${libro.nomeAutor}</td>
             </tr>
       `;
@@ -217,7 +217,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
           </tbody>
         </table>
         <div class="summary">
-          Total de libros: ${livrosData.meta.quantidade} | Fecha: ${livrosData.meta.data}
+          Total de Livros: ${livrosData.meta.quantidade} | Data: ${livrosData.meta.data}
         </div>
       </div>
     </body>
@@ -247,7 +247,7 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Listado de Libros</title>
+      <title>Listado de Livros</title>
       <style>
         :root {
           --bg-color: #121212;
@@ -433,14 +433,14 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
           tbody.innerHTML = '';
           
           data.forEach(libro => {
-            const fecha = new Date(libro.dataFimLeitura).toLocaleDateString();
+            const dataForma = new Date(libro.dataFimLeitura).toLocaleDateString();
             const row = document.createElement('tr');
             
             row.innerHTML = \`
               <td>\${libro.titulo}</td>
               <td>\${libro.paginas}</td>
               <td>\${libro.idioma}</td>
-              <td>\${fecha}</td>
+              <td>\${dataForma}</td>
               <td>\${libro.Pontuacom}</td>
               <td>\${libro.nomeAutor}</td>
             \`;
@@ -450,7 +450,7 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
           
           // Actualizar contador
           document.querySelector('.summary').innerHTML = \`
-            Libros mostrados: \${data.length} de \${libros.length} | Fecha: \${new Date().toLocaleDateString()}
+            livros amosados: \${data.length} de \${libros.length} | Data: \${new Date().toLocaleDateString()}
           \`;
         }
         
@@ -466,41 +466,41 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
     </head>
     <body>
       <div class="container">
-        <h1>Listado de Libros</h1>
+        <h1>Listado de Livros</h1>
         <div class="filters">
           <div class="filter-group">
-            <label for="titleFilter">Filtrar por título:</label>
-            <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escribe parte del título...">
+            <label for="titleFilter">Filtrar polo título:</label>
+            <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escrebe parte do título...">
           </div>
           <div class="filter-group">
-            <label for="authorFilter">Filtrar por autor:</label>
-            <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escribe parte del nombre del autor...">
+            <label for="authorFilter">Filtrar polo autor:</label>
+            <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escrebe parte do nome do autor...">
           </div>
           <div class="filter-group">
             <label for="languageFilter">Idioma:</label>
             <select id="languageFilter" onchange="applyFilters()">
-              <option value="">Todos los idiomas</option>
+              <option value="">Todos os idiomas</option>
               ${idiomas.map(idioma => `<option value="${idioma}">${idioma}</option>`).join('')}
             </select>
           </div>
           <div class="filter-group">
             <label for="authorComboFilter">Autor (lista):</label>
             <select id="authorComboFilter" onchange="applyFilters()">
-              <option value="">Todos los autores</option>
+              <option value="">Todos os autores</option>
               ${autores.map(autor => `<option value="${autor}">${autor}</option>`).join('')}
             </select>
           </div>
         </div>
         
         <div class="sort-options">
-          <h3>Ordenar por:</h3>
+          <h3>Ordenar polo:</h3>
           <div class="sort-option">
             <input type="radio" id="sortTitle" name="sort" value="titulo" checked onchange="applyFilters()">
             <label for="sortTitle">Título</label>
           </div>
           <div class="sort-option">
             <input type="radio" id="sortDate" name="sort" value="dataFimLeitura" onchange="applyFilters()">
-            <label for="sortDate">Fecha de lectura</label>
+            <label for="sortDate">Data de lectura</label>
           </div>
           <div class="sort-option">
             <input type="radio" id="sortPages" name="sort" value="paginas" onchange="applyFilters()">
@@ -508,7 +508,7 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
           </div>
           <div class="sort-option">
             <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
-            <label for="sortRating">Puntuación</label>
+            <label for="sortRating">Pontuaçom</label>
           </div>
           
           <div style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
@@ -529,15 +529,15 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
               <th>Título</th>
               <th>Páginas</th>
               <th>Idioma</th>
-              <th>Fecha Lectura</th>
-              <th>Puntuación</th>
+              <th>Data Lectura</th>
+              <th>Pontuaçom</th>
               <th>Autor</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
         <div class="summary">
-          Libros mostrados: ${livrosData.data.length} de ${livrosData.data.length} | Fecha: ${livrosData.meta.data}
+          livros amosados: ${livrosData.data.length} de ${livrosData.data.length} | Data: ${livrosData.meta.data}
         </div>
       </div>
     </body>
@@ -566,7 +566,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Listado de Libros</title>
+      <title>Listado de Livros</title>
       <style>
         :root {
           --bg-color: #121212;
@@ -789,7 +789,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
           tbody.innerHTML = '';
           
           data.forEach(libro => {
-            const fecha = new Date(libro.dataFimLeitura).toLocaleDateString();
+            const dataForma = new Date(libro.dataFimLeitura).toLocaleDateString();
             
             // Fila principal
             const mainRow = document.createElement('tr');
@@ -800,7 +800,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               <td>\${libro.titulo}</td>
               <td>\${libro.paginas}</td>
               <td>\${libro.idioma}</td>
-              <td>\${fecha}</td>
+              <td>\${dataForma}</td>
               <td>\${libro.Pontuacom}</td>
               <td>\${libro.nomeAutor}</td>
             \`;
@@ -872,7 +872,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
           
           // Actualizar contador
           document.querySelector('.summary').innerHTML = \`
-            Libros mostrados: \${data.length} de \${libros.length} | Fecha: \${new Date().toLocaleDateString()}
+            livros amosados: \${data.length} de \${libros.length} | Data: \${new Date().toLocaleDateString()}
           \`;
         }
         
@@ -888,41 +888,41 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
     </head>
     <body>
       <div class="container">
-        <h1>Listado de Libros</h1>
+        <h1>Listado de Livros</h1>
         <div class="filters">
           <div class="filter-group">
-            <label for="titleFilter">Filtrar por título:</label>
-            <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escribe parte del título...">
+            <label for="titleFilter">Filtrar polo título:</label>
+            <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escrebe parte do título...">
           </div>
           <div class="filter-group">
-            <label for="authorFilter">Filtrar por autor:</label>
-            <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escribe parte del nombre del autor...">
+            <label for="authorFilter">Filtrar polo autor:</label>
+            <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escrebe parte do nome do autor...">
           </div>
           <div class="filter-group">
             <label for="languageFilter">Idioma:</label>
             <select id="languageFilter" onchange="applyFilters()">
-              <option value="">Todos los idiomas</option>
+              <option value="">Todos os idiomas</option>
               ${idiomas.map(idioma => `<option value="${idioma}">${idioma}</option>`).join('')}
             </select>
           </div>
           <div class="filter-group">
             <label for="authorComboFilter">Autor (lista):</label>
             <select id="authorComboFilter" onchange="applyFilters()">
-              <option value="">Todos los autores</option>
+              <option value="">Todos os autores</option>
               ${autores.map(autor => `<option value="${autor}">${autor}</option>`).join('')}
             </select>
           </div>
         </div>
         
         <div class="sort-options">
-          <h3>Ordenar por:</h3>
+          <h3>Ordenar polo:</h3>
           <div class="sort-option">
             <input type="radio" id="sortTitle" name="sort" value="titulo" checked onchange="applyFilters()">
             <label for="sortTitle">Título</label>
           </div>
           <div class="sort-option">
             <input type="radio" id="sortDate" name="sort" value="dataFimLeitura" onchange="applyFilters()">
-            <label for="sortDate">Fecha de lectura</label>
+            <label for="sortDate">Data de lectura</label>
           </div>
           <div class="sort-option">
             <input type="radio" id="sortPages" name="sort" value="paginas" onchange="applyFilters()">
@@ -930,7 +930,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
           </div>
           <div class="sort-option">
             <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
-            <label for="sortRating">Puntuación</label>
+            <label for="sortRating">Pontuaçom</label>
           </div>
           
           <div style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
@@ -951,15 +951,15 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               <th>Título</th>
               <th>Páginas</th>
               <th>Idioma</th>
-              <th>Fecha Lectura</th>
-              <th>Puntuación</th>
+              <th>Data Lectura</th>
+              <th>Pontuaçom</th>
               <th>Autor</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
         <div class="summary">
-          Libros mostrados: ${livrosData.data.length} de ${livrosData.data.length} | Fecha: ${livrosData.meta.data}
+          livros amosados: ${livrosData.data.length} de ${livrosData.data.length} | Data: ${livrosData.meta.data}
         </div>
       </div>
     </body>
