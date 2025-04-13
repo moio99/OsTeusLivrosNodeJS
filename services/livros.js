@@ -40,7 +40,7 @@ async function getLivrosParaMovel(idUsuario){
     LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
     LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-    WHERE l.fkUsuario = ${idUsuario}
+    WHERE l.fkUsuario = ${idUsuario} AND l.lido = 1
     ORDER BY lower(l.Titulo) ASC;`;
   const dados = await db.query(select);
 
