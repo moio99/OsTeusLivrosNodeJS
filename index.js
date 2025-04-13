@@ -14,6 +14,7 @@ const coleconsRouter = require("./routes/colecons");
 const outrosRouter = require("./routes/outros");
 const relecturasRouter = require("./routes/relecturas");
 const estilosLiterariosRouter = require("./routes/estilosLiterarios");
+const probaRouter = require("./routes/proba");
 
 app.use(express.json());
 /* app.use(
@@ -59,6 +60,7 @@ app.use("/api/Colecons", middleware.userExtractor, coleconsRouter);
 app.use("/api/Outros", middleware.userExtractor, outrosRouter);
 app.use("/api/Relecturas", middleware.userExtractor, relecturasRouter);
 app.use("/api/EstilosLiterarios", middleware.userExtractor, estilosLiterariosRouter);
+app.use("/api/Proba", probaRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

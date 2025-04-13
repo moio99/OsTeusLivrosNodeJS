@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENTORNO=railway nodemon ./app.js",
-    "dev": "cross-env NODE_ENTORNO=local nodemon ./app.js",
+    "start": "node index.js",
+    "startLocal": "cross-env NODE_ENTORNO=railway nodemon ./index.js",
+    "dev": "cross-env NODE_ENTORNO=local nodemon ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
