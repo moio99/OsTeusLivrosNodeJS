@@ -146,7 +146,8 @@ background: black;
 .summary {
 font-style: italic;
 text-align: center;
-margin-top: 20px;
+margin-top: 5px;
+margin-bottom: 10px;
 color: #aaaaaa;
 }
 

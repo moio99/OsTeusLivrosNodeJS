@@ -505,6 +505,10 @@ router.get('/Listado', async function(req, res, next) {
               </div>
             </div>
             
+            <div class="summary">
+              livros amosados: ${livrosData.data.length} de ${livrosData.data.length} | Data: ${livrosData.meta.data}
+            </div>
+            
             <table style="margin-top: 10px;">
               <thead>
                 <tr>
@@ -518,9 +522,6 @@ router.get('/Listado', async function(req, res, next) {
               </thead>
               <tbody></tbody>
             </table>
-            <div class="summary">
-              livros amosados: ${livrosData.data.length} de ${livrosData.data.length} | Data: ${livrosData.meta.data}
-            </div>
           </div>
         </body>
         </html>
