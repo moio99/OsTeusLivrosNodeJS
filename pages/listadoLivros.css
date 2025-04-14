@@ -152,6 +152,19 @@ th {
   margin-right: 5px;
 }
 
+.titulo-detalhes {
+  display: flex;
+  justify-content: space-between;
+}
+
+.botom-fechar {
+  border: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0px 5px;
+  background: black;
+}
+
 .summary {
   font-style: italic;
   text-align: center;

@@ -27,26 +27,26 @@ router.get('/DadosLivrosParaMovel', async function(req, res, next) {
 router.get('/DadosDoLivro', async function(req, res, next) {
   try {
     if (req.query.idLivro) {
-      console.log('obtendo o livro:', req.query.idLivro);
-
       const data = await livros.getLivro(2, req.query.idLivro);
-
       if (data && data.livro) {
         const livrosData = data.livro;
         const htmlContent = `
-            <td colspan="6">
-              <p>Título Original: ${livrosData.tituloOriginal || "N/A"}</p>
+            <td colspan="4">
+              <div class="titulo-detalhes">
+                <div>Título Original: ${livrosData.tituloOriginal || "N/A"}</div>
+                <div class="botom-fechar" onclick="borrarDetalhes(${data.livro.id})">Pechar</div>
+              </div>
               <p><strong>Autores:</strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
               <p><strong>Géneros:</strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
               <p><strong>Editorial:</strong> ${livrosData.editorial}</p>
               <p><strong>Biblioteca:</strong> ${livrosData.biblioteca}</p>
               <p><strong>ISBN:</strong> ${livrosData.isbn}</p>
               <p><strong>Páginas:</strong> ${livrosData.paginas}</p>
-              <p><strong>Días de Lectura:</strong> ${livrosData.diasLeitura}</p>
-              <p><strong>Fecha Final de Lectura:</strong> ${livrosData.dataFimLeitura}</p>
-              <p><strong>Descripción:</strong> ${livrosData.descricom}</p>
+              <p><strong>Días de lectura:</strong> ${livrosData.diasLeitura}</p>
+              <p><strong>Fim de lectura:</strong> ${livrosData.dataFimLeitura}</p>
+              <p><strong>Descriçom:</strong> ${livrosData.descricom}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario}</p>
-              <p><strong>Puntuación:</strong> ${livrosData.pontuacom}/10</p>
+              <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom}/10</p>
             </td>
         `;
 
@@ -244,7 +244,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
               <th>Título</th>
               <th>Páginas</th>
               <th>Idioma</th>
-              <th>Data Lectura</th>
+              <th>Fim lectura</th>
               <th>Autor</th>
             </tr>
           </thead>
@@ -580,9 +580,9 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
             <tr>
               <th>Título</th>
               <th>Páginas</th>
-              <th>Idioma</th>
-              <th>Data Lectura</th>
               <th>Pontuaçom</th>
+              <th>Fim lectura</th>
+              <th>Idioma</th>
               <th>Autor</th>
             </tr>
           </thead>
@@ -699,6 +699,12 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               }
             }
             
+            function borrarDetalhes(idLivro) {
+              console.log('borrarDetalhes>>>>>>>>>>>>',idLivro);
+              const detalhesDiv = document.getElementById('detalhesId' + idLivro);
+              detalhesDiv.innerHTML = '';
+            }
+
             function renderTable(data) {
               const tbody = document.querySelector('tbody');
               tbody.innerHTML = '';
@@ -715,9 +721,9 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
                 mainRow.innerHTML = \`
                   <td>\${livro.titulo}</td>
                   <td>\${livro.paginas}</td>
-                  <td>\${livro.idioma}</td>
-                  <td>\${dataForma}</td>
                   <td>\${livro.Pontuacom}</td>
+                  <td>\${dataForma}</td>
+                  <td>\${livro.idioma}</td>
                   <td>\${livro.nomeAutor}</td>
                 \`;
                 
@@ -819,9 +825,9 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
                 <tr>
                   <th>Título</th>
                   <th>Páginas</th>
-                  <th>Idioma</th>
-                  <th>Data Lectura</th>
                   <th>Pontuaçom</th>
+                  <th>Fim lectura</th>
+                  <th>Idioma</th>
                   <th>Autor</th>
                 </tr>
               </thead>
