@@ -30,6 +30,7 @@ router.get('/DadosDoLivro', async function(req, res, next) {
       const data = await livros.getLivro(2, req.query.idLivro);
       if (data && data.livro) {
         const livrosData = data.livro;
+        console.log(data.livro);
         const htmlContent = `
             <td colspan="6">
               <div class="titulo-detalhes">
@@ -38,9 +39,12 @@ router.get('/DadosDoLivro', async function(req, res, next) {
               </div>
               <p><strong>Autores:</strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
               <p><strong>Géneros:</strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
-              <p><strong>Editorial:</strong> ${livrosData.editorial}</p>
-              <p><strong>Biblioteca:</strong> ${livrosData.biblioteca}</p>
+              <p><strong>Editorial:</strong> ${livrosData.editorial || "N/A"}</p>
+              ${livrosData.electronico ? "<p><strong>Livro electrónico</strong></p>" : ""}
+              <p><strong>Biblioteca:</strong> ${livrosData.biblioteca || "N/A"}</p>
               <p><strong>ISBN:</strong> ${livrosData.isbn}</p>
+              <p><strong>Estilo:</strong> ${livrosData.estilo}</p>
+              ${livrosData.premios ? "<p><strong>Premios: </strong>" + livrosData.premios + "</p>" : ""}
               <p><strong>Páginas:</strong> ${livrosData.paginas}</p>
               <p><strong>Días de lectura:</strong> ${livrosData.diasLeitura}</p>
               <p><strong>Fim de lectura:</strong> ${livrosData.dataFimLeitura}</p>
@@ -82,7 +86,7 @@ function normalizeText(text) {
 }
 
 // Rota para obteer os livros para criar o json
-router.get('/LivrosParaMovel', async function(req, res, next) {
+router.get('/LivrosParaJson', async function(req, res, next) {
   try {
     const livrosData = await livros.getLivrosParaMovel(2);
     
@@ -353,28 +357,32 @@ router.get('/Listado', async function(req, res, next) {
                   (valA < valB ? 1 : -1);
               });
               
-              // Actualizar tabla
+              // Actualizar taboa
               renderTable(filtered);
             }
 
             async function getDetalhesDoLivro(idLivro) {
-              console.log(idLivro);
-              try {
-                const response = await fetch(\`/api/Paginas/DadosDoLivro?idLivro=\${idLivro}\`);                
-                if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
-                
-                const htmlContent = await response.text();
-                const detalhesDiv = document.getElementById('detalhesId' + idLivro);
-                if (detalhesDiv) {
-                  detalhesDiv.innerHTML = htmlContent;
-                } else {
-                  console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
-                  alert('Nom se encontró el div com o id detalhesId' + idLivro);
+              const detalhesDiv = document.getElementById('detalhesId' + idLivro);
+              if (detalhesDiv.innerHTML !== '') {
+                borrarDetalhes(idLivro);
+              }
+              else {
+                try {
+                  const response = await fetch(\`/api/Paginas/DadosDoLivro?idLivro=\${idLivro}\`);                
+                  if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+                  
+                  const htmlContent = await response.text();
+                  if (detalhesDiv) {
+                    detalhesDiv.innerHTML = htmlContent;
+                  } else {
+                    console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
+                    alert('Nom se encontró el div com o id detalhesId' + idLivro);
+                  }
+                  
+                } catch (error) {
+                  console.error('Erro ao obter os detalhes:', error);
+                  alert('Erro ao obter os detalhes do livro');
                 }
-                
-              } catch (error) {
-                console.error('Erro ao obter os detalhes:', error);
-                alert('Erro ao obter os detalhes do livro');
               }
             }
             
