@@ -24,6 +24,51 @@ router.get('/DadosLivrosParaMovel', async function(req, res, next) {
   }
 });
 
+router.get('/DadosDoLivro', async function(req, res, next) {
+  try {
+    if (req.query.idLivro) {
+      console.log('obtendo o livro:', req.query.idLivro);
+
+      const data = await livros.getLivro(2, req.query.idLivro);
+
+      if (data && data.livro) {
+        const livrosData = data.livro;
+        const htmlContent = `
+            <td colspan="6">
+              <p>Título Original: ${livrosData.tituloOriginal || "N/A"}</p>
+              <p><strong>Autores:</strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
+              <p><strong>Géneros:</strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
+              <p><strong>Editorial:</strong> ${livrosData.editorial}</p>
+              <p><strong>Biblioteca:</strong> ${livrosData.biblioteca}</p>
+              <p><strong>ISBN:</strong> ${livrosData.isbn}</p>
+              <p><strong>Páginas:</strong> ${livrosData.paginas}</p>
+              <p><strong>Días de Lectura:</strong> ${livrosData.diasLeitura}</p>
+              <p><strong>Fecha Final de Lectura:</strong> ${livrosData.dataFimLeitura}</p>
+              <p><strong>Descripción:</strong> ${livrosData.descricom}</p>
+              <p><strong>Comentario:</strong> ${livrosData.comentario}</p>
+              <p><strong>Puntuación:</strong> ${livrosData.pontuacom}/10</p>
+            </td>
+        `;
+
+        // Enviar el HTML como respuesta
+        res.send(htmlContent);
+      }else {
+        return res.status(402).json({
+          error: 'Nom chegou se obtiverom dados'
+        });
+      }
+
+    } else {
+      return res.status(401).json({
+        error: 'Nom chegou o id do livro'
+      });
+    }
+  } catch (err) {
+    console.error(`Erro ao obter os livros:`, err.message);
+    next(err);
+  }
+});
+
 
 const htmlBasico = `
   <!DOCTYPE html>
@@ -36,7 +81,7 @@ function normalizeText(text) {
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
-// Ruta para obtener los libros
+// Rota para obteer os livros para criar o json
 router.get('/LivrosParaMovel', async function(req, res, next) {
   try {
     const livrosData = await livros.getLivrosParaMovel(2);
@@ -393,16 +438,18 @@ router.get('/LivrosParaMovelCombos', async function(req, res, next) {
           const authorFilter = normalizeText(document.getElementById('authorFilter').value);
           const languageFilter = document.getElementById('languageFilter').value;
           const authorComboFilter = document.getElementById('authorComboFilter').value;
+          console.log('valor authorComboFilter:', authorComboFilter);
           const sortField = document.querySelector('input[name="sort"]:checked')?.value || 'titulo';
           const sortDirection = document.querySelector('input[name="sortDirection"]:checked')?.value || 'asc';
           
           // Filtrar
-          let filtered = libros.filter(libro => {
-            const titleMatch = normalizeText(libro.titulo).includes(titleFilter);
-            const authorMatch = normalizeText(libro.nomeAutor).includes(authorFilter);
+          let filtered = libros.filter(livro => {
+            const titleMatch = normalizeText(livro.titulo).includes(titleFilter);
+            const authorMatch = normalizeText(livro.nomeAutor).includes(authorFilter);
             const languageMatch = languageFilter === '' || livro.idioma === languageFilter;
             const authorComboMatch = authorComboFilter === '' || 
               livro.autores.some(autor => autor.nome === authorComboFilter);
+            console.log('valor authorComboMatch:', authorComboMatch);
             
             return titleMatch && authorMatch && languageMatch && authorComboMatch;
           });
@@ -560,9 +607,9 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
   try {
     const livrosData = await livros.getLivrosParaMovel(2);
     
-    const idiomas = [...new Set(livrosData.data.map(libro => libro.idioma))];
-    const autores = [...new Set(livrosData.data.flatMap(libro => 
-      libro.autores.map(autor => autor.nome)
+    const idiomas = [...new Set(livrosData.data.map(livro => livro.idioma))];
+    const autores = [...new Set(livrosData.data.flatMap(livro => 
+      livro.autores.map(autor => autor.nome)
     ))];
 
     let html = htmlBasico;
@@ -582,7 +629,7 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
             ${contidoCSS}
           </style>
           <script>
-            let libros = ${JSON.stringify(livrosData.data)};
+            let livros = ${JSON.stringify(livrosData.data)};
             let expandedRows = {};
             
             function applyFilters() {
@@ -594,9 +641,9 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               const sortDirection = document.querySelector('input[name="sortDirection"]:checked')?.value || 'asc';
               
               // Filtrar
-              let filtered = libros.filter(libro => {
-                const titleMatch = normalizeText(libro.titulo).includes(titleFilter);
-                const authorMatch = normalizeText(libro.nomeAutor).includes(authorFilter);
+              let filtered = livros.filter(livro => {
+                const titleMatch = normalizeText(livro.titulo).includes(titleFilter);
+                const authorMatch = normalizeText(livro.nomeAutor).includes(authorFilter);
                 const languageMatch = languageFilter === '' || livro.idioma === languageFilter;
                 const authorComboMatch = authorComboFilter === '' || 
                   livro.autores.some(autor => autor.nome === authorComboFilter);
@@ -630,15 +677,25 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               // Actualizar tabla
               renderTable(filtered);
             }
-            
-            function toggleRow(id) {
-              const row = document.getElementById(\`detail-\${id}\`);
-              if (row.style.display === 'table-row') {
-                row.style.display = 'none';
-                expandedRows[id] = false;
-              } else {
-                row.style.display = 'table-row';
-                expandedRows[id] = true;
+
+            async function getDetalhesDoLivro(idLivro) {
+              console.log(idLivro);
+              try {
+                const response = await fetch(\`/api/Proba/DadosDoLivro?idLivro=\${idLivro}\`);                
+                if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+                
+                const htmlContent = await response.text();
+                const detalhesDiv = document.getElementById('detalhesId' + idLivro);
+                if (detalhesDiv) {
+                  detalhesDiv.innerHTML = htmlContent;
+                } else {
+                  console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
+                  alert('Nom se encontró el div com o id detalhesId' + idLivro);
+                }
+                
+              } catch (error) {
+                console.error('Erro ao obter os detalhes:', error);
+                alert('Erro ao obter os detalhes do livro');
               }
             }
             
@@ -646,91 +703,38 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
               const tbody = document.querySelector('tbody');
               tbody.innerHTML = '';
               
-              data.forEach(libro => {
-                const dataForma = new Date(libro.dataFimLeitura).toLocaleDateString();
+              data.forEach(livro => {
+                const dataForma = new Date(livro.dataFimLeitura).toLocaleDateString();
                 
                 // Fila principal
                 const mainRow = document.createElement('tr');
                 mainRow.className = 'book-row';
-                mainRow.onclick = () => toggleRow(libro.id);
+                mainRow.idDoLivr = livro.id;
+                mainRow.onclick = () => getDetalhesDoLivro(livro.id);
                 
                 mainRow.innerHTML = \`
-                  <td>\${libro.titulo}</td>
-                  <td>\${libro.paginas}</td>
-                  <td>\${libro.idioma}</td>
+                  <td>\${livro.titulo}</td>
+                  <td>\${livro.paginas}</td>
+                  <td>\${livro.idioma}</td>
                   <td>\${dataForma}</td>
-                  <td>\${libro.Pontuacom}</td>
-                  <td>\${libro.nomeAutor}</td>
+                  <td>\${livro.Pontuacom}</td>
+                  <td>\${livro.nomeAutor}</td>
                 \`;
                 
                 tbody.appendChild(mainRow);
                 
                 // Fila expandible con detalles
                 const detailRow = document.createElement('tr');
-                detailRow.id = \`detail-\${libro.id}\`;
+                detailRow.id = \`detalhesId\${livro.id}\`;
                 detailRow.className = 'expanded-row';
-                detailRow.style.display = 'none';
-                
-                detailRow.innerHTML = \`
-                  <td colspan="6">
-                    <div class="expanded-content">
-                      <div class="details-grid">
-                        <div class="detail-item">
-                          <span class="detail-label">ID:</span>
-                          <span>\${libro.id}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Título original:</span>
-                          <span>\${libro.tituloOriginal || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Idioma original:</span>
-                          <span>\${libro.idiomaOriginal || 'N/A'}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Electrónico:</span>
-                          <span>\${libro.Electronico ? 'Sí' : 'No'}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Parte de serie:</span>
-                          <span>\${libro.SomSerie ? 'Sí' : 'No'}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Premios:</span>
-                          <span>\${libro.Premios || 'Ninguno'}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Descripción:</span>
-                          <p>\${libro.Descricom || 'No disponible'}</p>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Comentario:</span>
-                          <p>\${libro.Comentario || 'No disponible'}</p>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Cantidad en serie:</span>
-                          <span>\${libro.quantidadeSerie}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="detail-label">Relecturas:</span>
-                          <span>\${libro.quantidadeRelecturas}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                \`;
-                
+                // detailRow.style.display = 'none';
+                                
                 tbody.appendChild(detailRow);
-                
-                // Restaurar estado expandido si estaba previamente abierto
-                if (expandedRows[libro.id]) {
-                  detailRow.style.display = 'table-row';
-                }
               });
               
               // Actualizar contador
               document.querySelector('.summary').innerHTML = \`
-                livros amosados: \${data.length} de \${libros.length} | Data: \${new Date().toLocaleDateString()}
+                livros amosados: \${data.length} de \${livros.length} | Data: \${new Date().toLocaleDateString()}
               \`;
             }
             
@@ -749,45 +753,63 @@ router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
             <h1>Listado de Livros</h1>
             <div class="filters">
               <div class="filter-group">
-                <label for="titleFilter">Filtrar polo título:</label>
-                <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escrebe parte do título...">
-             
-                <label for="authorFilter">Filtrar polo autor:</label>
-                <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escrebe parte do nome do autor...">
+                <div>
+                  <label for="titleFilter">Filtrar polo título:</label>
+                  <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escrebe parte do título...">
+                </div>
+                <div>
+                  <label for="authorFilter">Filtrar polo autor:</label>
+                  <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escrebe parte do nome do autor...">
+                </div>
               </div>
               <div class="filter-group">
-                <label for="languageFilter">Idioma:</label>
-                <select id="languageFilter" onchange="applyFilters()">
-                  <option value="">Todos os idiomas</option>
-                  ${idiomas.map(idioma => `<option value="${idioma}">${idioma}</option>`).join('')}
-                </select>
-                
-                <label for="authorComboFilter">Autor:</label>
-                <select id="authorComboFilter" onchange="applyFilters()">
-                  <option value="">Todos os autores</option>
-                  ${autores.map(autor => `<option value="${autor}">${autor}</option>`).join('')}
-                </select>
+                <div>
+                  <label for="languageFilter">Idioma:</label>
+                  <select id="languageFilter" onchange="applyFilters()">
+                    <option value="">Todos os idiomas</option>
+                    ${idiomas.map(idioma => `<option value="${idioma}">${idioma}</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label for="authorComboFilter">Autor:</label>
+                  <select id="authorComboFilter" onchange="applyFilters()">
+                    <option value="">Todos os autores</option>
+                    ${autores.map(autor => `<option value="${autor}">${autor}</option>`).join('')}
+                  </select>
+                </div>
               </div>
             </div>
             
             <div class="sort-options">
               <h4>Ordenar polo:</h4>
               <div class="sort-option">
-                <label for="sortTitle">Título</label>
-                <input type="radio" id="sortTitle" name="sort" value="titulo" checked="" onchange="applyFilters()">
-                <label for="sortDate">Data de lectura</label>
-                <input type="radio" id="sortDate" name="sort" value="dataFimLeitura" onchange="applyFilters()">
-                <label for="sortPages">Páginas</label>
-                <input type="radio" id="sortPages" name="sort" value="paginas" onchange="applyFilters()">
-                <label for="sortRating">Pontuaçom</label>
-                <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
+                <div class="radio-group">
+                  <label for="sortTitle">Título</label>
+                  <input type="radio" id="sortTitle" name="sort" value="titulo" checked="" onchange="applyFilters()">
+                </div>
+                <div class="radio-group">
+                  <label for="sortDate">Data de lectura</label>
+                  <input type="radio" id="sortDate" name="sort" value="dataFimLeitura" onchange="applyFilters()">
+                </div>
+                <div class="radio-group">
+                  <label for="sortPages">Páginas</label>
+                  <input type="radio" id="sortPages" name="sort" value="paginas" onchange="applyFilters()">
+                </div>
+                <div class="radio-group">
+                  <label for="sortRating">Pontuaçom</label>
+                  <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
+                </div>
               </div>              
               <div style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
                 <div class="sort-option">
-                  <label for="sortAsc">Ascendente</label>
-                  <input type="radio" id="sortAsc" name="sortDirection" value="asc" checked="" onchange="applyFilters()">
-                  <label for="sortDesc">Descendente</label>
-                  <input type="radio" id="sortDesc" name="sortDirection" value="desc" onchange="applyFilters()">
+                  <div class="radio-group">
+                    <label for="sortAsc">Ascendente</label>
+                    <input type="radio" id="sortAsc" name="sortDirection" value="asc" checked="" onchange="applyFilters()">
+                  </div>
+                  <div class="radio-group">
+                    <label for="sortDesc">Descendente</label>
+                    <input type="radio" id="sortDesc" name="sortDirection" value="desc" onchange="applyFilters()">
+                  </div>
                 </div>
               </div>
             </div>
