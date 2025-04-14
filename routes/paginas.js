@@ -282,7 +282,7 @@ router.get('/LivrosParaMovel', async function(req, res, next) {
   }
 });
 
-router.get('/LivrosParaMovelAmpliado', async function(req, res, next) {
+router.get('/Listado', async function(req, res, next) {
   try {
     const livrosData = await livros.getLivrosParaMovel(2);
     
