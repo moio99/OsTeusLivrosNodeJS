@@ -360,7 +360,7 @@ router.get('/Listado', async function(req, res, next) {
             async function getDetalhesDoLivro(idLivro) {
               console.log(idLivro);
               try {
-                const response = await fetch(\`/api/Proba/DadosDoLivro?idLivro=\${idLivro}\`);                
+                const response = await fetch(\`/api/Paginas/DadosDoLivro?idLivro=\${idLivro}\`);                
                 if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
                 
                 const htmlContent = await response.text();
