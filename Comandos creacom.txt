@@ -27,3 +27,7 @@ npm install cross-env --save-dev
 para lanzar     nodemon ./app.js
 ou
 npm dev       que lanza o nodemon ./app.js
+
+para subir o código e despregar en railway
+subir a git
+railway up
