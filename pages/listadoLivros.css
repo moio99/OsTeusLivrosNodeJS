@@ -35,7 +35,7 @@ margin: 2px;
 #carregando {
   display: none;
   position: fixed;
-  top: 20px;
+  top: 90px;
   right: 60px;
   width: 30px;
   height: 30px;
@@ -44,7 +44,7 @@ margin: 2px;
   /* Solución para móviles */
   @supports (position: sticky) {
     position: sticky;
-    top: 20px;
+    top: 90px;
     float: right;
     margin-right: 20px;
   }
