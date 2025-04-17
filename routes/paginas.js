@@ -86,10 +86,15 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
     }
     else {
       const html = resultado.data.map(element => {
-        return `<div><strong>${element.nome}</strong> livros: ${element.quantidade} páginas: ${element.quantidadePaginas}</div>`;
+        return `
+            <div>
+              <strong>${element.nome}</strong> livros: ${element.quantidade} páginas: ${element.quantidadePaginas}
+            </div>
+          `;
       }).join('');    // Para que nom componha umha matriz
       
       res.send(`<div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+        <a href="/api/paginas/Listado?idUsuario=${req.query.idUsuario}">Listado</a>
         ${html}`
       );
     }
@@ -373,7 +378,6 @@ router.get('/Listado', async function(req, res, next) {
   }
 });
 
-
 router.get('/Estadisticas', async function(req, res, next) {
   try {
     const idUsuario = req.query.idUsuario;
@@ -402,47 +406,12 @@ router.get('/Estadisticas', async function(req, res, next) {
                 <style>
                   ${contidoCSS}
                 </style>
+                <script>
+                  // Variavel global accesivel dende estadisticas.js
+                  var idUsuario = ${idUsuario};
+                </script>
+                <script src="/js/estadisticas.js"></script>
               </head>
-              <script>
-                function borrarContido(idDiv) {
-                  document.getElementById(idDiv).innerHTML = '';
-                }
-                
-                async function getEstadisticas(tipo, idDiv) {
-                  console.log(tipo)
-                  console.log(${idUsuario});
-                  const divCarregarDados = document.getElementById(idDiv);
-                  if (divCarregarDados.innerHTML !== '') {
-                    borrarContido(idDiv);
-                  }
-                  else {
-                    try {
-                      document.getElementById('carregando').style.display = 'block';
-                      const response = await fetch(\`/api/paginas/DadosEstadisticas?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
-                        .finally(() => {
-                          document.getElementById('carregando').style.display = 'none';
-                        });                
-                      if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
-                      
-                      if (divCarregarDados) {
-                        divCarregarDados.innerHTML = await response.text();
-                      } else {
-                        console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
-                        alert('Nom se encontró el div com o id detalhesId' + idLivro);
-                      }
-                      
-                    } catch (error) {
-                      console.error('Erro ao obter os detalhes:', error);
-                      alert('Erro ao obter os detalhes do livro');
-                    }
-                  }
-                }
-                              
-                // Inicializar
-                document.addEventListener('DOMContentLoaded', () => {
-                  getEstadisticas('1', 'livrosPorIdioma');
-                });
-              </script>
               <body>
                 <div class="container">
                   <h1>Estadísticas dos livros lidos</h1>
@@ -466,12 +435,10 @@ router.get('/Estadisticas', async function(req, res, next) {
               </body>
             </html>
           `;
-            res.send(html);
+          res.send(html);
         });
-      
       }
     });
-
   } catch (error) {
     console.error('Erro:', error);
     res.status(500).send('Erro ao obtene os livros');
