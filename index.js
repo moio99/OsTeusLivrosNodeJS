@@ -47,14 +47,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public'), {
-  dotfiles: 'allow',
-  fallthrough: true,
-  index: false
-}));
-
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)
 app.use("/api/Estadisticas", middleware.userExtractor, estadisticasRouter);

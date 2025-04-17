@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const livros = require('../services/livros');
+const estadisticas = require('../services/estadisticas');
 const fs = require('fs');
 
 router.get('/', async function(req, res, next) {
@@ -83,7 +84,7 @@ function normalizeText(text) {
 
 router.get('/Listado', async function(req, res, next) {
   try {
-    const livrosData = await livros.getLivrosParaMovel(2);
+    const livrosData = await livros.getLivrosParaMovel(req.query.idUsuario);
     
     const idiomas = [...new Set(livrosData.data.map(livro => livro.idioma))];
     const autores = [...new Set(livrosData.data.flatMap(livro => 
@@ -161,7 +162,7 @@ router.get('/Listado', async function(req, res, next) {
                   });
                   
                   // Actualizar taboa
-                  renderTable(filtered);
+                  renderTaboa(filtered);
                 }
 
                 async function getDetalhesDoLivro(idLivro) {
@@ -198,7 +199,7 @@ router.get('/Listado', async function(req, res, next) {
                   detalhesDiv.innerHTML = '';
                 }
 
-                function renderTable(data) {
+                function renderTaboa(data) {
                   const tbody = document.querySelector('tbody');
                   tbody.innerHTML = '';
                   
@@ -232,7 +233,7 @@ router.get('/Listado', async function(req, res, next) {
                   
                   // Actualizar contador
                   document.querySelector('.summary').innerHTML = \`
-                    \${data.length} livros amosados de \${livros.length} | Data: \${new Date().toLocaleDateString()}
+                    \${data.length} livros amosados de \${livros.length}
                   \`;
                 }
                 
@@ -250,7 +251,7 @@ router.get('/Listado', async function(req, res, next) {
               <div class="container">
                 <h1>Listado de Livros</h1>
                 <img id="carregando" src="${gifCarregando}" alt="Carregando...">
-                <a href="/api/paginas/Proba">Proba</a>
+                <a href="/api/paginas/Estadisticas?idUsuario=${req.query.idUsuario}">Estadísticas</a>
                 <div class="filters">
                   <div class="filter-group">
                     <div>
@@ -333,6 +334,111 @@ router.get('/Listado', async function(req, res, next) {
                 </table>
               </div>
             </body>
+            </html>
+          `;
+          res.send(html);
+        });
+      
+      }
+    });
+
+  } catch (error) {
+    console.error('Erro:', error);
+    res.status(500).send('Erro ao obtene os livros');
+  }
+});
+
+
+router.get('/Estadisticas', async function(req, res, next) {
+  try {
+    const idUsuario = req.query.idUsuario;
+
+    let gifCarregando = '';
+    fs.readFile('./pages/carregando.txt', 'utf8', (err, gifCarregando) => {
+      if (err) {
+        console.error('Erro ao obter o arquivo imagem.txt:', err);
+        gifCarregando = 'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==';
+      } else { 
+        console.log('Tamanho do arquivo imagem.txt:', gifCarregando.length);
+
+        let html = htmlBasico;
+        fs.readFile('./pages/listadoLivros.css', 'utf8', (err, contidoCSS) => {
+          if (err) {
+            console.error('Erro ao obter o arquivo CSS:', err);
+          } else { console.log('Tamanho do arquivo CSS:', contidoCSS.length); }
+          
+          html = `
+            <!DOCTYPE html>
+            <html lang="es">
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Listado de Livros</title>
+                <style>
+                  ${contidoCSS}
+                </style>
+              </head>
+              <script>
+                function borrarContido(idDiv) {
+                  document.getElementById(idDiv).innerHTML = '';
+                }
+                
+                async function getEstadisticas(tipo, idDiv) {
+                  console.log(tipo)
+                  console.log(${idUsuario});
+                  const divCarregarDados = document.getElementById(idDiv);
+                  if (divCarregarDados.innerHTML !== '') {
+                    borrarContido(idDiv);
+                  }
+                  else {
+                    try {
+                      document.getElementById('carregando').style.display = 'block';
+                      const response = await fetch(\`/api/Estadisticas/Pagina?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
+                        .finally(() => {
+                          document.getElementById('carregando').style.display = 'none';
+                        });                
+                      if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+                      
+                      if (divCarregarDados) {
+                        divCarregarDados.innerHTML = await response.text();
+                      } else {
+                        console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
+                        alert('Nom se encontró el div com o id detalhesId' + idLivro);
+                      }
+                      
+                    } catch (error) {
+                      console.error('Erro ao obter os detalhes:', error);
+                      alert('Erro ao obter os detalhes do livro');
+                    }
+                  }
+                }
+                              
+                // Inicializar
+                document.addEventListener('DOMContentLoaded', () => {
+                  getEstadisticas('1', 'livrosPorIdioma');
+                });
+              </script>
+              <body>
+                <div class="container">
+                  <h1>Estadísticas dos livros lidos</h1>
+                  <img id="carregando" src="${gifCarregando}" alt="Carregando...">
+
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('1', 'livrosPorIdioma')">Livros por idioma</h4>
+                    <div class="contido" id="livrosPorIdioma"></div>
+                  </div>
+                  
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('3', 'livrosPorAno')">Livros por ano</h4>
+                    <div class="book-row" id="livrosPorAno"></div>
+                  </div>
+
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('2', 'livrosPorGenero')">Livros por género</h4>
+                    <div id="livrosPorGenero"></div>
+                  </div>
+                </div>
+              </body>
             </html>
           `;
             res.send(html);
