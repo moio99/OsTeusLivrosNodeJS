@@ -77,6 +77,31 @@ router.get('/DadosDoLivro', async function(req, res, next) {
   }
 });
 
+router.get('/DadosEstadisticas', async function(req, res, next) {
+  try {
+    const resultado = await estadisticas.getEstadisticas(req.query.idUsuario, req.query.tipo);
+    if (resultado === '' && !resultado.data) {
+      res.statusMessage = `O tipo ${req.query.tipo} nom é um dos válidos`
+      res.status(404).end()
+    }
+    else {
+      const html = resultado.data.map(element => {
+        return `<div><strong>${element.nome}</strong> livros: ${element.quantidade} páginas: ${element.quantidadePaginas}</div>`;
+      }).join('');    // Para que nom componha umha matriz
+      
+      res.send(`<div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+        ${html}`
+      );
+    }
+  } catch (err) {
+    console.error(`Erro ao obter as estadísticas `, err.message);
+    next(err);
+  }
+});
+
+
+
+
 // Función para normalizar texto (eliminar acentos y convertir a minúsculas)
 function normalizeText(text) {
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -393,7 +418,7 @@ router.get('/Estadisticas', async function(req, res, next) {
                   else {
                     try {
                       document.getElementById('carregando').style.display = 'block';
-                      const response = await fetch(\`/api/Estadisticas/Pagina?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
+                      const response = await fetch(\`/api/paginas/DadosEstadisticas?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
                         .finally(() => {
                           document.getElementById('carregando').style.display = 'none';
                         });                
