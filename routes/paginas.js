@@ -233,7 +233,7 @@ router.get('/Listado', async function(req, res, next) {
                   
                   // Actualizar contador
                   document.querySelector('.summary').innerHTML = \`
-                    \${data.length} livros amosados de \${livros.length} | Data: \${new Date().toLocaleDateString()}
+                    \${data.length} livros amosados de \${livros.length}
                   \`;
                 }
                 
@@ -351,9 +351,7 @@ router.get('/Listado', async function(req, res, next) {
 
 router.get('/Estadisticas', async function(req, res, next) {
   try {
-    const estadisticasDados = await estadisticas.getEstadisticas(req.query.idUsuario, '1');
-    // const idiomas = [...new Set(estadisticasDados.data.map(livro => livro.idioma))];
-    
+    const idUsuario = req.query.idUsuario;
 
     let gifCarregando = '';
     fs.readFile('./pages/carregando.txt', 'utf8', (err, gifCarregando) => {
@@ -381,34 +379,65 @@ router.get('/Estadisticas', async function(req, res, next) {
                 </style>
               </head>
               <script>
-                let estadisDados = ${JSON.stringify(estadisticasDados.data)};
-                
-                function renderDados(data) {
-                  const tbody = document.querySelector('.contido');
-                  tbody.innerHTML = '';
-                  
-                  estadisDados.forEach(livro => {
-                    const mainRow = document.createElement('div');
-                    mainRow.className = 'book-row';
-                    
-                    mainRow.innerHTML = \`
-                      <div><strong>\${livro.nome}</strong> livros: \${livro.quantidade} páginas: \${livro.quantidadePaginas}</div>
-                    \`;
-                    
-                    tbody.appendChild(mainRow);
-                  });
+                function borrarContido(idDiv) {
+                  document.getElementById(idDiv).innerHTML = '';
                 }
-
-              
+                
+                async function getEstadisticas(tipo, idDiv) {
+                  console.log(tipo)
+                  console.log(${idUsuario});
+                  const divCarregarDados = document.getElementById(idDiv);
+                  if (divCarregarDados.innerHTML !== '') {
+                    borrarContido(idDiv);
+                  }
+                  else {
+                    try {
+                      document.getElementById('carregando').style.display = 'block';
+                      const response = await fetch(\`/api/Estadisticas/Pagina?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
+                        .finally(() => {
+                          document.getElementById('carregando').style.display = 'none';
+                        });                
+                      if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
+                      
+                      if (divCarregarDados) {
+                        divCarregarDados.innerHTML = await response.text();
+                      } else {
+                        console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
+                        alert('Nom se encontró el div com o id detalhesId' + idLivro);
+                      }
+                      
+                    } catch (error) {
+                      console.error('Erro ao obter os detalhes:', error);
+                      alert('Erro ao obter os detalhes do livro');
+                    }
+                  }
+                }
+                              
                 // Inicializar
                 document.addEventListener('DOMContentLoaded', () => {
-                  renderDados();
+                  getEstadisticas('1', 'livrosPorIdioma');
                 });
               </script>
               <body>
                 <div class="container">
                   <h1>Estadísticas dos livros lidos</h1>
-                  <div class="contido"></div>
+                  <img id="carregando" src="${gifCarregando}" alt="Carregando...">
+
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('1', 'livrosPorIdioma')">Livros por idioma</h4>
+                    <div class="contido" id="livrosPorIdioma"></div>
+                  </div>
+                  
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('3', 'livrosPorAno')">Livros por ano</h4>
+                    <div class="book-row" id="livrosPorAno"></div>
+                  </div>
+
+                  <div>
+                    <h4 class="book-row" onclick="getEstadisticas('2', 'livrosPorGenero')">Livros por género</h4>
+                    <div id="livrosPorGenero"></div>
+                  </div>
+                </div>
               </body>
             </html>
           `;
