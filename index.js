@@ -24,6 +24,7 @@ app.use(express.json());
 ); */
 const path = require('path');
 app.use(express.static('public'));    // para poder carregar no html o estadisticas.js
+// __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];

@@ -57,36 +57,40 @@ gap: 15px;
 }
 
 .filter-group {
-margin-bottom: 10px;
-display: flex;
+  margin-bottom: 10px;
+  display: flex;
+}
+  
+.combos {
+  gap: 10px;
 }
 
 label {
-display: block;
-color: var(--text-color);
+  display: block;
+  color: var(--text-color);
 }
 
 input {
-padding: 8px;
-background-color: var(--input-bg);
-color: var(--text-color);
-border: 1px solid var(--border-color);
-border-radius: 4px;
+  padding: 8px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
 }
 
 input[type="text"] {
-flex-grow: 1;
+  flex-grow: 1;
 }
 
 input[type="select"] {
-width: 40%;
-width: 15px;
-margin-left: 0px;
-margin-right: 10px;
-background-color: var(--input-bg);
-color: var(--text-color);
-border: 1px solid var(--border-color);
-border-radius: 4px;
+  width: 40%;
+  width: 15px;
+  margin-left: 0px;
+  margin-right: 10px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
 }
 
 input[type="radio"] {
@@ -94,13 +98,13 @@ width: 15px;
 }
 
 .sort-options {
-display: flex;
-flex-direction: column;
-gap: 8px;
-margin-top: 10px;
-padding: 10px;
-background-color: var(--input-bg);
-border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: var(--input-bg);
+  border-radius: 4px;
 }
 
 .sort-option {
@@ -207,13 +211,21 @@ th, td {
 
 /* Para pantallas menores a 410px */
 @media (max-width: 410px) {
-.coluna4 {
-  display: none;
-}
-.coluna5 {
-  display: none;
-}
-.coluna6 {
-  display: none;
-}
+  .coluna4 {
+    display: none;
+  }
+  .coluna5 {
+    display: none;
+  }
+  .coluna6 {
+    display: none;
+  }
+
+  .inputs {
+    display: block;
+  }
+
+  input[type="text"] {
+    width: 90%;
+  }
 }
