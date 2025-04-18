@@ -4,8 +4,6 @@ function borrarContido(idDiv) {
   }
 
 async function getEstadisticas(tipo, idDiv) {
-  console.log(tipo);
-  console.log(idUsuario);
   const divCarregarDados = document.getElementById(idDiv);
   if (divCarregarDados.innerHTML !== '') {
     borrarContido(idDiv);

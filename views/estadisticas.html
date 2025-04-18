@@ -1,0 +1,36 @@
+<!-- views/estadisticas.html -->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Livros</title>
+    <link rel="stylesheet" href="/styles/listadoLivros.css">
+    <script>
+      // Variavel global accesible dende o arquivo externo, será reemplazada polo valor
+      var idUsuario = '--idUsuario--';      // ponho as cominhas para que nom me proteste o editor
+    </script>
+    <script src="/js/estadisticas.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Estadísticas dos livros lidos</h2>
+      <img id="carregando" src="/images/carregando.gif" alt="Carregando...">
+
+      <div>
+        <h4 class="book-row" onclick="getEstadisticas('1', 'livrosPorIdioma')">Livros por idioma</h4>
+        <div class="contido" id="livrosPorIdioma"></div>
+      </div>
+      
+      <div>
+        <h4 class="book-row" onclick="getEstadisticas('3', 'livrosPorAno')">Livros por ano</h4>
+        <div class="book-row" id="livrosPorAno"></div>
+      </div>
+
+      <div>
+        <h4 class="book-row" onclick="getEstadisticas('2', 'livrosPorGenero')">Livros por género</h4>
+        <div id="livrosPorGenero"></div>
+      </div>
+    </div>
+  </body>
+</html>

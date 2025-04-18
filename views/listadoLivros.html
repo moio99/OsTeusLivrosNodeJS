@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Livros</title>
+    <link rel="stylesheet" href="/styles/listadoLivros.css">
+    <script>
+      // Variavel global accesible dende o arquivo externo, será reemplazada polo valor
+      var idUsuario = '--idUsuario--';      // ponho as cominhas para que nom me proteste o editor
+      var idTipo = '--tipo--';
+      var idChave = '--chave--';
+      var livros;
+    </script>
+    <script src="/js/listadoLivros.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="titulo">
+        <h1>Listado de Livros</h1>
+      </div>
+      <img id="carregando" src="/images/carregando.gif" alt="Carregando...">
+      <a id="aEstadisticas" href="/api/paginas/Estadisticas?idUsuario=--AidUsuarioA--">Estadísticas</a>
+      <div class="filters">
+        <div class="filter-group inputs">
+          <div>
+            <label for="titleFilter">Filtrar polo título:</label>
+            <input type="text" id="titleFilter" oninput="applyFilters()" placeholder="Escrebe parte do título...">
+          </div>
+          <div>
+            <label for="authorFilter">Filtrar polo autor:</label>
+            <input type="text" id="authorFilter" oninput="applyFilters()" placeholder="Escrebe parte do nome do autor...">
+          </div>
+        </div>
+        <div class="filter-group combos">
+          <div>
+            <label for="languageFilter">Idioma:</label>
+            <select id="languageFilter" onchange="applyFilters()">
+            </select>
+          </div>
+          <div>
+            <label for="authorComboFilter">Autor:</label>
+            <select id="authorComboFilter" onchange="applyFilters()">
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sort-options">
+        <h4>Ordenar polo:</h4>
+        <div class="sort-option">
+          <div class="radio-group">
+            <label for="sortTitle">Título</label>
+            <input type="radio" id="sortTitle" name="sort" value="titulo" checked="" onchange="applyFilters()">
+          </div>
+          <div class="radio-group">
+            <label for="sortDate">Data de lectura</label>
+            <input type="radio" id="sortDate" name="sort" value="dataFimLeitura" onchange="applyFilters()">
+          </div>
+          <div class="radio-group">
+            <label for="sortPages">Páginas</label>
+            <input type="radio" id="sortPages" name="sort" value="paginas" onchange="applyFilters()">
+          </div>
+          <div class="radio-group">
+            <label for="sortRating">Pontuaçom</label>
+            <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
+          </div>
+        </div>              
+        <div style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+          <div class="sort-option">
+            <div class="radio-group">
+              <label for="sortAsc">Ascendente</label>
+              <input type="radio" id="sortAsc" name="sortDirection" value="asc" checked="" onchange="applyFilters()">
+            </div>
+            <div class="radio-group">
+              <label for="sortDesc">Descendente</label>
+              <input type="radio" id="sortDesc" name="sortDirection" value="desc" onchange="applyFilters()">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary" id="sumario">
+      </div>
+      
+      <table style="margin-top: 10px;">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Páginas</th>
+            <th>Pontuaçom</th>
+            <th class="coluna4">Fim lectura</th>
+            <th class="coluna5">Idioma</th>
+            <th class="coluna6">Autor</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </body>
+</html>

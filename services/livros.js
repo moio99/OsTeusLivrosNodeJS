@@ -26,12 +26,11 @@ async function getLivros(idUsuario){
   }
 }
 
-async function getLivrosParaMovel(idUsuario){
+async function getLivrosParaListadoMovel(idUsuario){
   console.log('Petiçom de getLivros');
   let select = `SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas
-    , l.DataFimLeitura as dataFimLeitura, l.Electronico
-    , l.SomSerie, l.Premios, l.Descricom, l.Comentario, l.Pontuacom
-    , i.Nome as idioma, io.Nome as idiomaOriginal
+    , l.DataFimLeitura as dataFimLeitura, l.Electronico, l.Pontuacom
+    , i.Nome as nomeIdioma, io.Nome as idiomaOriginal
     , ar.idAutor, ar.Nome as nomeAutor
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
     , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
@@ -65,7 +64,6 @@ async function getLivrosParaMovel(idUsuario){
 
 // Para evitar ter na BD dous co mesmo Titulo.
 async function getLivroPorTitulo(idUsuario, titulo){
-  console.log(titulo + ' <<<<<<<<< titulo');
   console.log('Petiçom de getLivroPorTitulo ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT l.idLivro as id
@@ -116,7 +114,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         , l.DataFimLeitura as dataFimLeitura, l.fkIdioma as idioma
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-        , '0' as idRelectura
+        , '0' as idRelectura, i.Nome as nomeFiltro
         FROM Livro l
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
@@ -128,7 +126,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         , r.DataFimLeitura as dataFimLeitura, r.fkIdioma as idioma
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-        , r.idRelectura as idRelectura
+        , r.idRelectura as idRelectura, i.Nome as nomeFiltro
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
         INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
@@ -156,10 +154,10 @@ async function getLivrosPorAno(idUsuario, ano){
   const dados = await db.query(
     `SELECT uu.* FROM (
       SELECT l.idLivro as id, l.Titulo as titulo, l.TituloOriginal as tituloOriginal, l.Paginas as paginas
-        , l.DataFimLeitura as dataFimLeitura, l.fkIdioma as idioma, i.Nome as nomeIdioma
+        , l.DataFimLeitura as dataFimLeitura, l.fkIdioma as idioma, i.Nome as nomeIdioma, l.Pontuacom
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
-        , '0' as idRelectura
+        , '0' as idRelectura, ${ano} as nomeFiltro
         FROM Livro l
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
@@ -168,10 +166,10 @@ async function getLivrosPorAno(idUsuario, ano){
         AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = '1'
     UNION ALL
       SELECT l.idLivro as id, r.Titulo as titulo, l.TituloOriginal as tituloOriginal, r.Paginas as paginas
-        , r.DataFimLeitura as dataFimLeitura, r.fkIdioma as idioma, i.Nome as nomeIdioma
+        , r.DataFimLeitura as dataFimLeitura, r.fkIdioma as idioma, i.Nome as nomeIdioma, r.Pontuacom
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = r.idRelectura) as quantidadeSerie
-        , r.idRelectura as idRelectura
+        , r.idRelectura as idRelectura, ${ano} as nomeFiltro
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
@@ -229,7 +227,7 @@ async function getLivrosPorGenero(idUsuario, genero){
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
         , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
-        , '0' as idRelectura
+        , '0' as idRelectura, g.Nome as nomeFiltro
         FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
@@ -244,7 +242,7 @@ async function getLivrosPorGenero(idUsuario, genero){
         , ar.idAutor, ar.Nome as nomeAutor
         , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
         , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as quantidadeRelecturas
-        , r.idRelectura as idRelectura
+        , r.idRelectura as idRelectura, g.Nome as nomeFiltro
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
@@ -733,7 +731,7 @@ async function borrarLivro(idUsuario, id) {
 }
 
 module.exports = {
-  getLivros, getLivrosParaMovel, 
+  getLivros, getLivrosParaListadoMovel: getLivrosParaListadoMovel, 
   getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
   getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, 
   getLivro, postLivro, putLivro, borrarLivro

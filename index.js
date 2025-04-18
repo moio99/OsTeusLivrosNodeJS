@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require('dotenv').config(); // para usar o .env
-const port = process.env.PORT || 5002;
+const port = 5002;
 const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
 const graficosRouter = require("./routes/graficos");
@@ -22,7 +22,10 @@ app.use(express.json());
     extended: true,
   })
 ); */
+const path = require('path');
 app.use(express.static('public'));    // para poder carregar no html o estadisticas.js
+// __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
+app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
 const middleware = require('./utils/middleware')
