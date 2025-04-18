@@ -8,6 +8,7 @@ async function getLivros() {
   
   try {
     loadingElement.style.display = 'block';
+    document.getElementById('aEstadisticas').style.display = 'none';
     const response = await fetch(`/api/paginas/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -39,18 +40,20 @@ async function getLivros() {
 
 function renderTitulo(nomeFiltro) {
   const titulo = document.getElementById('titulo');
+  const subtitulo = '<span class="subtitulo">(lidos e nom lidos)</span>';
   switch (idTipo) {
     case '1':
-      titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro}</h3>`;
+      titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro} ${subtitulo}</h3>`;
       break;
     case '2':
-      titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro}</h3>`;
+      titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro} ${subtitulo}</h3>`;
       break;
     case '3':
-      titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro}</h3>`;
+      titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro} ${subtitulo}</h3>`;
       break;
     default:
-      titulo.innerHTML = '<h1>Listado de Livros</h1>';
+      titulo.innerHTML = `<h1>Listado de Livros ${subtitulo}</h1>`;
+      document.getElementById('aEstadisticas').style.display = 'block';
       break;
   }
 }
