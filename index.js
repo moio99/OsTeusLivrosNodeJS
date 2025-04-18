@@ -22,6 +22,9 @@ app.use(express.json());
     extended: true,
   })
 ); */
+const path = require('path');
+app.use(express.static('public'));    // para poder carregar no html o estadisticas.js
+app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
 const middleware = require('./utils/middleware')

@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const livros = require('../services/livros');
 const estadisticas = require('../services/estadisticas');
-const fs = require('fs');
+// const fs = require('fs');
+const fs = require('fs').promises;
+const path = require('path');
 
 router.get('/', async function(req, res, next) {
   const resultado = {resultado:'Chamada realizada'};
@@ -76,6 +78,36 @@ router.get('/DadosDoLivro', async function(req, res, next) {
     next(err);
   }
 });
+
+router.get('/DadosEstadisticas', async function(req, res, next) {
+  try {
+    const resultado = await estadisticas.getEstadisticas(req.query.idUsuario, req.query.tipo);
+    if (resultado === '' && !resultado.data) {
+      res.statusMessage = `O tipo ${req.query.tipo} nom é um dos válidos`
+      res.status(404).end()
+    }
+    else {
+      const html = resultado.data.map(element => {
+        return `
+            <div>
+              <strong>${element.nome}</strong> livros: ${element.quantidade} páginas: ${element.quantidadePaginas}
+            </div>
+          `;
+      }).join('');    // Para que nom componha umha matriz
+      
+      res.send(`<div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+        <a href="/api/paginas/Listado?idUsuario=${req.query.idUsuario}">Listado</a>
+        ${html}`
+      );
+    }
+  } catch (err) {
+    console.error(`Erro ao obter as estadísticas `, err.message);
+    next(err);
+  }
+});
+
+
+
 
 // Función para normalizar texto (eliminar acentos y convertir a minúsculas)
 function normalizeText(text) {
@@ -348,108 +380,28 @@ router.get('/Listado', async function(req, res, next) {
   }
 });
 
-
 router.get('/Estadisticas', async function(req, res, next) {
   try {
     const idUsuario = req.query.idUsuario;
 
-    let gifCarregando = '';
-    fs.readFile('./pages/carregando.txt', 'utf8', (err, gifCarregando) => {
-      if (err) {
-        console.error('Erro ao obter o arquivo imagem.txt:', err);
-        gifCarregando = 'data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==';
-      } else { 
-        console.log('Tamanho do arquivo imagem.txt:', gifCarregando.length);
+    // Ler a plantilha HTML
+    let htmlPagina;
+    try {
+      htmlPagina = await fs.readFile('./views/estadisticas.html', 'utf8');
+    } catch (err) {
+      console.error('Erro ao carregar htmlPagina:', err);
+      return res.status(500).send('Erro interno');
+    }
+    
+    // Reemplazar os placeholders
+    const html = htmlPagina
+      .replace('--idUsuario--', idUsuario);
 
-        let html = htmlBasico;
-        fs.readFile('./pages/listadoLivros.css', 'utf8', (err, contidoCSS) => {
-          if (err) {
-            console.error('Erro ao obter o arquivo CSS:', err);
-          } else { console.log('Tamanho do arquivo CSS:', contidoCSS.length); }
-          
-          html = `
-            <!DOCTYPE html>
-            <html lang="es">
-              <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Listado de Livros</title>
-                <style>
-                  ${contidoCSS}
-                </style>
-              </head>
-              <script>
-                function borrarContido(idDiv) {
-                  document.getElementById(idDiv).innerHTML = '';
-                }
-                
-                async function getEstadisticas(tipo, idDiv) {
-                  console.log(tipo)
-                  console.log(${idUsuario});
-                  const divCarregarDados = document.getElementById(idDiv);
-                  if (divCarregarDados.innerHTML !== '') {
-                    borrarContido(idDiv);
-                  }
-                  else {
-                    try {
-                      document.getElementById('carregando').style.display = 'block';
-                      const response = await fetch(\`/api/Estadisticas/Pagina?idUsuario=${idUsuario}&tipo=\${tipo}&idDiv=\${idDiv}\`)
-                        .finally(() => {
-                          document.getElementById('carregando').style.display = 'none';
-                        });                
-                      if (!response.ok) throw new Error(\`HTTP error! status: \${response.status}\`);
-                      
-                      if (divCarregarDados) {
-                        divCarregarDados.innerHTML = await response.text();
-                      } else {
-                        console.error('Nom se atopou o div com o id detalhesId' + idLivro); 
-                        alert('Nom se encontró el div com o id detalhesId' + idLivro);
-                      }
-                      
-                    } catch (error) {
-                      console.error('Erro ao obter os detalhes:', error);
-                      alert('Erro ao obter os detalhes do livro');
-                    }
-                  }
-                }
-                              
-                // Inicializar
-                document.addEventListener('DOMContentLoaded', () => {
-                  getEstadisticas('1', 'livrosPorIdioma');
-                });
-              </script>
-              <body>
-                <div class="container">
-                  <h1>Estadísticas dos livros lidos</h1>
-                  <img id="carregando" src="${gifCarregando}" alt="Carregando...">
-
-                  <div>
-                    <h4 class="book-row" onclick="getEstadisticas('1', 'livrosPorIdioma')">Livros por idioma</h4>
-                    <div class="contido" id="livrosPorIdioma"></div>
-                  </div>
-                  
-                  <div>
-                    <h4 class="book-row" onclick="getEstadisticas('3', 'livrosPorAno')">Livros por ano</h4>
-                    <div class="book-row" id="livrosPorAno"></div>
-                  </div>
-
-                  <div>
-                    <h4 class="book-row" onclick="getEstadisticas('2', 'livrosPorGenero')">Livros por género</h4>
-                    <div id="livrosPorGenero"></div>
-                  </div>
-                </div>
-              </body>
-            </html>
-          `;
-            res.send(html);
-        });
-      
-      }
-    });
+    res.send(html);
 
   } catch (error) {
     console.error('Erro:', error);
-    res.status(500).send('Erro ao obtene os livros');
+    res.status(500).send('Erro ao obter as estadísticas');
   }
 });
 
