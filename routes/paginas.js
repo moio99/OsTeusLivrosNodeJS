@@ -380,6 +380,31 @@ router.get('/Listado', async function(req, res, next) {
   }
 });
 
+router.get('/ListadoLivros', async function(req, res, next) {
+  try {
+    const idUsuario = req.query.idUsuario;
+
+    // Ler a plantilha HTML
+    let htmlPagina;
+    try {
+      htmlPagina = await fs.readFile('./views/listadoLivros.html', 'utf8');
+    } catch (err) {
+      console.error('Erro ao carregar htmlPagina:', err);
+      return res.status(500).send('Erro interno');
+    }
+    
+    // Reemplazar os placeholders
+    const html = htmlPagina
+      .replace('--idUsuario--', idUsuario);
+
+    res.send(html);
+
+  } catch (error) {
+    console.error('Erro:', error);
+    res.status(500).send('Erro ao obter as estadísticas');
+  }
+});
+
 router.get('/Estadisticas', async function(req, res, next) {
   try {
     const idUsuario = req.query.idUsuario;
