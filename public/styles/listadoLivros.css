@@ -22,14 +22,18 @@ margin: 0 auto;
 }
 
 h1 {
-color: var(--text-color);
-text-align: center;
-margin-top: 0px;
-margin-bottom: 0px;
+  color: var(--text-color);
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 h4 {
-color: var(--text-color);
-margin: 2px;
+  color: var(--text-color);
+  margin: 2px;
+}
+
+.subtitulo {
+  font-size: x-small;
 }
 
 #carregando {
