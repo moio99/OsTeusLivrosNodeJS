@@ -8,6 +8,7 @@ const loadingElement = document.getElementById('carregando');
 
 try {
   loadingElement.style.display = 'block';
+  document.getElementById('aEstadisticas').style.display = 'none';
   const response = await fetch(`/api/paginas/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
   if (!response.ok) {
     throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -39,7 +40,6 @@ try {
 
 function renderTitulo(nomeFiltro) {
 const titulo = document.getElementById('titulo');
-document.getElementById('aEstadisticas').style.display = 'none';
 switch (idTipo) {
   case '1':
     titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro}</h3>`;
