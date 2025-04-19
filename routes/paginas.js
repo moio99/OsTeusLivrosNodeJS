@@ -110,8 +110,9 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
               <p><strong>Estilo:</strong> ${livrosData.estilo}</p>
               ${livrosData.premios ? "<p><strong>Premios: </strong>" + livrosData.premios + "</p>" : ""}
               <p><strong>Páginas:</strong> ${livrosData.paginas}</p>
-              <p><strong>Días de lectura:</strong> ${livrosData.diasLeitura}</p>
-              <p><strong>Fim de lectura:</strong> ${livrosData.dataFimLeitura}</p>
+              <p><strong>Días da lectura:</strong> ${livrosData.diasLeitura}</p>
+              <p><strong>Lido:</strong>
+                ${livrosData.lido ? "sim <strong>Fim de lectura:</strong> " + livrosData.dataFimLeitura : "nom" }</p>
               <p><strong>Descriçom:</strong> ${livrosData.descricom}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario}</p>
               <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom}/10</p>
