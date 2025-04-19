@@ -40,19 +40,18 @@ try {
 
 function renderTitulo(nomeFiltro) {
 const titulo = document.getElementById('titulo');
-const subtitulo = '<span class="subtitulo">(lidos e nom lidos)</span>';
 switch (idTipo) {
   case '1':
-    titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro} ${subtitulo}</h3>`;
+    titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro}</h3>`;
     break;
   case '2':
-    titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro} ${subtitulo}</h3>`;
+    titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro}</h3>`;
     break;
   case '3':
-    titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro} ${subtitulo}</h3>`;
+    titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro}</h3>`;
     break;
   default:
-    titulo.innerHTML = `<h1>Listado de Livros ${subtitulo}</h1>`;
+    titulo.innerHTML = `<h1>Listado de Livros</h1>`;
     document.getElementById('aEstadisticas').style.display = 'block';
     break;
 }
@@ -122,16 +121,17 @@ const languageFilter = document.getElementById('languageFilter').value;
 const authorComboFilter = document.getElementById('authorComboFilter').value;
 const sortField = document.querySelector('input[name="sort"]:checked')?.value || 'titulo';
 const sortDirection = document.querySelector('input[name="sortDirection"]:checked')?.value || 'asc';
+const radioLidoValor = document.querySelector('input[name="lido"]:checked')?.value || 2;
 
 // Filtrar
 let filtered = livros.filter(livro => {
   const titleMatch = normalizeText(livro.titulo).includes(titleFilter);
   const authorMatch = normalizeText(livro.nomeAutor).includes(authorFilter);
   const languageMatch = languageFilter === '' || livro.nomeIdioma === languageFilter;
-  const authorComboMatch = authorComboFilter === '' || 
-    livro.autores.some(autor => autor.nome === authorComboFilter);
+  const authorComboMatch = authorComboFilter === '' || livro.autores.some(autor => autor.nome === authorComboFilter);
+  const lidos = radioLidoValor == 2 ? true : livro.lido == radioLidoValor;
   
-  return titleMatch && authorMatch && languageMatch && authorComboMatch;
+  return titleMatch && authorMatch && languageMatch && authorComboMatch && lidos;
 });
 
 // Ordenar
