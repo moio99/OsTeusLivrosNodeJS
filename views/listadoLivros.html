@@ -21,7 +21,7 @@
       </div>
       <img id="carregando" src="/images/carregando.gif" alt="Carregando...">
       <a id="aEstadisticas" href="/api/paginas/Estadisticas?idUsuario=--AidUsuarioA--">Estadísticas</a>
-      <div class="filters">
+      <div class="tarjeta filters">
         <div class="filter-group inputs">
           <div>
             <label for="titleFilter">Filtrar polo título:</label>
@@ -46,7 +46,7 @@
         </div>
       </div>
       
-      <div class="sort-options">
+      <div class="tarjeta sort-options">
         <h4>Ordenar polo:</h4>
         <div class="sort-option">
           <div class="radio-group">
@@ -65,8 +65,8 @@
             <label for="sortRating">Pontuaçom</label>
             <input type="radio" id="sortRating" name="sort" value="Pontuacom" onchange="applyFilters()">
           </div>
-        </div>              
-        <div style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+        </div>
+        <div class="secom-radios">
           <div class="sort-option">
             <div class="radio-group">
               <label for="sortAsc">Ascendente</label>
@@ -78,12 +78,29 @@
             </div>
           </div>
         </div>
+        <div class="secom-radios">
+          <div class="sort-option">
+            Lidos:
+            <div class="radio-group">
+              <label for="sortLidosSim">Sim</label>
+              <input type="radio" id="sortLidosSim" name="lido" value=1 onchange="applyFilters()">
+            </div>
+            <div class="radio-group">
+              <label for="sortLidosNom">Nom</label>
+              <input type="radio" id="sortLidosNom" name="lido" value=0 onchange="applyFilters()">
+            </div>
+            <div class="radio-group">
+              <label for="sortLidosTodos">Todos</label>
+              <input type="radio" id="sortLidosTodos" name="lido" value=2 checked="" onchange="applyFilters()">
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="summary" id="sumario">
       </div>
       
-      <table style="margin-top: 10px;">
+      <table>
         <thead>
           <tr>
             <th>Título</th>
