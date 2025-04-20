@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 require('dotenv').config(); // para usar o .env
 const port = 5002;
@@ -30,6 +31,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230', 'https://osteuslivrosnodejs-production.up.railway.app'];
 const middleware = require('./utils/middleware')
 
+app.use(cors({
+  origin: 'https://osteuslivrosnodejs-production.up.railway.app', // Reemplaza con tu URL
+  methods: ['GET', 'POST',, 'OPTIONS', 'PUT', 'DELETE'],
+  credentials: true // Si usas cookies o autenticación
+}));
 
 app.use(function (req, res, next) {
   const origin = req.headers.origin;
