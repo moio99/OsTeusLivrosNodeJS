@@ -30,8 +30,10 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = [
-  'https://osteuslivrosangular-production.up.railway.app', // Frontend
-  'http://localhost:4210' // Para desarrollo local
+  'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
+  'https://osteuslivrosangular.onrender.com', // Frontend de render.com
+  'http://localhost:4210',
+  'http://localhost:4230'
 ];
 
 app.use(cors({
