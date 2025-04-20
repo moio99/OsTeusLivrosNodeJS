@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config(); // para usar o .env
 const port = 5002;
+const middleware = require('./utils/middleware');
 const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
 const graficosRouter = require("./routes/graficos");
@@ -28,13 +29,21 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 // __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
 
-const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230', 'https://osteuslivrosnodejs-production.up.railway.app'];
-const middleware = require('./utils/middleware')
+const allowedOrigins = [
+  'https://osteuslivrosnodejs-production.up.railway.app',
+];
 
 app.use(cors({
-  origin: 'https://osteuslivrosnodejs-production.up.railway.app', // Reemplaza con tu URL
-  methods: ['GET', 'POST',, 'OPTIONS', 'PUT', 'DELETE'],
-  credentials: true // Si usas cookies o autenticación
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origem nom permitido por CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho'],
+  credentials: true
 }));
 
 app.use(function (req, res, next) {
