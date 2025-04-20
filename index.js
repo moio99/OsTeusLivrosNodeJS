@@ -46,26 +46,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(function (req, res, next) {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, authorization, rolroleiro, usuarinho');
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});
-
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)
 app.use("/api/Estadisticas", middleware.userExtractor, estadisticasRouter);
