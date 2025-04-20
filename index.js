@@ -30,21 +30,32 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = [
-  'https://osteuslivrosnodejs-production.up.railway.app',
+  'https://osteuslivrosangular-production.up.railway.app', // Frontend
+  'http://localhost:4210' // Para desarrollo local
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    // Permitir solicitudes sin 'origin' (como Postman o móviles)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin))) {
+      return callback(null, true);
     } else {
-      callback(new Error('Origem nom permitido por CORS'));
+      console.warn('⚠ Origem bloqueado polas CORS:', origin);
+      return callback(new Error('Origem nom permitido'), false);
     }
   },
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho'],
-  credentials: true
+  exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados que el frontend puede leer
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
+
+// Manejo explícito de OPTIONS para todas las rutas
+//app.options('*', cors());
 
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)
