@@ -27,7 +27,7 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 // __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
 
-const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
+const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230', 'https://osteuslivrosnodejs-production.up.railway.app'];
 const middleware = require('./utils/middleware')
 
 

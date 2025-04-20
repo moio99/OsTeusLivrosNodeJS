@@ -119,7 +119,7 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
             </td>
         `;
 
-        // Enviar el HTML como respuesta
+        // Enviar o HTML como resposta
         res.send(htmlContent);
       }else {
         return res.status(402).json({
