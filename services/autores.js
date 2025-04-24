@@ -80,7 +80,7 @@ async function getAutoresPorNacons(idUsuario){
     `SELECT n.idNacionalidade as id, n.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
       FROM Autor a
       LEFT JOIN Nacionalidade n ON a.fkNacionalidade = n.idNacionalidade
-      WHERE a.fkUsuario = ${idUsuario}
+      WHERE a.fkPais IS NOT NULL AND a.fkUsuario = ${idUsuario}
       GROUP BY n.idNacionalidade
       ORDER BY COUNT(a.idAutor) DESC, lower(a.Nome) ASC;;`
   );
@@ -102,7 +102,7 @@ async function getAutoresPorPaises(idUsuario){
     `SELECT p.idPais as id, p.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
       FROM Autor a
       LEFT JOIN Pais p ON a.fkPais = p.idPais
-      WHERE a.fkUsuario = ${idUsuario}
+      WHERE a.fkPais IS NOT NULL AND a.fkUsuario = ${idUsuario}
       GROUP BY p.idPais
       ORDER BY COUNT(a.idAutor) DESC, p.Nome ASC;`
   );
