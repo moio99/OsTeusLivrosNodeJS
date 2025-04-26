@@ -17,6 +17,7 @@ const outrosRouter = require("./routes/outros");
 const relecturasRouter = require("./routes/relecturas");
 const estilosLiterariosRouter = require("./routes/estilosLiterarios");
 const paginasRouter = require("./routes/paginas");
+const construconsBD = require("./routes/construconsBD");
 
 app.use(express.json());
 /* app.use(
@@ -50,7 +51,7 @@ app.use(cors({
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho'],
-  exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados que el frontend puede leer
+  exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados
   credentials: true,
   preflightContinue: false,
   optionsSuccessStatus: 204
@@ -73,6 +74,7 @@ app.use("/api/Outros", middleware.userExtractor, outrosRouter);
 app.use("/api/Relecturas", middleware.userExtractor, relecturasRouter);
 app.use("/api/EstilosLiterarios", middleware.userExtractor, estilosLiterariosRouter);
 app.use("/api/Paginas", paginasRouter);
+app.use("/api/ConstruconsBD", construconsBD);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
