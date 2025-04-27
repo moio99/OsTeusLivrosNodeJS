@@ -20,12 +20,14 @@ async function query(sql, params, isMigracom = false) {
   let rows;
   try {
     if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
+      console.log('Qual projecto: render');
       rows = await pool.query(sql, params);
       return rows;
     } else {
       if (process.env.NODE_ENTORNO === 'local') {
         connection = await mysql.createConnection(configLocal.db);
       } else {
+        console.log('Qual projecto: railway');
         connection = await mysql.createConnection(configRailway);
       }
       [rows] = await connection.execute(sql, params);
