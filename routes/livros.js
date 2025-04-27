@@ -18,6 +18,22 @@ const livros = require('../services/livros');
 /**
  * GET
  */
+router.get('/LivrosParaMovel', async function(req, res, next) {
+  try {
+    if (process.env.NODE_ENTORNO === 'local') {
+      res.json(await livros.getLivrosParaMovel(req.idUsuario));
+    } else {
+      res.status(404).send({ error: 'unknown endpoint' });
+    }
+  } catch (err) {
+    console.error(`Erro ao obter os livros `, err.message);
+    next(err);
+  }
+});
+
+/**
+ * GET
+ */
 router.get('/LivroPorTitulo', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));

@@ -1,7 +1,9 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 require('dotenv').config(); // para usar o .env
 const port = 5002;
+const middleware = require('./utils/middleware');
 const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
 const graficosRouter = require("./routes/graficos");
@@ -15,6 +17,7 @@ const outrosRouter = require("./routes/outros");
 const relecturasRouter = require("./routes/relecturas");
 const estilosLiterariosRouter = require("./routes/estilosLiterarios");
 const paginasRouter = require("./routes/paginas");
+const construconsBD = require("./routes/construconsBD");
 
 app.use(express.json());
 /* app.use(
@@ -27,29 +30,35 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 // __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
 
-const allowedOrigins = ['http://localhost:4210', 'http://localhost:4230'];
-const middleware = require('./utils/middleware')
+const allowedOrigins = [
+  'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
+  'https://osteuslivrosangular.onrender.com', // Frontend de render.com
+  'http://localhost:4210',
+  'http://localhost:4230'
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permitir solicitudes sin 'origin' (como Postman o móviles)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin))) {
+      return callback(null, true);
+    } else {
+      console.warn('⚠ Origem bloqueado polas CORS:', origin);
+      return callback(new Error('Origem nom permitido'), false);
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho'],
+  exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
 
-app.use(function (req, res, next) {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, authorization, rolroleiro, usuarinho');
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});
+// Manejo explícito de OPTIONS para todas las rutas
+//app.options('*', cors());
 
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)
@@ -65,6 +74,7 @@ app.use("/api/Outros", middleware.userExtractor, outrosRouter);
 app.use("/api/Relecturas", middleware.userExtractor, relecturasRouter);
 app.use("/api/EstilosLiterarios", middleware.userExtractor, estilosLiterariosRouter);
 app.use("/api/Paginas", paginasRouter);
+app.use("/api/ConstruconsBD", construconsBD);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

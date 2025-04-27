@@ -24,7 +24,17 @@ const configRailway = {
   ssl: { rejectUnauthorized: false } // Obrigatorio em Railway
 };
 
+const configRender = {
+  host: process.env.DB_POSGRESQL_HOST,
+  user: process.env.DB_POSGRESQL_USER,
+  password: process.env.DB_POSGRESQL_PASSWORD,
+  database: process.env.DB_POSGRESQL_NAME,
+  port: process.env.DB_POSGRESQL_PORT,
+  ssl: { rejectUnauthorized: false }
+};
+
 module.exports = {
   configLocal,
   configRailway,
+  configRender
 }

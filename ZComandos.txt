@@ -1,0 +1,22 @@
+
+web
+https://osteuslivrosangular-production.up.railway.app
+
+api
+https://osteuslivrosnodejs-production.up.railway.app/api
+https://osteuslivrosnodejs-production.up.railway.app/api/paginas/ListadoLivros?idUsuario=2&tipo=0
+
+Para eligir o projecto co que trabalhar na consola
+railway link
+
+Para despregar:
+railway up
+
+Para ver as variaveis:
+railway variables
+
+Para engadir
+railway variables -set NOME="valor"
+
+Para crear o dominio:
+railway domain
