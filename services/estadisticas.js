@@ -9,14 +9,14 @@ FROM (
     FROM Livro l
         RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
     WHERE l.fkUsuario = {idUsuario_reemprazo}
-    AND l.Lido = 1
+    AND l.Lido = true
     -- AND (l.idSerie IS NULL OR l.idSerie =  0)
   UNION ALL
     SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas
     FROM Relectura r
         RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
     WHERE r.fkUsuario = {idUsuario_reemprazo}
-    AND r.Lido = 1
+    AND r.Lido = true
     -- AND (r.idSerie IS NULL OR r.idSerie =  0)
   ) AS uu
 GROUP BY uu.id, uu.nome
@@ -29,7 +29,7 @@ const queryPorGenero = `SELECT uu.id, uu.nome
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = 1
+      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
     UNION ALL
       SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, 1 as numRelecturas
       FROM Relectura r  
@@ -37,7 +37,7 @@ const queryPorGenero = `SELECT uu.id, uu.nome
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo}
-      AND l.Lido = 1
+      AND l.Lido = true
   ) as uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
@@ -48,12 +48,12 @@ const queryPorAno = `SELECT uu.id, uu.nome
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome, l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
       WHERE l.fkUsuario = {idUsuario_reemprazo}
-      AND l.Lido = 1
+      AND l.Lido = true
     UNION ALL
       SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome, r.PaginasLidas, 1 as numRelecturas
       FROM Relectura r
       WHERE r.fkUsuario = {idUsuario_reemprazo}
-      AND r.Lido = 1
+      AND r.Lido = true
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY uu.id DESC;`;
@@ -65,14 +65,14 @@ const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
       FROM Livro l
       RIGHT JOIN Autores ars ON l.idLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = 1
+      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
     SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas
       FROM Relectura r
       RIGHT JOIN Autores ars ON r.fkLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE r.fkUsuario = {idUsuario_reemprazo} AND r.Lido = 1
+      WHERE r.fkUsuario = {idUsuario_reemprazo} AND r.Lido = true
       -- AND (r.idSerie IS NULL OR r.idSerie =  0)
   ) as uu
   GROUP BY uu.id, uu.nome

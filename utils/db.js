@@ -21,13 +21,18 @@ async function query(sql, params, isMigracom = false) {
   try {
     if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
       console.log('Qual projecto: render');
-      rows = await pool.query(sql, params);
-      return rows;
+      const salPosgreSQL = sql
+        .replaceAll('CONVERT(SUM', 'CAST(SUM')
+        .replaceAll(', UNSIGNED', ' AS INTEGER')
+        .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ')
+        .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
+        .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
+      const resultado = await pool.query(salPosgreSQL);
+      return resultado.rows;
     } else {
       if (process.env.NODE_ENTORNO === 'local') {
         connection = await mysql.createConnection(configLocal.db);
       } else {
-        console.log('Qual projecto: railway');
         connection = await mysql.createConnection(configRailway);
       }
       [rows] = await connection.execute(sql, params);

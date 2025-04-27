@@ -91,7 +91,7 @@ async function getLivrosUltimaLectura(idUsuario){
       FROM Livro l
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = ${idUsuario} AND l.Lido = 1
+      WHERE l.fkUsuario = ${idUsuario} AND l.Lido = true
       ORDER BY DataFimLeitura DESC;`
   );
 
