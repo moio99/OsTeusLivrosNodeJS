@@ -175,7 +175,7 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
         return `
             <div>
               <a href="/api/paginas/ListadoLivros?idUsuario=${req.query.idUsuario}&tipo=${req.query.tipo}&chave=${element.id}">
-                <strong>${element.nome}</strong></a> livros: ${element.quantidade} páginas: ${element.quantidadePaginas}
+                <strong>${element.nome}</strong></a> livros: ${element.quantidade} páginas: ${element.quantidadepaginas}
             </div>
           `;
       }).join('');    // Para que nom componha umha matriz
