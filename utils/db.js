@@ -17,17 +17,18 @@ const pool = new Pool(configRender);
 
 async function query(sql, params, isMigracom = false) {
   let connection;
+  let pgClient;
   let rows;
   try {
     if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
-      console.log('Qual projecto: render');
+      pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('CONVERT(SUM', 'CAST(SUM')
         .replaceAll(', UNSIGNED', ' AS INTEGER')
         .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ')
         .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
         .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
-      const resultado = await pool.query(salPosgreSQL);
+      const resultado = await pgClient.query(salPosgreSQL);
       return resultado.rows;
     } else {
       if (process.env.NODE_ENTORNO === 'local') {
@@ -44,6 +45,9 @@ async function query(sql, params, isMigracom = false) {
     // Fecha a conexom
     if (connection) {
       await connection.end();
+    }
+    if (pgClient) {
+      pgClient.release();
     }
   }
   return 0;

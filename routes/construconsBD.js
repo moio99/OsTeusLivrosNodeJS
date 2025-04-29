@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../utils/db');
+const estadisticas = require('../services/estadisticas');
 
 // Query para crear la tabla
 const createTableQuery = `
@@ -45,6 +46,16 @@ router.get('/ProbaC', async function(req, res, next) {
 });
 
 // SELECT
+router.get('/ProbaAa', async function(req, res, next) {
+  console.log('Petiçom /ProbaA');
+  try {
+    const resultado = await estadisticas.getEstadisticas('2', '1');
+    res.json(resultado);
+  } catch (err) {
+    console.error(`Erro ao obter os dados de Outros`, err.message);
+    next(err);
+  }
+});
 router.get('/ProbaA', async function(req, res, next) {
   console.log('Petiçom /ProbaA');
   const pgClient = await db.pool.connect();

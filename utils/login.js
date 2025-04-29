@@ -13,13 +13,14 @@ loginRouter.post('/', async (request, response) => {
   }
 
   const rows = await db.query(
-    `SELECT * FROM Usuario WHERE Nome = '${nome}' AND Pass = '${contrasinal}' AND Ativado = 1;`
+    `SELECT * FROM Usuario WHERE Nome = '${nome}' AND Pass = '${contrasinal}' AND Ativado = true;`
   );
   if (rows.length === 0) {
     return response.status(401).json({
       error: 'inválidos nome do usuario ou contrasinal'
     })
   } else {
+    console.log('rows[0]: ', rows[0]);
     const userForToken = {
       nome: rows[0].Nome,
       id: rows[0].idUsuario,

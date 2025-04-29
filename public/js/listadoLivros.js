@@ -95,7 +95,7 @@ data.forEach(livro => {
     <td>${livro.Pontuacom}</td>
     <td class="coluna4">${dataForma}</td>
     <td class="coluna5">${livro.nomeIdioma}</td>
-    <td class="coluna6">${livro.nomeAutor}</td>
+    <td class="coluna6">${livro.nomeautor}</td>
   `;
   
   tbody.appendChild(mainRow);
