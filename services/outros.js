@@ -167,7 +167,7 @@ async function getSeriesLivro(idUsuario){
   const dados = await db.query(
     `SELECT l.idLivro id, l.Titulo as titulo
       FROM Livro l
-      WHERE l.fkUsuario = ${idUsuario} AND l.SomSerie = 1 AND l.idSerie = 0
+      WHERE l.fkUsuario = ${idUsuario} AND l.SomSerie = true AND l.idSerie = 0
       ORDER BY lower(l.Titulo) ASC;`
   );
   
@@ -197,20 +197,26 @@ async function getUltimaLeitura(idUsuario){
 
 async function getUltimasLeituras(idUsuario){
   console.log('Petiçom de getUltimasLeituras ' + new Date().toJSON());
+  const condicomTempo = process.env.QUAL_PROJECTO === 'render' ?
+      `AND (
+        EXTRACT(YEAR FROM l.DataFimLeitura) = EXTRACT(YEAR FROM CURRENT_DATE)
+        OR 
+        EXTRACT(YEAR FROM l.DataFimLeitura) = EXTRACT(YEAR FROM (CURRENT_DATE - INTERVAL '1 year'))
+        )`
+    : `AND (YEAR(l.DataFimLeitura) = YEAR(CURDATE()) 
+          OR YEAR(l.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))`;
   const ultimasLeituras = await db.query(
     `SELECT uu.dataDoLivro, uu.id
       FROM (
         SELECT l.DataFimLeitura as dataDoLivro, l.idLivro as id
           FROM Livro l
           WHERE l.fkUsuario = ${idUsuario}
-          AND (YEAR(l.DataFimLeitura) = YEAR(CURDATE()) 
-          OR YEAR(l.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))
+          ${condicomTempo}
         UNION ALL
         SELECT r.DataFimLeitura as dataDoLivro, r.idRelectura as id
           FROM Relectura r
           WHERE r.fkUsuario = ${idUsuario}
-          AND (YEAR(r.DataFimLeitura) = YEAR(CURDATE()) 
-          OR YEAR(r.DataFimLeitura) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)))
+          ${condicomTempo.replaceAll('l.', 'r.')}
       ) AS uu`
   );
   

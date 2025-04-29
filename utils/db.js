@@ -21,7 +21,6 @@ async function query(sql, params, isMigracom = false) {
   let rows;
   try {
     if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
-      console.log('Qual projecto: render');
       pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('CONVERT(SUM', 'CAST(SUM')

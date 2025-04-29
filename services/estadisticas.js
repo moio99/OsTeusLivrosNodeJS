@@ -3,7 +3,7 @@ const helper = require('../utils/helper');
 
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
 , CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
-, CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS quantidadeRelecturas
+, CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"
 FROM (
   SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
     FROM Livro l
@@ -23,7 +23,7 @@ GROUP BY uu.id, uu.nome
 ORDER BY quantidade DESC, lower(nome) ASC;`;
 const queryPorGenero = `SELECT uu.id, uu.nome
   , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as quantidadeRelecturas
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as "quantidadeRelecturas"
   FROM (
       SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
@@ -43,7 +43,7 @@ const queryPorGenero = `SELECT uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
 const queryPorAno = `SELECT uu.id, uu.nome
   , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as quantidadeRelecturas
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as "quantidadeRelecturas"
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome, l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
@@ -59,7 +59,7 @@ const queryPorAno = `SELECT uu.id, uu.nome
   ORDER BY uu.id DESC;`;
 const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
   , CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS quantidadeRelecturas 
+  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas" 
   FROM (
     SELECT ar.idAutor as id, ar.Nome as nome, l.PaginasLidas, 0 AS numRelecturas
       FROM Livro l
