@@ -4,10 +4,10 @@ const helper = require('../utils/helper');
 async function getEstilosLiterarios(idUsuario){
   console.log('Petiçom de getEstilosLiterarios ' + new Date().toJSON());
   const dadosLivro = await db.query(
-    `SELECT e.idEstilo as id, e.Nome as nome
+    `SELECT e.idEstilo as id, e.Nome as "nome"
       FROM EstiloLiterario e
       WHERE e.fkUsuario = ${idUsuario}   
-      ORDER BY lower(e.Nome) ASC;`
+      ORDER BY lower(e.nome) ASC;`
   );
   
   const estilosLiterarios = helper.emptyOrRows(dadosLivro);
@@ -21,7 +21,7 @@ async function getEstilosLiterarios(idUsuario){
   }
 }
 
-async function getEstiloLiterario(idUsuario, id){
+async function getEstilosLiterario(idUsuario, id){
   console.log('Petiçom de getEstiloLiterario ' + new Date().toJSON());
   const dadosEstiloLiterario = await db.query(
     `SELECT e.idEstilo as id, e.Nome as nome, e.Comentario as comentario
@@ -62,11 +62,14 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
 
 async function getEstilosLiterariosCosLivros(idUsuario){
   console.log('Petiçom de getEstilosLiterariosCosLivros ' + new Date().toJSON());
+  const quantidade = process.env.QUAL_PROJECTO === 'render' ?
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
+    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosLivro = await db.query(
-    `SELECT e.idEstilo as id, e.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos
+    `SELECT e.idEstilo as id, e.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
       FROM EstiloLiterario e
       LEFT JOIN Livro l on l.fkEstilo = e.idEstilo
-      WHERE e.fkUsuario = ${idUsuario}
+      WHERE e.fkUsuario = 2
       GROUP BY e.idEstilo
       ORDER BY e.idEstilo ASC;`
   );
@@ -157,5 +160,5 @@ async function borrarEstiloLiterario(idUsuario, id) {
 }
 
 module.exports = {
-  getEstilosLiterarios, getEstilosLiterariosCosLivros, getEstiloLiterario, getEstiloLiterarioPorNome, postEstiloLiterario, putEstiloLiterario, borrarEstiloLiterario
+  getEstilosLiterarios, getEstilosLiterariosCosLivros, getEstilosLiterario, getEstiloLiterarioPorNome, postEstiloLiterario, putEstiloLiterario, borrarEstiloLiterario
 }

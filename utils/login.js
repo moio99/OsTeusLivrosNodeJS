@@ -20,7 +20,6 @@ loginRouter.post('/', async (request, response) => {
       error: 'inválidos nome do usuario ou contrasinal'
     })
   } else {
-    console.log('rows[0]: ', rows[0]);
     const userForToken = {
       nome: rows[0].Nome,
       id: rows[0].idUsuario,

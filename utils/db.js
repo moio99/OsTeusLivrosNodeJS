@@ -18,7 +18,7 @@ const pool = new Pool(configRender);
 async function query(sql, params, isMigracom = false) {
   let connection;
   let pgClient;
-  let rows;
+  let dados;
   try {
     if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
       pgClient = await pool.connect();
@@ -36,9 +36,9 @@ async function query(sql, params, isMigracom = false) {
       } else {
         connection = await mysql.createConnection(configRailway);
       }
-      rows = await connection.execute(sql, params);
-      if (rows && rows[0])
-        return rows[0];
+      dados = await connection.execute(sql, params);
+      if (dados && dados[0])
+        return dados[0];
     }
   } catch (err) {
     console.error('Erro ao realiçar o GET:', err);

@@ -32,10 +32,10 @@ router.get('/', async function(req, res, next) {
 /**
  * GET
  */
- router.get('/EstiloLiterario', async function(req, res, next) {
+ router.get('/EstilosLiterario', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstiloLiterario(req.idUsuario, req.query.id));
+    res.json(await estiloLiterario.getEstilosLiterario(req.idUsuario, req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o EstiloLiterario `, err.message);
     next(err);

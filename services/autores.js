@@ -4,8 +4,11 @@ const livro = require('./livros');
 
 async function getAutores(idUsuario){
   console.log('Petiçom de getAutores ' + new Date().toJSON());
+  const quantidade = process.env.QUAL_PROJECTO === 'render' ?
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
+    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosAutores = await db.query(
-    `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos
+    `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade}
       FROM Autor a
       LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
       LEFT JOIN Livro l ON ars.fkLivro = l.idLivro
@@ -47,7 +50,10 @@ async function getAutorPorNome(idUsuario, nome){
 
 async function getAutoresFiltrados(idUsuario, id, tipo){
   console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
-  const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, SUM(l.Lido) as quantidadeLidos
+  const quantidade = process.env.QUAL_PROJECTO === 'render' ?
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
+    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
+  const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
     FROM Autor a
     LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
     LEFT JOIN Livro l ON ars.fkLivro = l.idLivro`;
@@ -77,7 +83,7 @@ async function getAutoresFiltrados(idUsuario, id, tipo){
 async function getAutoresPorNacons(idUsuario){
   console.log('Petiçom de getAutoresPorNacions ' + new Date().toJSON());
   const dadosAutores = await db.query(
-    `SELECT n.idNacionalidade as id, n.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
+    `SELECT n.idNacionalidade as id, n.Nome as nome, COUNT(a.idAutor) as "quantidadeAutores"
       FROM Autor a
       LEFT JOIN Nacionalidade n ON a.fkNacionalidade = n.idNacionalidade
       WHERE a.fkNacionalidade IS NOT NULL AND a.fkUsuario = ${idUsuario}
@@ -99,7 +105,7 @@ async function getAutoresPorNacons(idUsuario){
 async function getAutoresPorPaises(idUsuario){
   console.log('Petiçom de getAutoresPorPaises ' + new Date().toJSON());
   const dadosAutores = await db.query(
-    `SELECT p.idPais as id, p.Nome as nome, COUNT(a.idAutor) as quantidadeAutores
+    `SELECT p.idPais as id, p.Nome as nome, COUNT(a.idAutor) as "quantidadeAutores"
       FROM Autor a
       LEFT JOIN Pais p ON a.fkPais = p.idPais
       WHERE a.fkPais IS NOT NULL AND a.fkUsuario = ${idUsuario}
@@ -121,25 +127,24 @@ async function getAutoresPorPaises(idUsuario){
 async function getAutor(idUsuario, id){
   console.log('Petiçom de getAutor id: ' + id + ' tempo ' + new Date().toJSON());
   const dadosAutor = await db.query(
-    `SELECT a.idAutor as id, a.Nome as nome, a.NomeReal as nomeReal, a.LugarNacemento as lugarNacemento
-      , DATE_FORMAT(a.DataNacemento,'%d/%m/%Y') as dataNacemento
-      , DATE_FORMAT(a.DataDefuncom,'%d/%m/%Y') as dataDefuncom, a.Premios as premios, a.web
-      , a.Comentario as comentario
-      , n.idNacionalidade, n.Nome as nomeNacionalidade
-      , p.idPais, p.Nome as nomePais
-      , COUNT(l.idLivro) as quantidade
+    `SELECT a.idAutor as id, a.Nome as "nome", a.NomeReal as "nomeReal", a.LugarNacemento as "lugarNacemento"
+      , DATE_FORMAT(a.DataNacemento,'%d/%m/%Y') as "dataNacemento"
+      , DATE_FORMAT(a.DataDefuncom,'%d/%m/%Y') as "dataDefuncom", a.Premios as "premios", a.web
+      , a.Comentario as "comentario"
+      , n.idNacionalidade, n.Nome as "nomeNacionalidade"
+      , p.idPais, p.Nome as "nomePais"
+      , COUNT(l.idLivro) as "quantidade"
       FROM Autor a
       LEFT JOIN Nacionalidade n ON a.fkNacionalidade = n.idNacionalidade
       LEFT JOIN Pais p ON a.fkPais = p.idPais
       LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
       LEFT JOIN Livro l ON ars.fkLivro = l.idLivro
       WHERE a.fkUsuario = ${idUsuario} AND a.idAutor = ${id}
-      GROUP BY a.idAutor;`
+      GROUP BY a.idAutor, n.idNacionalidade, p.idPais;`
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
   console.log(autor.length + ' elementos devoltos');
-  console.log(autor);
 
   const meta = {'id': id, 'quantidade': autor.length};
 

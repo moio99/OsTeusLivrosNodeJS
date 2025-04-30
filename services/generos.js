@@ -79,8 +79,11 @@ async function getGeneroNome(idUsuario, id){
 
 async function getGenerosCosLivros(idUsuario){
   console.log('Petiçom de getGenerosCosLivros ' + new Date().toJSON());
+  const quantidade = process.env.QUAL_PROJECTO === 'render' ?
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
+    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosGeneros = await db.query(
-    `SELECT g.idGenero as id, g.Nome as nome, COUNT(l.idLivro) as quantidadeLivros, CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos
+    `SELECT g.idGenero as id, g.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
       FROM Genero g
       LEFT JOIN Generos gs ON gs.fkGenero = g.idGenero
       LEFT JOIN Livro l on l.idLivro = gs.fkLivro
@@ -131,10 +134,17 @@ async function putGenero(idUsuario, genero){
   console.log('Petiçom de putGenero ' + genero.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  const queryInsert = `UPDATE Genero SET
+  let queryInsert = `UPDATE Genero SET
       Nome = ?,
       Comentario = ?
     WHERE idGenero = ? AND fkUsuario = ?;`;
+  if (process.env.QUAL_PROJECTO === 'render') {
+    queryInsert = `UPDATE Genero SET
+        Nome = $1,
+        Comentario = $2
+      WHERE idgenero = $3 AND fkUsuario = $4
+      RETURNING idgenero`;
+  }
   const dadosInsert = [
     db.stringOuNullSimple(genero.nome),
     db.stringOuNullSimple(genero.comentario),
