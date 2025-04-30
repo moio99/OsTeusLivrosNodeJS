@@ -95,7 +95,7 @@ data.forEach(livro => {
     <td>${livro.Pontuacom}</td>
     <td class="coluna4">${dataForma}</td>
     <td class="coluna5">${livro.nomeIdioma}</td>
-    <td class="coluna6">${livro.nomeautor}</td>
+    <td class="coluna6">${livro.nomeAutor}</td>
   `;
   
   tbody.appendChild(mainRow);
@@ -162,7 +162,7 @@ renderTaboa(filtered);
 }
 
 function normalizeText(text) {
-return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
 async function getDetalhesDoLivro(idLivro) {

@@ -36,9 +36,10 @@ async function query(sql, params, isMigracom = false) {
       } else {
         connection = await mysql.createConnection(configRailway);
       }
-      [rows] = await connection.execute(sql, params);
+      rows = await connection.execute(sql, params);
+      if (rows && rows[0])
+        return rows[0];
     }
-    return rows;
   } catch (err) {
     console.error('Erro ao realiçar o GET:', err);
   } finally {

@@ -165,10 +165,10 @@ async function getIdiomaNome(id){
 async function getSeriesLivro(idUsuario){
   console.log('Petiçom de getSeriesLivro ' + new Date().toJSON());
   const dados = await db.query(
-    `SELECT l.idLivro id, l.Titulo as titulo
+    `SELECT l.idLivro id, l.Titulo as "Titulo"
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario} AND l.SomSerie = true AND l.idSerie = 0
-      ORDER BY lower(l.Titulo) ASC;`
+      ORDER BY lower(l."Titulo") ASC;`
   );
   
   return getGenerico(dados);
