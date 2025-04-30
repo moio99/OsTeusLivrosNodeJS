@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken')
 const requestLogger = (request, response, next) => {
   console.info('Method:', request.method)
   console.info('Path:  ', request.path)
-  console.info('Body:  ', request.body)
+  if (!request.path.includes('/login')) {
+    console.info('Body:  ', request.body)
+  }
   console.info('---------------------------------------------------FIM')
   next()
 }

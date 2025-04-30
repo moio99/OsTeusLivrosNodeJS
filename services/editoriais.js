@@ -63,7 +63,7 @@ async function getEditorialPorNome(idUsuario, nome){
 async function getEditoriaisCosLivros(idUsuario){
   console.log('Petiçom de getEditoriaisCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
-    `SELECT e.idEditorial as id, e.Nome as nome, e.web, COUNT(l.idLivro) as quantidadeLivros 
+    `SELECT e.idEditorial as id, e.Nome as nome, e.web, COUNT(l.idLivro) as "quantidadeLivros" 
       FROM Editorial e
       LEFT JOIN Livro l on l.fkEditorial = e.idEditorial
       WHERE e.fkUsuario = ${idUsuario}

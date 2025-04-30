@@ -165,10 +165,10 @@ async function getIdiomaNome(id){
 async function getSeriesLivro(idUsuario){
   console.log('Petiçom de getSeriesLivro ' + new Date().toJSON());
   const dados = await db.query(
-    `SELECT l.idLivro id, l.Titulo as "Titulo"
+    `SELECT l.idLivro id, l.Titulo as "titulo"
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario} AND l.SomSerie = true AND l.idSerie = 0
-      ORDER BY lower(l."Titulo") ASC;`
+      ORDER BY lower(l.titulo) ASC;`
   );
   
   return getGenerico(dados);
@@ -177,12 +177,7 @@ async function getSeriesLivro(idUsuario){
 async function getUltimaLeitura(idUsuario){
   console.log('Petiçom de getUltimaLeitura ' + new Date().toJSON());
   const dados = await db.query(
-    /*
-    *****************************************************
-    TODO: Este MAX nom funciona
-    *****************************************************
-    */
-    `SELECT MAX(l.DataFimLeitura) as ultimaLeitura
+    `SELECT MAX(l.DataFimLeitura) as "ultimaLeitura"
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario}`
   );

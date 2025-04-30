@@ -257,10 +257,8 @@ async function getLivrosPorAutor(idUsuario, id){
       INNER JOIN Autores ars ON l.idLivro = ars.fkLivro 
       INNER JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
-      AND ar.idAutor = ${id} `;
-  query += process.env.QUAL_PROJECTO === 'render' ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;' 
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;' 
+      AND ar.idAutor = ${id} 
+      ORDER BY l.titulo ASC;`;
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -276,18 +274,17 @@ async function getLivrosPorAutor(idUsuario, id){
 
 async function getLivrosPorEditorial(idUsuario, id){
   console.log('Petiçom de getLivrosPorEditorial para o idEditorial: ' + id);
-  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
+      , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Editorial e ON l.fkEditorial = e.idEditorial 
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
-      AND e.idEditorial = ${id}`;
-  query += process.env.QUAL_PROJECTO === 'render' ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;' 
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;' 
+      AND e.idEditorial = ${id}
+      ORDER BY l.titulo ASC;`;
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -303,18 +300,17 @@ async function getLivrosPorEditorial(idUsuario, id){
 
 async function getLivrosPorBiblioteca(idUsuario, id){
   console.log('Petiçom de getLivrosPorBiblioteca para a idBiblioteca: ' + id);
-  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
+      , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
-      AND b.idBiblioteca = ${id}`;
-  query += process.env.QUAL_PROJECTO === 'render' ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;' 
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;' 
+      AND b.idBiblioteca = ${id} 
+      ORDER BY l.titulo ASC;`;
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -330,18 +326,17 @@ async function getLivrosPorBiblioteca(idUsuario, id){
 
 async function getLivrosPorColecom(idUsuario, id){
   console.log('Petiçom de getLivrosPorColecom para a idColecom: ' + id);
-  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
+      , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Colecom c ON l.fkColecom = c.idColecom
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
-      AND c.idColecom = ${id}`;
-  query += process.env.QUAL_PROJECTO === 'render' ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;' 
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;' 
+      AND c.idColecom = ${id} 
+      ORDER BY l.titulo ASC;`;
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -357,18 +352,17 @@ async function getLivrosPorColecom(idUsuario, id){
 
 async function getLivrosPorEstiloLiterario(idUsuario, id){
   console.log('Petiçom de getLivrosPorEstiloLiterario para a idEstiloLiterario: ' + id);
-  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as dataFimLeitura
+  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
+      , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN estiloLiterario e ON l.fkEstilo = e.idEstilo
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
-      AND e.idEstilo = ${id} `;
-  query += process.env.QUAL_PROJECTO === 'render' ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;' 
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;' 
+      AND e.idEstilo = ${id}
+      ORDER BY l.titulo ASC;`;
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -476,7 +470,6 @@ async function getLivro(idUsuario, id){
         autores.push(autor); 
       }
     }
-    console.log(autores)
 
     let generos = [];
     for (let i = 0; i < data.length; i++) {
@@ -489,7 +482,6 @@ async function getLivro(idUsuario, id){
         generos.push(genero);
       }
     }
-    console.log(generos)
 
     var livro = {
       id: String(data[0].idLivro),

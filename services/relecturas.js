@@ -35,14 +35,13 @@ async function getRelectura(idUsuario, idRelectura){
 
 async function getRelecturas(idUsuario, idLivro){
   console.log('Petiçom de getRelecturas ' + new Date().toJSON() + ' idLivro: ' + idLivro);
-  const dadosRelecturas = await db.query(
-    `SELECT r.idRelectura id, r.titulo, r.paginas, r.lido, r.dataFimLeitura, r.TempoLeitura as diasLeitura, r.pontuacom
+  let query = `SELECT r.idRelectura id, r.titulo, r.paginas, r.lido, r.DataFimLeitura as "dataFimLeitura"
+      , r.TempoLeitura as "diasLeitura", r.pontuacom
       FROM Relectura r
-      WHERE r.fkUsuario = ${idUsuario} AND r.fkLivro =  ${idLivro}
-      ORDER BY lower(r.dataFimLeitura) ASC;`
-  );
+      WHERE r.fkUsuario = ${idUsuario} AND r.fkLivro =  ${idLivro}`;
+  const dados = await db.query(query);
   
-  const data = helper.emptyOrRows(dadosRelecturas);
+  const data = helper.emptyOrRows(dados);
   console.log(data.length + ' relecturas devoltas');
 
   const meta = {'idLivro': idLivro, 'quantidade': data.length};

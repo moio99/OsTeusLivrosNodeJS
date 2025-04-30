@@ -63,7 +63,7 @@ async function getColecomPorNome(idUsuario, nome){
 async function getColeconsCosLivros(idUsuario){
   console.log('Petiçom de getColeconsCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
-    `SELECT c.idColecom as id, c.Nome as nome, c.web, COUNT(l.idLivro) as quantidadeLivros
+    `SELECT c.idColecom as id, c.Nome as nome, c.web, COUNT(l.idLivro) as "quantidadeLivros"
       FROM Colecom c
       LEFT JOIN Livro l on l.fkColecom = c.idColecom
       WHERE c.fkUsuario = ${idUsuario}

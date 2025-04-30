@@ -65,7 +65,7 @@ async function getBibliotecaPorNome(idUsuario, nome){
 async function getBibliotecasCosLivros(idUsuario){
   console.log('Petiçom de getBibliotecasCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
-    `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as dataRenovacom, COUNT(l.idLivro) as quantidadeLivros
+    `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as "dataRenovacom", COUNT(l.idLivro) as "quantidadeLivros"
       FROM Biblioteca b
       LEFT JOIN Livro l on l.fkBiblioteca = b.idBiblioteca
       WHERE b.fkUsuario = ${idUsuario}
