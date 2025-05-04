@@ -93,7 +93,7 @@ async function getLivroPorTitulo(idUsuario, titulo){
   const meta = {'id': livro.length > 0 ? livro[0].id : 0, 'quantidade': livro.length};
 
   return {
-    livro,
+    data: livro,
     meta
   }
 }
@@ -483,7 +483,7 @@ async function getLivro(idUsuario, id){
       }
     }
 
-    var livro = {
+    var livro = [{
       id: String(data[0].idLivro),
       titulo: data[0].Titulo,
       autores: autores,
@@ -516,12 +516,12 @@ async function getLivro(idUsuario, id){
       descricom: data[0].Descricom,
       comentario: data[0].Comentario,
       pontuacom: data[0].Pontuacom
-    }
+    }]
   }
 
   const meta = {'id': id};
   return {
-    livro,
+    data: livro,
     meta
   }
 }

@@ -26,7 +26,8 @@ npm install cross-env --save-dev
 
 para lanzar     nodemon ./app.js
 ou
-npm dev       que lanza o nodemon ./app.js
+npm run dev             que lanza o nodemon ./app.js
+npm run devRender       que lanza o nodemon ./app.js coa BD de posgreSQL de Render
 
 para subir o código e despregar en railway
 subir a git

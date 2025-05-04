@@ -35,13 +35,14 @@ async function getEditorial(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    editorial,
+    data: editorial,
     meta
   }
 }
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getEditorialPorNome(idUsuario, nome){
+  console.log('Petiçom de getEditorialPorNome ' + idUsuario, nome);
   console.log('Petiçom de getEditorialPorNome ' + new Date().toJSON());
   const dadosEditorial = await db.query(
     `SELECT e.idEditorial as id
@@ -55,7 +56,7 @@ async function getEditorialPorNome(idUsuario, nome){
   const meta = {'id': editorial.length > 0 ? editorial[0].id : 0, 'quantidade': editorial.length};
 
   return {
-    editorial,
+    data: editorial,
     meta
   }
 }

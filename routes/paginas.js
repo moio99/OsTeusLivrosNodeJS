@@ -92,14 +92,14 @@ router.get('/DadosLivros', async function(req, res, next) {
 router.get('/DetalhesDoLivro', async function(req, res, next) {
   try {
     if (req.query.idLivro) {
-      const data = await livros.getLivro(2, req.query.idLivro);
-      if (data && data.livro) {
-        const livrosData = data.livro;
+      const dados = await livros.getLivro(2, req.query.idLivro);
+      if (dados && dados.data && dados.data.length > 0) {
+        const livrosData = dados.data[0];
         const htmlContent = `
             <td colspan="6">
               <div class="titulo-detalhes">
                 <div>Título Original: ${livrosData.tituloOriginal || "N/A"}</div>
-                <div class="botom-fechar" onclick="borrarDetalhes(${data.livro.id})">❌Pechar</div>
+                <div class="botom-fechar" onclick="borrarDetalhes(${dados.data[0].id})">❌Pechar</div>
               </div>
               <p><strong>Autores:</strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
               <p><strong>Géneros:</strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>

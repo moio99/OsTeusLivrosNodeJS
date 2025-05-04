@@ -37,7 +37,7 @@ async function getBiblioteca(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    biblioteca,
+    data: biblioteca,
     meta
   }
 }
@@ -57,7 +57,7 @@ async function getBibliotecaPorNome(idUsuario, nome){
   const meta = {'id': biblioteca.length > 0 ? biblioteca[0].id : 0, 'quantidade': biblioteca.length};
 
   return {
-    biblioteca,
+    data: biblioteca,
     meta
   }
 }

@@ -10,13 +10,13 @@ async function getEstilosLiterarios(idUsuario){
       ORDER BY lower(e.nome) ASC;`
   );
   
-  const estilosLiterarios = helper.emptyOrRows(dadosLivro);
-  console.log(estilosLiterarios.length + ' elementos devoltos');
+  const data = helper.emptyOrRows(dadosLivro);
+  console.log(data.length + ' elementos devoltos');
 
   const meta = {'nada': 'nada'};
 
   return {
-    estilosLiterarios,
+    data,
     meta
   }
 }
@@ -35,7 +35,7 @@ async function getEstilosLiterario(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    estiloLiterario,
+    data: estiloLiterario,
     meta
   }
 }
@@ -55,7 +55,7 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
   const meta = {'id': estiloLiterario.length > 0 ? estiloLiterario[0].id : 0, 'quantidade': estiloLiterario.length};
 
   return {
-    estiloLiterario,
+    data: estiloLiterario,
     meta
   }
 }
@@ -74,13 +74,13 @@ async function getEstilosLiterariosCosLivros(idUsuario){
       ORDER BY e.idEstilo ASC;`
   );
 
-  const estilosLiterarios = helper.emptyOrRows(dadosLivro);
-  console.log(estilosLiterarios.length + ' elementos devoltos');
+  const data = helper.emptyOrRows(dadosLivro);
+  console.log(data.length + ' elementos devoltos');
 
   const meta = {'nada': 'nada'};
 
   return {
-    estilosLiterarios,
+    data,
     meta
   }
 }

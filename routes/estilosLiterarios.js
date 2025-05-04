@@ -32,7 +32,7 @@ router.get('/', async function(req, res, next) {
 /**
  * GET
  */
- router.get('/EstilosLiterario', async function(req, res, next) {
+ router.get('/EstiloLiterario', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
     res.json(await estiloLiterario.getEstilosLiterario(req.idUsuario, req.query.id));

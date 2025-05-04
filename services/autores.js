@@ -43,7 +43,7 @@ async function getAutorPorNome(idUsuario, nome){
   const meta = {'id': autor.length > 0 ? autor[0].id : 0, 'quantidade': autor.length};
 
   return {
-    autor,
+    data: autor,
     meta
   }
 }
@@ -149,7 +149,7 @@ async function getAutor(idUsuario, id){
   const meta = {'id': id, 'quantidade': autor.length};
 
   return {
-    autor,
+    data: autor,
     meta
   }
 }
