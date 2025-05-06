@@ -79,7 +79,7 @@ async function getGeneroNome(idUsuario, id){
 
 async function getGenerosCosLivros(idUsuario){
   console.log('Petiçom de getGenerosCosLivros ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_PROJECTO === 'render' ?
+  const quantidade = process.env.QUAL_SQL === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosGeneros = await db.query(
@@ -110,7 +110,7 @@ async function postGenero(idUsuario, genero){
   let queryInsert = `INSERT INTO Genero
     (fkUsuario, Nome, Comentario)
     VALUES (?, ?, ?)`;
-  if (process.env.QUAL_PROJECTO === 'render') {
+  if (process.env.QUAL_SQL === 'PosgreSQL') {
     queryInsert = `INSERT INTO Genero
       (fkUsuario, Nome, Comentario)
       VALUES ($1, $2, $3)
@@ -124,7 +124,7 @@ async function postGenero(idUsuario, genero){
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-    if (process.env.QUAL_PROJECTO === 'render') {
+    if (process.env.QUAL_SQL === 'PosgreSQL') {
       idResult = ResultSetHeader[0].idgenero;
     } else if (ResultSetHeader.affectedRows == 1)
       idResult = ResultSetHeader.insertId
@@ -147,7 +147,7 @@ async function putGenero(idUsuario, genero){
       Nome = ?,
       Comentario = ?
     WHERE idGenero = ? AND fkUsuario = ?;`;
-  if (process.env.QUAL_PROJECTO === 'render') {
+  if (process.env.QUAL_SQL === 'PosgreSQL') {
     queryInsert = `UPDATE Genero SET
         Nome = $1,
         Comentario = $2
@@ -161,7 +161,7 @@ async function putGenero(idUsuario, genero){
     idUsuario
   ];
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-    if (process.env.QUAL_PROJECTO === 'render') {
+    if (process.env.QUAL_SQL === 'PosgreSQL') {
       idResult = ResultSetHeader[0].idgenero;
     } else if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
       idResult = genero.id;
