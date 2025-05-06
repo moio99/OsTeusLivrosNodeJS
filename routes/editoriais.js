@@ -21,7 +21,7 @@ router.get('/', async function(req, res, next) {
 router.get('/EditorialPorNome', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await editoriais.getEditorialPorNome(req.query.nome));
+    res.json(await editoriais.getEditorialPorNome(req.idUsuario, req.query.nome));
   } catch (err) {
     console.error(`Erro ao obter a editorial polo nome `, err.message);
     next(err);
@@ -58,7 +58,7 @@ router.get('/EditorialPorNome', async function(req, res, next) {
 /* POST Editorial */
 router.post('/Editorial', async function(req, res, next) {
   try {
-    res.json(await editoriais.postEditorial(req.body));
+    res.json(await editoriais.postEditorial(req.idUsuario, req.body));
   } catch (err) {
     console.error(`Erro tentando criar umha editorial`, err.message);
     next(err);

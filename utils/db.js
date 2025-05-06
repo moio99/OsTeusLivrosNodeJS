@@ -28,7 +28,7 @@ async function query(sql, params, isMigracom = false) {
         .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ')
         .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
         .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
-      const resultado = await pgClient.query(salPosgreSQL);
+      const resultado = await pgClient.query(salPosgreSQL, params);
       return resultado.rows;
     } else {
       if (process.env.NODE_ENTORNO === 'local') {

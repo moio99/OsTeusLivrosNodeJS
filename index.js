@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require('cors');
 const app = express();
 require('dotenv').config(); // para usar o .env
-const port = 5002;
+const port = process.env.PORT || 3000;
 const middleware = require('./utils/middleware');
 const loginRouter = require("./utils/login");
 const estadisticasRouter = require("./routes/estadisticas");
@@ -85,6 +85,6 @@ app.use((err, req, res, next) => {
   return;
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Podes chamar à API no porto: ${port}`);
 });

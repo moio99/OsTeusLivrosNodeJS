@@ -24,7 +24,7 @@ async function getBibliotecas(idUsuario){
 async function getBiblioteca(idUsuario, id){
   console.log('Petiçom de getBiblioteca ' + new Date().toJSON());
   const dadosBiblioteca = await db.query(
-    `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as Endereco, b.Localidade as localidade
+    `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as endereco, b.Localidade as localidade
       , b.Telefone as telefone, b.DataAsociamento as dataAsociamento, b.DataRenovacom as dataRenovacom
       , b.Comentario as comentario
       FROM Biblioteca b
@@ -37,7 +37,7 @@ async function getBiblioteca(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    biblioteca,
+    data: biblioteca,
     meta
   }
 }
@@ -57,7 +57,7 @@ async function getBibliotecaPorNome(idUsuario, nome){
   const meta = {'id': biblioteca.length > 0 ? biblioteca[0].id : 0, 'quantidade': biblioteca.length};
 
   return {
-    biblioteca,
+    data: biblioteca,
     meta
   }
 }

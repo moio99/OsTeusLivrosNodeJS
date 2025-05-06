@@ -31,7 +31,8 @@ const userExtractor = (request, response, next) => {
     return next()
   }
 
-  console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO);
+  console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO
+    , '  |  process.env.QUAL_PROJECTO: ' + process.env.QUAL_PROJECTO);
   if (process.env.NODE_ENTORNO === 'railway') {
     const authorization = request.get('authorization') || request.get('Authorization');
     console.log('authorization: ' + authorization);

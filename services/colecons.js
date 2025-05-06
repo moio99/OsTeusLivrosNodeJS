@@ -35,7 +35,7 @@ async function getColecom(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    colecom,
+    data: colecom,
     meta
   }
 }
@@ -55,7 +55,7 @@ async function getColecomPorNome(idUsuario, nome){
   const meta = {'id': colecom.length > 0 ? colecom[0].id : 0, 'quantidade': colecom.length};
 
   return {
-    colecom,
+    data: colecom,
     meta
   }
 }

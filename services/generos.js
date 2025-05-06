@@ -35,7 +35,7 @@ async function getGenero(idUsuario, id){
   const meta = {'id': id};
 
   return {
-    genero,
+    data: genero,
     meta
   }
 }
@@ -55,7 +55,7 @@ async function getGeneroPorNome(idUsuario, nome){
   const meta = {'id': genero.length > 0 ? genero[0].id : 0, 'quantidade': genero.length};
 
   return {
-    genero,
+    data: genero,
     meta
   }
 }
@@ -103,12 +103,19 @@ async function getGenerosCosLivros(idUsuario){
   }
 }
 
+// FUNCIONA O PUT mas o post nom porque dá um erro de geraçom do autonumérico para idgenero
 async function postGenero(idUsuario, genero){
   console.log('Petiçom de postGenero ' + genero.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  const queryInsert = `INSERT INTO Genero
+  let queryInsert = `INSERT INTO Genero
     (fkUsuario, Nome, Comentario)
-  VALUES (?, ?, ?)`;
+    VALUES (?, ?, ?)`;
+  if (process.env.QUAL_PROJECTO === 'render') {
+    queryInsert = `INSERT INTO Genero
+      (fkUsuario, Nome, Comentario)
+      VALUES ($1, $2, $3)
+      RETURNING idgenero`;
+  }
 
   const dadosInsert = [
     idUsuario,
@@ -117,10 +124,12 @@ async function postGenero(idUsuario, genero){
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = ResultSetHeader.insertId
-      }
-    );
+    if (process.env.QUAL_PROJECTO === 'render') {
+      idResult = ResultSetHeader[0].idgenero;
+    } else if (ResultSetHeader.affectedRows == 1)
+      idResult = ResultSetHeader.insertId
+    }  
+  );
   
   console.log('id: ' + idResult + ' genero creado');
   const meta = {'id': idResult};
@@ -142,7 +151,7 @@ async function putGenero(idUsuario, genero){
     queryInsert = `UPDATE Genero SET
         Nome = $1,
         Comentario = $2
-      WHERE idgenero = $3 AND fkUsuario = $4
+      WHERE idGenero = $3 AND fkUsuario = $4
       RETURNING idgenero`;
   }
   const dadosInsert = [
@@ -152,8 +161,10 @@ async function putGenero(idUsuario, genero){
     idUsuario
   ];
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = genero.id;
+    if (process.env.QUAL_PROJECTO === 'render') {
+      idResult = ResultSetHeader[0].idgenero;
+    } else if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
+      idResult = genero.id;
     }
   );
   
