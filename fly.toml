@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for fsonodejs on 2025-02-19T10:32:52Z
+# fly.toml app configuration file generated for osteuslivrosnodejs on 2025-05-06T13:07:40Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -9,7 +9,7 @@ primary_region = 'mad'
 [build]
 
 [http_service]
-  internal_port = 8080
+  internal_port = 3000
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
