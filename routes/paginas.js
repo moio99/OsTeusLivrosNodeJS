@@ -78,7 +78,7 @@ router.get('/DadosLivros', async function(req, res, next) {
     res.json({
       success: true,
       livros: livrosData.data,
-      nomeFiltro: livrosData.data[0].nomeFiltro
+      origemDados: livrosData.meta.origemDados
     });
   } catch (err) {
     console.error(`Erro ao obter os DadosLivros:`, err);
@@ -180,7 +180,11 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
           `;
       }).join('');    // Para que nom componha umha matriz
       
-      res.send(`<div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+      res.send(`
+        <div class="botomFechar">
+          <span>${resultado.meta.origemDados}</span>
+          <div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+        </div>
         ${html}`
       );
     }

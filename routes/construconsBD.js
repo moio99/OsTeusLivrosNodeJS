@@ -5,27 +5,11 @@ const estadisticas = require('../services/estadisticas');
 
 // Query para crear la tabla
 const createTableQuery = `
-CREATE TABLE IF NOT EXISTS EstiloLiterario (
-  idEstilo SERIAL PRIMARY KEY,
-  fkUsuario BIGINT NOT NULL,
-  Nome VARCHAR(150) NOT NULL,
-  Comentario TEXT,
-  
-  -- Clave foránea
-  CONSTRAINT fk_EstiloLiterario_Usuario FOREIGN KEY (fkUsuario) 
-    REFERENCES Usuario(idUsuario),
-  
-  -- Evitar nombres duplicados por usuario
-  CONSTRAINT uq_estilo_usuario_nome UNIQUE (fkUsuario, Nome)
-);
-
-COMMENT ON TABLE EstiloLiterario IS 'Tabla de estilos literarios definidos por usuarios';
-COMMENT ON COLUMN EstiloLiterario.Nome IS 'Nombre del estilo literario';
-COMMENT ON COLUMN EstiloLiterario.Comentario IS 'Descripción del estilo literario';
-
--- Índices para mejorar el rendimiento
-CREATE INDEX idx_estilo_usuario ON EstiloLiterario(fkUsuario);
-CREATE INDEX idx_estilo_nome ON EstiloLiterario(Nome);
+  CREATE TABLE IF NOT EXISTS Continente (
+    idContinente SMALLSERIAL NOT NULL,
+    Nome VARCHAR(15) NOT NULL,
+    PRIMARY KEY (idContinente)
+  );
 `;
 
 router.get('/ProbaC', async function(req, res, next) {
@@ -41,7 +25,7 @@ router.get('/ProbaC', async function(req, res, next) {
   
   res.json({
     success: true,
-    livros: 'taboa "usuarios2" creada exitosamente'
+    livros: 'taboa "..." creada exitosamente'
   });
 });
 

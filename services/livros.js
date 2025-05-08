@@ -1,5 +1,9 @@
 const db = require('../utils/db');
 const helper = require('../utils/helper');
+const fs = require('fs').promises;
+const path = require('path');
+
+const DATA_FILE = path.join(__dirname, '../data/DadosLivros.json');
 
 async function getLivros(idUsuario){
   console.log('Petiçom de getLivros');
@@ -59,8 +63,17 @@ async function getLivrosParaListadoMovel(idUsuario){
     ORDER BY lower(l.titulo) ASC;`;
   const dados = await db.query(select);
 
+  let origemDados = 'BD';
   let data = helper.emptyOrRows(dados);
-  data = LivroComMaisDumAutor(data);
+  if (data?.length > 0) {
+    data = LivroComMaisDumAutor(data);
+    if (process.env.NODE_ENTORNO === 'local') {
+      await EscreverFicheiroJSON(data);
+    }
+  } else {
+    data = await LerFicheiroJSON();
+    origemDados = 'Ficheiro JSON';
+  }
   console.log(data.length + ' elementos devoltos');
 
   const date = new Date();
@@ -70,11 +83,35 @@ async function getLivrosParaListadoMovel(idUsuario){
     year: 'numeric'
   }).replace(/\//g, '/');
 
-  const meta = {'id': 0, 'quantidade': data.length, 'data': dateFormatada};
+  const meta = {'id': 0, 'quantidade': data.length, 'origemDados': origemDados, 'data': dateFormatada};
 
   return {
     data,
     meta
+  }
+}
+
+async function EscreverFicheiroJSON(dados) {
+  const dadosJson = JSON.stringify(dados, null, 2);
+  try {
+    const existingData = await fs.readFile(DATA_FILE, 'utf8');
+    
+    if (dadosJson.length !== existingData.length) {
+      await fs.writeFile(DATA_FILE, dadosJson);
+    }
+  } catch (error) {
+    await fs.writeFile(DATA_FILE, dadosJson);
+    console.log('dados escritos NOVO ficheiro');
+  }
+}
+
+async function LerFicheiroJSON() {
+  try {
+    const data = await fs.readFile(DATA_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Erro ao ler o arquivo do listado dos livros fallback:', error.message);
+    throw new Error('Nom foi posível obtener dados nem da API nem do arquivo fallback');
   }
 }
 

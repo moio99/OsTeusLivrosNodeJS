@@ -1,0 +1,296 @@
+[
+  {
+    "id": 3,
+    "nome": "Novela",
+    "quantidade": 115,
+    "quantidadepaginas": 30227,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 4,
+    "nome": "Ficçom Científica",
+    "quantidade": 50,
+    "quantidadepaginas": 16881,
+    "quantidadeRelecturas": 1
+  },
+  {
+    "id": 7,
+    "nome": "Histórica",
+    "quantidade": 35,
+    "quantidadepaginas": 15317,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 5,
+    "nome": "Fantasia",
+    "quantidade": 28,
+    "quantidadepaginas": 5458,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 41,
+    "nome": "Fantasia Épica",
+    "quantidade": 21,
+    "quantidadepaginas": 8336,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 2,
+    "nome": "Política",
+    "quantidade": 20,
+    "quantidadepaginas": 3444,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 20,
+    "nome": "Contos",
+    "quantidade": 19,
+    "quantidadepaginas": 3607,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 11,
+    "nome": "Divulgaçom Cientista",
+    "quantidade": 17,
+    "quantidadepaginas": 5278,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 35,
+    "nome": "Aventuras",
+    "quantidade": 16,
+    "quantidadepaginas": 5787,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 10,
+    "nome": "Policiacas",
+    "quantidade": 15,
+    "quantidadepaginas": 4417,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 43,
+    "nome": "Mar",
+    "quantidade": 11,
+    "quantidadepaginas": 2782,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 50,
+    "nome": "Magia",
+    "quantidade": 8,
+    "quantidadepaginas": 2816,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 33,
+    "nome": "Distopia",
+    "quantidade": 7,
+    "quantidadepaginas": 1801,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 31,
+    "nome": "Humor",
+    "quantidade": 6,
+    "quantidadepaginas": 1288,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 27,
+    "nome": "Romántica",
+    "quantidade": 6,
+    "quantidadepaginas": 2786,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 45,
+    "nome": "Feminista",
+    "quantidade": 5,
+    "quantidadepaginas": 1134,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 8,
+    "nome": "Teatro",
+    "quantidade": 5,
+    "quantidadepaginas": 737,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 13,
+    "nome": "Realismo",
+    "quantidade": 4,
+    "quantidadepaginas": 867,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 6,
+    "nome": "Filosofia",
+    "quantidade": 3,
+    "quantidadepaginas": 269,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 9,
+    "nome": "Horror",
+    "quantidade": 3,
+    "quantidadepaginas": 546,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 49,
+    "nome": "Juvenil",
+    "quantidade": 3,
+    "quantidadepaginas": 592,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 42,
+    "nome": "Negra",
+    "quantidade": 3,
+    "quantidadepaginas": 1475,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 28,
+    "nome": "Parodia",
+    "quantidade": 3,
+    "quantidadepaginas": 515,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 55,
+    "nome": "Roma",
+    "quantidade": 3,
+    "quantidadepaginas": 1689,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 44,
+    "nome": "Antropologia",
+    "quantidade": 2,
+    "quantidadepaginas": 805,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 52,
+    "nome": "Autobigrafia",
+    "quantidade": 2,
+    "quantidadepaginas": 445,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 37,
+    "nome": "Debate",
+    "quantidade": 2,
+    "quantidadepaginas": 852,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 32,
+    "nome": "Diario",
+    "quantidade": 2,
+    "quantidadepaginas": 237,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 54,
+    "nome": "Egipto",
+    "quantidade": 2,
+    "quantidadepaginas": 1349,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 14,
+    "nome": "Naturalismo",
+    "quantidade": 2,
+    "quantidadepaginas": 1128,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 38,
+    "nome": "Novela de cavalaria",
+    "quantidade": 2,
+    "quantidadepaginas": 369,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 46,
+    "nome": "Romanticismo",
+    "quantidade": 2,
+    "quantidadepaginas": 942,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 40,
+    "nome": "Sem definir",
+    "quantidade": 2,
+    "quantidadepaginas": 332,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 25,
+    "nome": "Sátira",
+    "quantidade": 2,
+    "quantidadepaginas": 117,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 36,
+    "nome": "Autoajuda",
+    "quantidade": 1,
+    "quantidadepaginas": 244,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 30,
+    "nome": "Biografia",
+    "quantidade": 1,
+    "quantidadepaginas": 103,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 34,
+    "nome": "Economia",
+    "quantidade": 1,
+    "quantidadepaginas": 170,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 48,
+    "nome": "Ensaio",
+    "quantidade": 1,
+    "quantidadepaginas": 109,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 53,
+    "nome": "Literatura do eu",
+    "quantidade": 1,
+    "quantidadepaginas": 134,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 47,
+    "nome": "Realismo Mágico",
+    "quantidade": 1,
+    "quantidadepaginas": 344,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 39,
+    "nome": "Religioso",
+    "quantidade": 1,
+    "quantidadepaginas": 118,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 29,
+    "nome": "Ucronia",
+    "quantidade": 1,
+    "quantidadepaginas": 222,
+    "quantidadeRelecturas": 0
+  }
+]
