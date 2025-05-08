@@ -78,7 +78,8 @@ router.get('/DadosLivros', async function(req, res, next) {
     res.json({
       success: true,
       livros: livrosData.data,
-      origemDados: livrosData.meta.origemDados
+      origemDados: livrosData.meta.origemDados,
+      nomeFiltro: livrosData.data[0].nomeFiltro
     });
   } catch (err) {
     console.error(`Erro ao obter os DadosLivros:`, err);
