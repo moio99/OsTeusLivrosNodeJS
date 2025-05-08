@@ -1,7 +1,7 @@
 // public/js/estadisticas.js
 function borrarContido(idDiv) {
-    document.getElementById(idDiv).innerHTML = '';
-  }
+  document.getElementById(idDiv).innerHTML = '';
+}
 
 async function getEstadisticas(tipo, idDiv) {
   const divCarregarDados = document.getElementById(idDiv);

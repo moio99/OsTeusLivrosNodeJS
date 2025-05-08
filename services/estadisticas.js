@@ -1,5 +1,9 @@
 const db = require('../utils/db');
 const helper = require('../utils/helper');
+const fs = require('fs').promises;
+const path = require('path');
+
+const DATA_FILE = path.join(__dirname, '../data/DadosEstadisticas');
 
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
 , CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
@@ -97,14 +101,60 @@ async function getEstadisticas(idUsuario, tipo){
     default:
       return ''
   }
-  const data = helper.emptyOrRows(dados);
-  const meta = {'tipo': tipo};
+  const data = await GestomDados(dados, tipo);
 
+  return data;
+}
+
+async function GestomDados(dados, tipo){
+  let origemDados = 'BD';
+  let data = helper.emptyOrRows(dados);
+  if (tipo !== '4') {
+    if (data?.length > 0) {
+      if (process.env.NODE_ENTORNO === 'local') {
+        await EscreverFicheiroJSON(data, tipo);
+      }
+    } else {
+      const dataJS = await LerFicheiroJSON(tipo);
+      data = JSON.parse(dataJS);
+      origemDados = 'Ficheiro JSON';
+    }
+  }
+  
+  console.log(data.length + ' elementos devoltos');
+  const meta = {'tipo': tipo, origemDados: origemDados};
   return {
     data,
     meta
+  };
+}
+
+async function EscreverFicheiroJSON(dados, tipo) {
+  const nomeArquivo = DATA_FILE + tipo + '.json';
+  const dadosJson = JSON.stringify(dados, null, 2);
+  try {
+    const existingData = await fs.readFile(nomeArquivo, 'utf8');
+    
+    if (dadosJson.length !== existingData.length) {
+      await fs.writeFile(nomeArquivo, dadosJson);
+    }
+  } catch (error) {
+    await fs.writeFile(nomeArquivo, dadosJson);
+    console.log('dados escritos NOVO ficheiro');
   }
 }
+
+async function LerFicheiroJSON(tipo) {
+  const nomeArquivo = DATA_FILE + tipo + '.json';
+  try {
+    const data = await fs.readFile(nomeArquivo, 'utf8');
+    return data;
+  } catch (error) {
+    console.error('Erro ao ler o arquivo das estadísticas fallback:', error.message);
+    throw new Error('Nom foi posível obtener dados nem da API nem do arquivo fallback');
+  }
+}
+
 
 module.exports = {
   getEstadisticas

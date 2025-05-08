@@ -192,7 +192,7 @@ async function getUltimaLeitura(idUsuario){
 
 async function getUltimasLeituras(idUsuario){
   console.log('Petiçom de getUltimasLeituras ' + new Date().toJSON());
-  const condicomTempo = process.env.QUAL_PROJECTO === 'render' ?
+  const condicomTempo = process.env.QUAL_SQL === 'PosgreSQL' ?
       `AND (
         EXTRACT(YEAR FROM l.DataFimLeitura) = EXTRACT(YEAR FROM CURRENT_DATE)
         OR 

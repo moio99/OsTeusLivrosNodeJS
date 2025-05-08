@@ -46,6 +46,17 @@ h4 {
   will-change: transform;
 }
 
+.infoTopo {
+  display: flex;
+  gap: 5px;
+}
+
+.botomFechar {
+  display: flex;
+  gap: 5px;
+  justify-content: right;
+}
+
 .tarjeta {
   background-color: var(--input-bg);
   border-radius: 5px;

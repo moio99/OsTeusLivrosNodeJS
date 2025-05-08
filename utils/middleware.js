@@ -32,7 +32,7 @@ const userExtractor = (request, response, next) => {
   }
 
   console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO
-    , '  |  process.env.QUAL_PROJECTO: ' + process.env.QUAL_PROJECTO);
+    , '  |  process.env.QUAL_SQL: ' + process.env.QUAL_SQL);
   if (process.env.NODE_ENTORNO === 'railway') {
     const authorization = request.get('authorization') || request.get('Authorization');
     console.log('authorization: ' + authorization);

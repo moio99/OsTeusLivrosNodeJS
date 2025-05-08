@@ -20,7 +20,7 @@ async function query(sql, params, isMigracom = false) {
   let pgClient;
   let dados;
   try {
-    if (!isMigracom && process.env.QUAL_PROJECTO === 'render') {
+    if (!isMigracom && process.env.QUAL_SQL === 'PosgreSQL') {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('CONVERT(SUM', 'CAST(SUM')

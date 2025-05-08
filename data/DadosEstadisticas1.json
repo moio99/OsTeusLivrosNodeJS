@@ -1,0 +1,30 @@
+[
+  {
+    "id": 2,
+    "nome": "Galician-RAG",
+    "quantidade": 180,
+    "quantidadepaginas": 42406,
+    "quantidadeRelecturas": 1
+  },
+  {
+    "id": 8,
+    "nome": "Spanish",
+    "quantidade": 112,
+    "quantidadepaginas": 40850,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 3,
+    "nome": "Portuguese",
+    "quantidade": 21,
+    "quantidadepaginas": 5664,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 1,
+    "nome": "Galician-AGAL",
+    "quantidade": 2,
+    "quantidadepaginas": 194,
+    "quantidadeRelecturas": 0
+  }
+]

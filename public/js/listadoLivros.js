@@ -4,57 +4,59 @@ function borrarContido(idDiv) {
 }
 
 async function getLivros() {
-const loadingElement = document.getElementById('carregando');
+  const loadingElement = document.getElementById('carregando');
 
-try {
-  loadingElement.style.display = 'block';
-  document.getElementById('aEstadisticas').style.display = 'none';
-  const response = await fetch(`/api/paginas/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
-  if (!response.ok) {
-    throw new Error(`Error ${response.status}: ${response.statusText}`);
+  try {
+    loadingElement.style.display = 'block';
+    document.getElementById('aEstadisticas').style.display = 'none';
+    const response = await fetch(`/api/paginas/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    if (!data.success || !data.livros?.length) {
+      console.error('Nom se atoparom livros:', error);
+      return;
+    }
+    console.log(data.origemDados, 'origemDados elementos devoltos');
+    renderTitulo(data.nomeFiltro, data.origemDados);
+
+    const idiomas = [...new Set(data.livros.map(livro => livro.nomeIdioma))];
+    const autores = [...new Set(data.livros.flatMap(livro => 
+      livro.autores?.map(autor => autor.nome) || []
+    ))];
+    
+    livros = data.livros;
+    renderCombo(idiomas, '#languageFilter');
+    renderCombo(autores, '#authorComboFilter');
+    renderTaboa(data.livros);
+  } catch (error) {
+    console.error('Erro ao obter os livros:', error);
+  } finally {
+    loadingElement.style.display = 'none';
   }
+}
 
-  const data = await response.json();
-  if (!data.success || !data.livros?.length) {
-    console.error('Nom se atoparom livros:', error);
-    return;
+
+function renderTitulo(nomeFiltro, origemDados) {
+  const titulo = document.getElementById('titulo');
+  switch (idTipo) {
+    case '1':
+      titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro}</h3>`;
+      break;
+    case '2':
+      titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro}</h3>`;
+      break;
+    case '3':
+      titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro}</h3>`;
+      break;
+    default:
+      titulo.innerHTML = `<h1>Listado de Livros</h1>`;
+      document.getElementById('aEstadisticas').style.display = 'block';
+      document.getElementById('origemDados').innerText = origemDados;
+      break;
   }
-  renderTitulo(data.nomeFiltro);
-
-  const idiomas = [...new Set(data.livros.map(livro => livro.nomeIdioma))];
-  const autores = [...new Set(data.livros.flatMap(livro => 
-    livro.autores?.map(autor => autor.nome) || []
-  ))];
-  
-  livros = data.livros;
-  renderCombo(idiomas, '#languageFilter');
-  renderCombo(autores, '#authorComboFilter');
-  renderTaboa(data.livros);
-} catch (error) {
-  console.error('Erro ao obter os livros:', error);
-} finally {
-  loadingElement.style.display = 'none';
-}
-}
-
-
-function renderTitulo(nomeFiltro) {
-const titulo = document.getElementById('titulo');
-switch (idTipo) {
-  case '1':
-    titulo.innerHTML = `<h3>Livros polo idioma ${nomeFiltro}</h3>`;
-    break;
-  case '2':
-    titulo.innerHTML = `<h3>Livros polo género ${nomeFiltro}</h3>`;
-    break;
-  case '3':
-    titulo.innerHTML = `<h3>Livros polo ano ${nomeFiltro}</h3>`;
-    break;
-  default:
-    titulo.innerHTML = `<h1>Listado de Livros</h1>`;
-    document.getElementById('aEstadisticas').style.display = 'block';
-    break;
-}
 }
 
 function renderCombo(data, idCombo) {
