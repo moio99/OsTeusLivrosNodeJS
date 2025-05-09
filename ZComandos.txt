@@ -6,6 +6,12 @@ api
 https://osteuslivrosnodejs-production.up.railway.app/api
 https://osteuslivrosnodejs-production.up.railway.app/api/paginas/ListadoLivros?idUsuario=2&tipo=0
 
+render
+https://osteuslivrosnodejs.onrender.com/api/paginas/ListadoLivros?idUsuario=2&tipo=0
+
+fly.io
+https://osteuslivrosnodejs.fly.dev/api/paginas/ListadoLivros?idUsuario=2&tipo=0
+
 Para eligir o projecto co que trabalhar na consola
 railway link
 

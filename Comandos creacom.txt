@@ -32,3 +32,10 @@ npm run devRender       que lanza o nodemon ./app.js coa BD de posgreSQL de Rend
 para subir o código e despregar en railway
 subir a git
 railway up
+
+
+Para gerar os arquivos *.json para quando nom há base de dados
+http://localhost:5002/api/paginas/ListadoLivros?idUsuario=2&tipo=0
+navegar às estadísticas e consultar por idioma e por género
+os dados se guardam em
+.\OsMeusLivrosAPI\data
