@@ -121,7 +121,7 @@ async function GestomDados(dados, tipo){
     }
   }
   
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos devoltos. ' + origemDados);
   const meta = {'tipo': tipo, origemDados: origemDados};
   return {
     data,

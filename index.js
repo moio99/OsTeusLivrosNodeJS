@@ -85,6 +85,6 @@ app.use((err, req, res, next) => {
   return;
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Podes chamar à API do ${process.env.QUAL_SQL} no porto: ${port}`);
 });

@@ -74,7 +74,7 @@ async function getLivrosParaListadoMovel(idUsuario){
     data = await LerFicheiroJSON();
     origemDados = 'Ficheiro JSON';
   }
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos devoltos. ' + origemDados);
 
   const date = new Date();
   const dateFormatada = date.toLocaleDateString('es-ES', {
