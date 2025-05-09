@@ -31,9 +31,9 @@ router.get('/ProbaC', async function(req, res, next) {
 
 // SELECT
 router.get('/ProbaAa', async function(req, res, next) {
-  console.log('Petiçom /ProbaA');
+  console.log('Petiçom /ProbaAa');
   try {
-    const resultado = await estadisticas.getEstadisticas('2', '1');
+    const resultado = await estadisticas.getEstadisticas('2', '3');
     res.json(resultado);
   } catch (err) {
     console.error(`Erro ao obter os dados de Outros`, err.message);
@@ -45,7 +45,7 @@ router.get('/ProbaA', async function(req, res, next) {
   const pgClient = await db.pool.connect();
   try {
     res.json(await pgClient.query(
-      'SELECT * FROM Pais'
+      'SELECT * FROM casas'
     ));
   } catch (err) {
     console.error(`Erro ao obter os dados de Outros`, err.message);
@@ -206,7 +206,7 @@ async function migrateNacionalidades(pgClient) {
 
 async function migrateUsuarios(pgClient) {
   try {
-    const rows = await db.query('SELECT * FROM Usuario WHERE idUsuario = 2', null, true);
+    const rows = await db.query('SELECT * FROM Usuario', null, true);
     console.log(`✅ atopárom-se ${rows.length} Usuarios en MySQL`);
 
     await pgClient.query('BEGIN');   

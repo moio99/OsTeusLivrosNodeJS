@@ -1,5 +1,5 @@
 const mysql = require('mysql2/promise');
-const { configLocal, configRailway, configRender } = require('./config');
+const { configLocal, configRailway, configRender, configSupabase } = require('./config');
 const { Pool } = require('pg');
 
 // async function query(sql, params) {
@@ -13,14 +13,14 @@ const { Pool } = require('pg');
 //   return results;
 // }
 
-const pool = new Pool(configRender);
+const pool = new Pool(process.env.QUAL_SQL === 'PosgreSQLrender' ? configRender : configSupabase);
 
 async function query(sql, params, isMigracom = false) {
   let connection;
   let pgClient;
   let dados;
   try {
-    if (!isMigracom && process.env.QUAL_SQL === 'PosgreSQL') {
+    if (!isMigracom && process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL') {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('CONVERT(SUM', 'CAST(SUM')

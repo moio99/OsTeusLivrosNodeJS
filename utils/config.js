@@ -25,8 +25,16 @@ const configRender = {
   ssl: { rejectUnauthorized: false }
 };
 
+const configSupabase = {
+  connectionString: process.env.DB_POSGRESQL_SUPABASE_URL,
+  ssl: {
+    rejectUnauthorized: false // Necesario para Supabase
+  }
+};
+
 module.exports = {
   configLocal,
   configRailway,
-  configRender
+  configRender,
+  configSupabase
 }
