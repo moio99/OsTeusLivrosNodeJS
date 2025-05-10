@@ -5,9 +5,12 @@ const path = require('path');
 
 const DATA_FILE = path.join(__dirname, '../data/DadosEstadisticas');
 
-const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
-, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
-, CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"
+const quantidade = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+    `, SUM(uu.PaginasLidas)::INTEGER AS quantidadepaginas
+     , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
+  : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
+     , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
+const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
 FROM (
   SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
     FROM Livro l
@@ -26,8 +29,7 @@ FROM (
 GROUP BY uu.id, uu.nome
 ORDER BY quantidade DESC, lower(nome) ASC;`;
 const queryPorGenero = `SELECT uu.id, uu.nome
-  , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as "quantidadeRelecturas"
+  , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
@@ -45,9 +47,9 @@ const queryPorGenero = `SELECT uu.id, uu.nome
   ) as uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
+
 const queryPorAno = `SELECT uu.id, uu.nome
-  , COUNT(uu.id) as quantidade, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) as quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) as "quantidadeRelecturas"
+  , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome, l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
@@ -61,9 +63,8 @@ const queryPorAno = `SELECT uu.id, uu.nome
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY uu.id DESC;`;
-const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade
-  , CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
-  , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas" 
+  
+const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
     SELECT ar.idAutor as id, ar.Nome as nome, l.PaginasLidas, 0 AS numRelecturas
       FROM Livro l
