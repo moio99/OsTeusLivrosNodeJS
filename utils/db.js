@@ -23,9 +23,7 @@ async function query(sql, params, isMigracom = false) {
     if (!isMigracom && process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL') {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
-        .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ')
-        .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
-        .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
+        .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ');
       const resultado = await pgClient.query(salPosgreSQL, params);
       console.log(`✅ posgreSQL ${process.env.QUAL_SQL}`);
       return resultado.rows;

@@ -464,6 +464,13 @@ function LivroComMaisDumAutor(data) {
 
 async function getLivro(idUsuario, id){
   console.log('Petiçom de getLivro para o id: ' + id);
+  const dataSelect = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+      `, TO_CHAR(l.DataFimLeitura, 'DD/MM/YYYY') as "DataFimLeitura"
+       , TO_CHAR(l.DataCriacom, 'DD/MM/YYYY') as "DataCriacom"
+       , TO_CHAR(l.DataEdicom, 'DD/MM/YYYY') as "DataEdicom"`
+    : `, DATE_FORMAT(l.DataFimLeitura,'%d/%m/%Y') as "DataFimLeitura"
+       , DATE_FORMAT(l.DataCriacom,'%d/%m/%Y') as "DataCriacom"
+       , DATE_FORMAT(l.DataEdicom,'%d/%m/%Y') as "DataEdicom"`;
   let query = `SELECT
       l.idLivro AS "idLivro", l.Titulo AS "Titulo", l.TituloOriginal AS "TituloOriginal"
       , b.idBiblioteca AS "idBiblioteca", b.Nome as biblioteca
@@ -472,10 +479,8 @@ async function getLivro(idUsuario, id){
       , el.idEstilo, el.Nome as "estilo"
       , l.fkBiblioteca, l.fkEditorial, l.fkColecom, l.fkEstilo, l.ISBN AS "ISBN"
       , l.Paginas AS "Paginas", l.PaginasLidas AS "PaginasLidas", l.Lido AS "Lido", l.TempoLeitura AS "TempoLeitura"
-      , DATE_FORMAT(l.DataFimLeitura,'%d/%m/%Y') as "DataFimLeitura"
+      ${dataSelect}
       , l.fkIdioma AS "fkIdioma", l.fkIdiomaOriginal AS "fkIdiomaOriginal"
-      , DATE_FORMAT(l.DataCriacom,'%d/%m/%Y') as "DataCriacom"
-      , DATE_FORMAT(l.DataEdicom,'%d/%m/%Y') as "DataEdicom"
       , l.NumeroEdicom AS "NumeroEdicom", l.Electronico AS "Electronico"
       , l.SomSerie AS "SomSerie", l.idSerie AS "idSerie", l.Premios AS "Premios", l.Descricom AS "Descricom"
       , l.Comentario AS "Comentario", l.Pontuacom AS "Pontuacom"
