@@ -4,7 +4,7 @@ const livro = require('./livros');
 
 async function getAutores(idUsuario){
   console.log('Petiçom de getAutores ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL === 'PosgreSQL' ?
+  const quantidade = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosAutores = await db.query(
@@ -50,7 +50,7 @@ async function getAutorPorNome(idUsuario, nome){
 
 async function getAutoresFiltrados(idUsuario, id, tipo){
   console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL === 'PosgreSQL' ?
+  const quantidade = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 

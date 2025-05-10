@@ -29,16 +29,21 @@ async function query(sql, params, isMigracom = false) {
         .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
         .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
       const resultado = await pgClient.query(salPosgreSQL, params);
+      console.log(`✅ posgreSQL ${process.env.QUAL_SQL}`);
       return resultado.rows;
     } else {
+      let entorno = '✅ local';
       if (process.env.NODE_ENTORNO === 'local') {
         connection = await mysql.createConnection(configLocal.db);
       } else {
         connection = await mysql.createConnection(configRailway);
+        entorno = `✅ posgreSQL railway`;
       }
       dados = await connection.execute(sql, params);
-      if (dados && dados[0])
+      if (dados && dados[0]) {
+        console.log(entorno);
         return dados[0];
+      }
     }
   } catch (err) {
     console.error('Erro ao realiçar o GET:', err);
