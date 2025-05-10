@@ -23,8 +23,6 @@ async function query(sql, params, isMigracom = false) {
     if (!isMigracom && process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL') {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
-        .replaceAll('CONVERT(SUM', 'CAST(SUM')
-        .replaceAll(', UNSIGNED', ' AS INTEGER')
         .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ')
         .replaceAll('DATE_FORMAT(', 'TO_CHAR(')
         .replaceAll(`,'%d/%m/%Y')`, `, 'DD/MM/YYYY')`);
