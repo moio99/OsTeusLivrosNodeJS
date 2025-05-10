@@ -183,7 +183,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL === 'PosgreSQL' ? 
+  query += process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ? 
       ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
     : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
   const dados = await db.query(query);
@@ -223,7 +223,7 @@ async function getLivrosPorAno(idUsuario, ano){
         WHERE r.fkUsuario = ${idUsuario} 
         AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL === 'PosgreSQL' ? 
+  query += process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ? 
       ' ORDER BY uu."titulo" ASC;' 
     : ' ORDER BY uu.titulo ASC;' 
   const dados = await db.query(query);
@@ -267,7 +267,7 @@ async function getLivrosPorGenero(idUsuario, genero){
         WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL === 'PosgreSQL' ? 
+  query += process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ? 
       ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
     : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
   const dados = await db.query(query);
@@ -419,7 +419,7 @@ async function getLivrosSerie(idUsuario, id){
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario} 
       AND l.idSerie = ${id} `;
-  query += process.env.QUAL_SQL === 'PosgreSQL' ? 
+  query += process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ? 
       ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;'
     : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;';
   const dados = await db.query(query);
