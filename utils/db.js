@@ -20,7 +20,7 @@ async function query(sql, params, isMigracom = false) {
   let pgClient;
   let dados;
   try {
-    if (!isMigracom && process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL') {
+    if (!isMigracom && process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ');

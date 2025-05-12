@@ -62,7 +62,7 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
 
 async function getEstilosLiterariosCosLivros(idUsuario){
   console.log('Petiçom de getEstilosLiterariosCosLivros ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+  const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED)';
   const dadosLivro = await db.query(
