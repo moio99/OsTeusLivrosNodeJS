@@ -3,7 +3,7 @@ const helper = require('../utils/helper');
 
 async function getRelectura(idUsuario, idRelectura){
   console.log('Petiçom de getRelectura ' + new Date().toJSON() + ' idRelectura: ' + idRelectura);
-  const dataSelect = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+  const dataSelect = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
       `, TO_CHAR(r.DataFimLeitura, 'DD/MM/YYYY') as dataFimLeitura
        , TO_CHAR(r.DataEdicom, 'DD/MM/YYYY') as dataEdicom`
     : `, DATE_FORMAT(r.DataFimLeitura,'%d/%m/%Y') as dataFimLeitura

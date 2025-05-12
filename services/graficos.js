@@ -7,7 +7,7 @@ async function getPaginasPorIdiomaEAno(idUsuario){
   let quantidadepaginasUU = ', CONVERT(SUM(uu.quantidadepaginas), UNSIGNED) as "quantidadepaginas"';
   let quantidadepaginasL = ', CONVERT(SUM(l.PaginasLidas), UNSIGNED) as "quantidadepaginas"';
   let quantidadepaginasR = ', CONVERT(SUM(r.PaginasLidas), UNSIGNED) as "quantidadepaginas"';
-  if (process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL') {
+  if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
     quantidadepaginasUU = ', SUM(uu.quantidadepaginas)::INTEGER as "quantidadepaginas"';
     quantidadepaginasL = ', SUM(l.PaginasLidas)::INTEGER as "quantidadepaginas"';
     quantidadepaginasR = ', SUM(r.PaginasLidas)::INTEGER as "quantidadepaginas"';

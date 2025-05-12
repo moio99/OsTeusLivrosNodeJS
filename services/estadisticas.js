@@ -5,7 +5,7 @@ const path = require('path');
 
 const DATA_FILE = path.join(__dirname, '../data/DadosEstadisticas');
 
-const quantidade = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
     `, SUM(uu.PaginasLidas)::INTEGER AS quantidadepaginas
      , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
   : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
