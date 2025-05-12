@@ -72,6 +72,23 @@ router.get('/ProbaC', async function(req, res, next) {
   }
 });
 
+// Update
+router.get('/ProbaU', async function(req, res, next) {
+  console.log('Petiçom /ProbaC PosgreSQL');
+  // const { nome, email, idade } = req.query;
+  try {
+    res.json(await db.pool.query(
+      `UPDATE public.casas
+        SET "data"=now(), nome=$1, valor=$2
+        WHERE id=1;`,
+        ['primeiro', 300]
+    ));
+  } catch (err) {
+    console.error(`Erro ao obter os dados de Outros`, err.message);
+    next(err);
+  }
+});
+
 // INSERT
 router.get('/ProbaI', async function(req, res, next) {
   console.log('Petiçom /ProbaI');

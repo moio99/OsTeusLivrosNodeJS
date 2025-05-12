@@ -3,6 +3,11 @@ const helper = require('../utils/helper');
 
 async function getRelectura(idUsuario, idRelectura){
   console.log('Petiçom de getRelectura ' + new Date().toJSON() + ' idRelectura: ' + idRelectura);
+  const dataSelect = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+      `, TO_CHAR(r.DataFimLeitura, 'DD/MM/YYYY') as dataFimLeitura
+       , TO_CHAR(r.DataEdicom, 'DD/MM/YYYY') as dataEdicom`
+    : `, DATE_FORMAT(r.DataFimLeitura,'%d/%m/%Y') as dataFimLeitura
+       , DATE_FORMAT(r.DataEdicom,'%d/%m/%Y') as dataEdicom`;
   let query = `SELECT
       r.idRelectura as id, r.fkLivro, r.titulo
       , b.idBiblioteca, b.Nome as biblioteca
@@ -10,9 +15,8 @@ async function getRelectura(idUsuario, idRelectura){
       , c.idColecom, c.Nome as colecom
       , r.ISBN as isbn
       , r.Paginas as paginas, r.PaginasLidas as paginasLidas, r.Lido as lido, r.TempoLeitura as diasLeitura
-      , DATE_FORMAT(r.DataFimLeitura,'%d/%m/%Y') as dataFimLeitura
+      ${dataSelect}
       , r.fkIdioma as idIdioma
-      , DATE_FORMAT(r.DataEdicom,'%d/%m/%Y') as dataEdicom
       , r.NumeroEdicom as numeroEdicom, r.Electronico as electronico
       , r.SomSerie as somSerie, r.idSerie, r.Comentario as comentario, r.Pontuacom as pontuacom
     FROM Relectura r

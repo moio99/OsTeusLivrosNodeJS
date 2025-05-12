@@ -126,10 +126,14 @@ async function getAutoresPorPaises(idUsuario){
 
 async function getAutor(idUsuario, id){
   console.log('Petiçom de getAutor id: ' + id + ' tempo ' + new Date().toJSON());
+  const dataSelect = process.env.QUAL_SQL.length > 8 && process.env.QUAL_SQL.substring(0, 9) === 'PosgreSQL' ?
+      `, TO_CHAR(a.DataNacemento, 'DD/MM/YYYY') as "dataNacemento"
+       , TO_CHAR(a.DataDefuncom, 'DD/MM/YYYY') as "dataDefuncom", a.Premios as "premios", a.web`
+    : `, DATE_FORMAT(a.DataNacemento,'%d/%m/%Y') as "dataNacemento"
+       , DATE_FORMAT(a.DataDefuncom,'%d/%m/%Y') as "dataDefuncom", a.Premios as "premios", a.web`;
   const dadosAutor = await db.query(
     `SELECT a.idAutor as id, a.Nome as "nome", a.NomeReal as "nomeReal", a.LugarNacemento as "lugarNacemento"
-      , DATE_FORMAT(a.DataNacemento,'%d/%m/%Y') as "dataNacemento"
-      , DATE_FORMAT(a.DataDefuncom,'%d/%m/%Y') as "dataDefuncom", a.Premios as "premios", a.web
+      ${dataSelect}
       , a.Comentario as "comentario"
       , n.idNacionalidade, n.Nome as "nomeNacionalidade"
       , p.idPais, p.Nome as "nomePais"
