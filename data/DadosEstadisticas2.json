@@ -2,36 +2,43 @@
   {
     "id": 3,
     "nome": "Novela",
-    "quantidade": 115,
-    "quantidadepaginas": 30227,
+    "quantidade": 121,
+    "quantidadepaginas": 33188,
     "quantidadeRelecturas": 0
   },
   {
     "id": 4,
     "nome": "Ficçom Científica",
-    "quantidade": 50,
-    "quantidadepaginas": 16881,
+    "quantidade": 51,
+    "quantidadepaginas": 17170,
     "quantidadeRelecturas": 1
   },
   {
     "id": 7,
     "nome": "Histórica",
-    "quantidade": 35,
-    "quantidadepaginas": 15317,
+    "quantidade": 38,
+    "quantidadepaginas": 15817,
     "quantidadeRelecturas": 0
   },
   {
     "id": 5,
     "nome": "Fantasia",
-    "quantidade": 28,
-    "quantidadepaginas": 5458,
+    "quantidade": 30,
+    "quantidadepaginas": 6358,
     "quantidadeRelecturas": 0
   },
   {
     "id": 41,
     "nome": "Fantasia Épica",
-    "quantidade": 21,
-    "quantidadepaginas": 8336,
+    "quantidade": 23,
+    "quantidadepaginas": 10402,
+    "quantidadeRelecturas": 0
+  },
+  {
+    "id": 20,
+    "nome": "Contos",
+    "quantidade": 20,
+    "quantidadepaginas": 3811,
     "quantidadeRelecturas": 0
   },
   {
@@ -42,17 +49,10 @@
     "quantidadeRelecturas": 0
   },
   {
-    "id": 20,
-    "nome": "Contos",
-    "quantidade": 19,
-    "quantidadepaginas": 3607,
-    "quantidadeRelecturas": 0
-  },
-  {
     "id": 11,
     "nome": "Divulgaçom Cientista",
-    "quantidade": 17,
-    "quantidadepaginas": 5278,
+    "quantidade": 18,
+    "quantidadepaginas": 5478,
     "quantidadeRelecturas": 0
   },
   {
@@ -79,8 +79,8 @@
   {
     "id": 50,
     "nome": "Magia",
-    "quantidade": 8,
-    "quantidadepaginas": 2816,
+    "quantidade": 10,
+    "quantidadepaginas": 4663,
     "quantidadeRelecturas": 0
   },
   {

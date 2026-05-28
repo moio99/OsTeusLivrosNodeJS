@@ -7,6 +7,7 @@
     "dev": "cross-env NODE_ENTORNO=local QUAL_SQL=mySQL nodemon ./index.js",
     "devRender": "cross-env NODE_ENTORNO=local QUAL_SQL=render nodemon ./index.js",
     "devSupabase": "cross-env NODE_ENTORNO=local QUAL_SQL=PosgreSQLsupabase nodemon ./index.js",
+    "Para_subir_a_Supabase": "http://localhost:5002/api/ConstruconsBD/SubidaAWeb",
     "start": "node index.js",
     "startLocal": "cross-env NODE_ENTORNO=railway nodemon ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

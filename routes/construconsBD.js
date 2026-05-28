@@ -90,8 +90,8 @@ router.get('/ProbaU', async function(req, res, next) {
 });
 
 // INSERT
-router.get('/ProbaI', async function(req, res, next) {
-  console.log('Petiçom /ProbaI');
+router.get('/SubidaAWeb', async function(req, res, next) {
+  console.log('Petiçom /SubidaAWeb');
   const pgClient = await db.pool.connect();
   try {
     // await pgClient.query('BEGIN');
@@ -125,8 +125,10 @@ router.get('/ProbaI', async function(req, res, next) {
     res.json(await migrateAutoresN(pgClient));
     res.json(await migrateGenerosN(pgClient));
     res.json(await migrateEstilosLiterarios(pgClient));
+    
+    console.log('🎉 ✅✅✅ Fim da migraçom ✅✅✅ 🎉');
   } catch (err) {
-    console.error(`Erro ao realizar a migraçom en construconsBD`, err.message);
+    console.error(`Erro ao realizar a migraçom em construconsBD`, err.message);
     next(err);
   } finally {
     pgClient.release();
@@ -138,7 +140,7 @@ router.get('/ProbaI', async function(req, res, next) {
 async function migrateContinentes(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Continente', null, true);
-    console.log(`✅ atopárom-se ${rows.length} continentes en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} continentes em MySQL`);
 
     for (const row of rows) {
       await pgClient.query(
@@ -156,7 +158,7 @@ async function migrateContinentes(pgClient) {
 async function migratePaises(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Pais', null, true);
-    console.log(`✅ atopárom-se ${rows.length} paises en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} paises em MySQL`);
     
     await pgClient.query('BEGIN');   
     for (const pais of rows) {
@@ -178,7 +180,7 @@ async function migratePaises(pgClient) {
 async function migrateIdiomas(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Idioma', null, true);
-    console.log(`✅ atopárom-se ${rows.length} idiomas en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} idiomas em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const idioma of rows) {
@@ -199,7 +201,7 @@ async function migrateIdiomas(pgClient) {
 async function migrateNacionalidades(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Nacionalidade', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Nacionalidades en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Nacionalidades em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const elemento of rows) {
@@ -224,7 +226,7 @@ async function migrateNacionalidades(pgClient) {
 async function migrateUsuarios(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Usuario', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Usuarios en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Usuarios em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const u of rows) {
@@ -250,7 +252,7 @@ async function migrateUsuarios(pgClient) {
 async function migrateAutores(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Autor', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Autores en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Autores em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const a of rows) {
@@ -276,7 +278,7 @@ async function migrateAutores(pgClient) {
 async function migrateBibliotecas(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Biblioteca', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Bibliotecas en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Bibliotecas em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const b of rows) {
@@ -301,7 +303,7 @@ async function migrateBibliotecas(pgClient) {
 async function migrateColecons(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Colecom', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Colecons en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Colecons em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const c of rows) {
@@ -324,7 +326,7 @@ async function migrateColecons(pgClient) {
 async function migrateEditoriais(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Editorial', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Editoriais en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Editoriais em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const e of rows) {
@@ -347,7 +349,7 @@ async function migrateEditoriais(pgClient) {
 async function migrateGeneros(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Genero', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Generos en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Generos em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const g of rows) {
@@ -370,7 +372,7 @@ async function migrateGeneros(pgClient) {
 async function migrateLivros(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Livro WHERE fkUsuario = 2', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Livros en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Livros em MySQL`);
 
     await pgClient.query('BEGIN');
     
@@ -445,7 +447,7 @@ async function migrateLivros(pgClient) {
 async function migrateRelecturas(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Relectura WHERE fkUsuario = 2', null, true);
-    console.log(`✅ atopárom-se ${rows.length} Relecturas en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} Relecturas em MySQL`);
 
     await pgClient.query('BEGIN');
     for (const l of rows) {
@@ -508,7 +510,7 @@ async function migrateRelecturas(pgClient) {
 async function migrateAutoresN(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Autores WHERE fkUsuario = 2', null, true);
-    console.log(`✅ atopárom-se ${rows.length} AutoresN en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} AutoresN em MySQL`);
 
     await pgClient.query('BEGIN');
     for (const a of rows) {
@@ -532,7 +534,7 @@ async function migrateAutoresN(pgClient) {
 async function migrateGenerosN(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM Generos WHERE fkUsuario = 2', null, true);
-    console.log(`✅ atopárom-se ${rows.length} GenerosN en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} GenerosN em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const g of rows) {
@@ -557,7 +559,7 @@ async function migrateGenerosN(pgClient) {
 async function migrateEstilosLiterarios(pgClient) {
   try {
     const rows = await db.query('SELECT * FROM EstiloLiterario', null, true);
-    console.log(`✅ atopárom-se ${rows.length} EstilosLiterarios en MySQL`);
+    console.log(`✅ atopárom-se ${rows.length} EstilosLiterarios em MySQL`);
 
     await pgClient.query('BEGIN');   
     for (const e of rows) {
