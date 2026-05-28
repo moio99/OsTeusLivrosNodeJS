@@ -56,6 +56,11 @@ function renderTitulo(nomeFiltro, origemDados) {
       titulo.innerHTML = `<h1>Listado de Livros</h1>`;
       document.getElementById('aEstadisticas').style.display = 'block';
       document.getElementById('origemDados').innerText = origemDados;
+      if (origemDados !== 'BD') {
+        document.getElementById('origemDados').style.color = "red";
+        document.getElementById('origemDados').style.fontSize = "large";
+        document.getElementById('origemDados').style.fontWeight = "bold";
+      }
       break;
   }
 }
