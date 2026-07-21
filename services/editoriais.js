@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getEditoriais(idUsuario){
   console.log('Petiçom de getEditoriais ' + new Date().toJSON());
@@ -30,13 +30,18 @@ async function getEditorial(idUsuario, id){
   );
   
   const editorial = helper.emptyOrRows(dadosEditorial);
+
+  if (editorial.length == 0) {
+    return {
+      data: [],
+      meta: {'id': id}
+    }
+  }
+
   console.log(editorial.length + ' elementos devoltos');
-
-  const meta = {'id': id};
-
   return {
     data: editorial,
-    meta
+    meta: {'id': id}
   }
 }
 
@@ -162,6 +167,6 @@ async function borrarEditorial(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getEditoriais, getEditoriaisCosLivros, getEditorial, getEditorialPorNome, postEditorial, putEditorial, borrarEditorial
 }

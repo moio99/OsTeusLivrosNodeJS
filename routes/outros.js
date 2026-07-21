@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const outros = require('../services/outros');
+import outros from '../services/outros.js';
 
 /**
  * GET Nacionalidades
@@ -98,4 +98,4 @@ router.get('/IdiomaNome', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

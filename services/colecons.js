@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getColecons(idUsuario){
   console.log('Petiçom de getColecons ' + new Date().toJSON());
@@ -162,6 +162,6 @@ async function borrarColecom(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getColecons, getColeconsCosLivros, getColecom, getColecomPorNome, postColecom, putColecom, borrarColecom
 }

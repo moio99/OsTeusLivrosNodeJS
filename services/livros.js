@@ -1,8 +1,11 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
-const fs = require('fs').promises;
-const path = require('path');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const DATA_FILE = path.join(__dirname, '../data/DadosLivros.json');
 
 async function getLivros(idUsuario){
@@ -777,7 +780,7 @@ async function borrarLivro(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getLivros, getLivrosParaListadoMovel: getLivrosParaListadoMovel, 
   getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
   getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, 

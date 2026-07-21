@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const relecturas = require('../services/relecturas');
+import relecturas from '../services/relecturas.js';
 
 /**
  * GET
@@ -75,4 +75,4 @@ router.delete('/Relectura', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

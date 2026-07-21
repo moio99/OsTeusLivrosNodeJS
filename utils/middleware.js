@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken';
 
 const requestLogger = (request, response, next) => {
   console.info('Method:', request.method)
@@ -82,7 +82,7 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-module.exports = {
+export default {
   requestLogger,
   unknownEndpoint,
   //tokenExtractor,

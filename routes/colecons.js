@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const colecons = require('../services/colecons');
+import colecons from '../services/colecons.js';
 
 /**
  * GET
@@ -88,4 +88,4 @@ router.delete('/Colecom', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

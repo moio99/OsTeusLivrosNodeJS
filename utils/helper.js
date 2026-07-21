@@ -9,7 +9,7 @@ function emptyOrRows(rows) {
     return rows;
 }
 
-module.exports = {
+export default {
     getOffset,
     emptyOrRows,
 };

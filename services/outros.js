@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getNacionalidades(){
   console.log('Petiçom de getNacionalidades ' + new Date().toJSON());
@@ -262,7 +262,7 @@ async function getGenerico(datos){
   }
 }
 
-module.exports = {
+export default {
   getNacionalidades, getNacionalidadeNome, getPaises, getPaisNome, getAutores, getBibliotecas, getEditoriais
   , getGeneros, getColecons, getIdiomas, getIdiomaNome, getSeriesLivro, getTodo
 }

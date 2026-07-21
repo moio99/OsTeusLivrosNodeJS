@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getEstilosLiterarios(idUsuario){
   console.log('Petiçom de getEstilosLiterarios ' + new Date().toJSON());
@@ -159,6 +159,6 @@ async function borrarEstiloLiterario(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getEstilosLiterarios, getEstilosLiterariosCosLivros, getEstilosLiterario, getEstiloLiterarioPorNome, postEstiloLiterario, putEstiloLiterario, borrarEstiloLiterario
 }

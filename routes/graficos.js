@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const graficos = require('../services/graficos');
+import graficos from '../services/graficos.js';
 
 /**
  * GET
@@ -15,4 +15,4 @@ router.get('/PaginasPorIdiomaEAno', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

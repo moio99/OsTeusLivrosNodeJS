@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getPaginasPorIdiomaEAno(idUsuario){
   console.log('Petiçom de getPaginasPorIdiomaEAno ' + new Date().toJSON());
@@ -43,6 +43,6 @@ async function getPaginasPorIdiomaEAno(idUsuario){
     }
 }
 
-module.exports = {
+export default {
   getPaginasPorIdiomaEAno
 }

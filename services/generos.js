@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getGeneros(idUsuario){
   console.log('Petiçom de getGeneros ' + new Date().toJSON());
@@ -195,7 +195,7 @@ async function borrarGenero(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getGeneros, getGenerosCosLivros, getGenero, getGeneroPorNome, getGeneroNome
   , postGenero, putGenero, borrarGenero
 }

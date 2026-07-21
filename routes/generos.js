@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const generos = require('../services/generos');
+import generos from '../services/generos.js';
 
 /**
  * GET
@@ -98,4 +98,4 @@ router.delete('/Genero', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

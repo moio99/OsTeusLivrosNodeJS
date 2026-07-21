@@ -1,4 +1,5 @@
-require('dotenv').config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 const configLocal = {
   db: {
@@ -40,7 +41,7 @@ const configSupabase = {
   }
 };
 
-module.exports = {
+export default {
   configLocal,
   configRailway,
   configRender,

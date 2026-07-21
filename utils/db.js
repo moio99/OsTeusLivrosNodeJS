@@ -1,6 +1,8 @@
-const mysql = require('mysql2/promise');
-const { configLocal, configRailway, configRender, configSupabase } = require('./config');
-const { Pool } = require('pg');
+import mysql from 'mysql2/promise';
+import config from './config.js';
+import { Pool } from 'pg';
+
+const { configLocal, configRailway, configRender, configSupabase } = config;
 
 // async function query(sql, params) {
 //   const connection = await mysql.createConnection(configLocal.db);
@@ -83,6 +85,6 @@ function numberOu0(value) {
     return value;
 }
 
-module.exports = {
+export default {
   query, stringOuNull, stringOuNullSimple, numberOuNull, numberOu0, pool
 }

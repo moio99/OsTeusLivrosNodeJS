@@ -1,23 +1,30 @@
-const express = require("express");
-const cors = require('cors');
+import express from "express";
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import middleware from './utils/middleware.js';
+import loginRouter from "./utils/login.js";
+import estadisticasRouter from "./routes/estadisticas.js";
+import graficosRouter from "./routes/graficos.js";
+import livrosRouter from "./routes/livros.js";
+import autoresRouter from "./routes/autores.js";
+import editoriaisRouter from "./routes/editoriais.js";
+import generosRouter from "./routes/generos.js";
+import bibliotecasRouter from "./routes/bibliotecas.js";
+import coleconsRouter from "./routes/colecons.js";
+import outrosRouter from "./routes/outros.js";
+import relecturasRouter from "./routes/relecturas.js";
+import estilosLiterariosRouter from "./routes/estilosLiterarios.js";
+import paginasRouter from "./routes/paginas.js";
+import construconsBD from "./routes/construconsBD.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-require('dotenv').config(); // para usar o .env
+dotenv.config(); // para usar o .env
 const port = 5002;
-const middleware = require('./utils/middleware');
-const loginRouter = require("./utils/login");
-const estadisticasRouter = require("./routes/estadisticas");
-const graficosRouter = require("./routes/graficos");
-const livrosRouter = require("./routes/livros");
-const autoresRouter = require("./routes/autores");
-const editoriaisRouter = require("./routes/editoriais");
-const generosRouter = require("./routes/generos");
-const bibliotecasRouter = require("./routes/bibliotecas");
-const coleconsRouter = require("./routes/colecons");
-const outrosRouter = require("./routes/outros");
-const relecturasRouter = require("./routes/relecturas");
-const estilosLiterariosRouter = require("./routes/estilosLiterarios");
-const paginasRouter = require("./routes/paginas");
-const construconsBD = require("./routes/construconsBD");
 
 app.use(express.json());
 /* app.use(
@@ -25,7 +32,6 @@ app.use(express.json());
     extended: true,
   })
 ); */
-const path = require('path');
 app.use(express.static('public'));    // para poder carregar no html o estadisticas.js
 // __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,6 +65,40 @@ app.use(cors({
 
 // Manejo explícito de OPTIONS para todas las rutas
 //app.options('*', cors());
+
+
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+
+// Configuración de OpenAPI / Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'A miña API en Node 20',
+      version: '1.0.0',
+      description: 'Documentación automatizada da miña API',
+    },
+    servers: [{ url: `http://localhost:${port}/api` }],
+  },
+  apis: ['./app.js', './routes/*.js'], // Ruta onde o paquete buscará os teus comentarios de documentación
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+/**
+ * @openapi
+ * /estadisticas:
+ *   get:
+ *     description: Obtén as estadísticas.
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ */
+app.get('/estadisticas', (req, res) => {
+  res.json([{ id: 1, nome: 'Goretti' }]);
+});
 
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)

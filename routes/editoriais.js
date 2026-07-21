@@ -1,14 +1,43 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const editoriais = require('../services/editoriais');
+import editoriais from '../services/editoriais.js';
 
 /**
- * GET
+ * @openapi
+ * tags:
+ *   - name: Editoriais
+ *     description: Gestom de editoriais
+ */
+
+/**
+ * @openapi
+ * /editoriais:
+ *   get:
+ *     tags: [Editoriais]
+ *     description: Obtem o listado das editoriais.
+ *     parameters:
+ *       - in: query
+ *         name: idUsuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuario
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ *       400:
+ *         description: Parámetros incorrectos
+ *       404:
+ *         description: Editorials nom encontradas
  */
 router.get('/', async function(req, res, next) {
   try {
     // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await editoriais.getEditoriais());
+    if (!req.idUsuario) {
+      return res.status(400).json({ error: 'Faltam parámetros necesarios' });
+    }
+
+    res.json(await editoriais.getEditoriais(req.idUsuario));
   } catch (err) {
     console.error(`Erro ao obter as editoriais `, err.message);
     next(err);
@@ -43,12 +72,44 @@ router.get('/EditorialPorNome', async function(req, res, next) {
 });
 
 /**
- * GET
+ * @openapi
+ * /editoriais/Editorial:
+ *   get:
+ *     tags: [Editoriais]
+ *     description: Obtem umha editorial.
+ *     parameters:
+ *       - in: query
+ *         name: idUsuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do usuario
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID da editorial
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ *       400:
+ *         description: Parámetros incorrectos
+ *       404:
+ *         description: Editorial nom encontrada
  */
  router.get('/Editorial', async function(req, res, next) {
   try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await editoriais.getEditorial(req.idUsuario, req.query.id));
+    if (!req.idUsuario || !req.query.id) {
+      return res.status(400).json({ error: 'Faltam parámetros necesarios' });
+    }
+
+    const editorialResponse = await editoriais.getEditorial(req.idUsuario, req.query.id);
+    if (editorialResponse.data.length === 0) {
+      return res.status(404).json({ error: 'Editorial nom atopada' });
+    }
+
+    res.json(editorialResponse);
   } catch (err) {
     console.error(`Erro ao obter a editorial `, err.message);
     next(err);
@@ -88,4 +149,4 @@ router.delete('/Editorial', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

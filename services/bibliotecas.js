@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getBibliotecas(idUsuario){
   console.log('Petiçom de getBibliotecas ' + new Date().toJSON());
@@ -174,6 +174,6 @@ async function borrarBiblioteca(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getBibliotecas, getBibliotecasCosLivros, getBiblioteca, getBibliotecaPorNome, postBiblioteca, putBiblioteca, borrarBiblioteca
 }

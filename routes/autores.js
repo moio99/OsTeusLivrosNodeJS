@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const autores = require('../services/autores');
+import autores from '../services/autores.js';
 
 /**
  * GET
@@ -114,4 +114,4 @@ router.delete('/Autor', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

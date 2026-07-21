@@ -1,5 +1,5 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
 
 async function getRelectura(idUsuario, idRelectura){
   console.log('Petiçom de getRelectura ' + new Date().toJSON() + ' idRelectura: ' + idRelectura);
@@ -190,6 +190,6 @@ async function borrarRelectura(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getRelectura, getRelecturas, postRelectura, putRelectura, borrarRelectura
 }

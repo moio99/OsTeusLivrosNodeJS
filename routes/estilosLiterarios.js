@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const estiloLiterario = require('../services/estilosLiterarios');
+import estiloLiterario from '../services/estilosLiterarios.js';
 
 /**
  * GET
@@ -98,4 +98,4 @@ router.delete('/EstiloLiterario', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

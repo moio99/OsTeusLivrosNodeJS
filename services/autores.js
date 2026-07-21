@@ -1,6 +1,6 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
-const livro = require('./livros');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
+import livro from './livros.js';
 
 async function getAutores(idUsuario){
   console.log('Petiçom de getAutores ' + new Date().toJSON());
@@ -264,7 +264,7 @@ async function borrarAutor(idUsuario, id) {
   }
 }
 
-module.exports = {
+export default {
   getAutores, getAutorPorNome, getAutoresFiltrados, getAutoresPorNacons, getAutoresPorPaises, getAutor
   , postAutor, putAutor, borrarAutor
 }

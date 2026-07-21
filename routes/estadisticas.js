@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const estadisticas = require('../services/estadisticas');
+import estadisticas from '../services/estadisticas.js';
 
 /**
  * GET
@@ -21,4 +21,4 @@ router.get('/', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

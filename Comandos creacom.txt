@@ -39,3 +39,8 @@ http://localhost:5002/api/paginas/ListadoLivros?idUsuario=2&tipo=0
 navegar às estadísticas e consultar por idioma e por género
 os dados se guardam em
 .\OsMeusLivrosAPI\data
+
+
+para crear unha interface interactiva de Swagger UI con OpenApi
+npm install swagger-ui-express swagger-jsdoc
+http://localhost:5002/api-docs/

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENTORNO=local QUAL_SQL=mySQL nodemon ./index.js",
     "Para_facer_a_consulta_basica": "http://localhost:5002/api/paginas/ListadoLivros?idUsuario=2&tipo=0",
@@ -11,7 +12,8 @@
     "Para_subir_a_Supabase": "http://localhost:5002/api/ConstruconsBD/SubidaAWeb",
     "start": "node index.js",
     "startLocal": "cross-env NODE_ENTORNO=railway nodemon ./index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "Pagina_do_listado_da_api_em_supabase": "https://osteuslivrosnodejs.onrender.com/api/paginas/ListadoLivros?idUsuario=2&tipo=0"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +27,9 @@
     "mysql2": "^2.3.3",
     "node-fetch": "^3.3.2",
     "nodemon": "^2.0.19",
-    "pg": "^8.15.6"
+    "pg": "^8.15.6",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3"

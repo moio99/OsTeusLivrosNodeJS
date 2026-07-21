@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const db = require('../utils/db');
-const estadisticas = require('../services/estadisticas');
+import db from '../utils/db.js';
+import estadisticas from '../services/estadisticas.js';
 
 // Query para crear la tabla
 const createTableQuery = `
@@ -579,4 +579,4 @@ async function migrateEstilosLiterarios(pgClient) {
   }
 }
 
-module.exports = router;
+export default router;

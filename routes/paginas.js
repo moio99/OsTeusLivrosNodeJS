@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const livros = require('../services/livros');
-const estadisticas = require('../services/estadisticas');
+import livros from '../services/livros.js';
+import estadisticas from '../services/estadisticas.js';
 // const fs = require('fs');
-const fs = require('fs').promises;
+import fs from 'fs/promises';
 
 router.get('/', async function(req, res, next) {
   const resultado = {resultado:'Chamada realizada'};
@@ -195,4 +195,4 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;

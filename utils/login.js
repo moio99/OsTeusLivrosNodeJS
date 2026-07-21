@@ -1,7 +1,8 @@
-const db = require('../utils/db');
-const jwt = require('jsonwebtoken')
+import db from '../utils/db.js';
+import jwt from 'jsonwebtoken';
 // const bcrypt = require('bcrypt')
-const loginRouter = require('express').Router()
+import { Router } from 'express';
+const loginRouter = Router();
 
 loginRouter.post('/', async (request, response) => {
   const { nome, contrasinal } = request.body
@@ -34,4 +35,4 @@ loginRouter.post('/', async (request, response) => {
   }
 })
 
-module.exports = loginRouter
+export default loginRouter

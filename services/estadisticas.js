@@ -1,8 +1,11 @@
-const db = require('../utils/db');
-const helper = require('../utils/helper');
-const fs = require('fs').promises;
-const path = require('path');
+import db from '../utils/db.js';
+import helper from '../utils/helper.js';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const DATA_FILE = path.join(__dirname, '../data/DadosEstadisticas');
 
 const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
@@ -157,6 +160,6 @@ async function LerFicheiroJSON(tipo) {
 }
 
 
-module.exports = {
+export default {
   getEstadisticas
 }

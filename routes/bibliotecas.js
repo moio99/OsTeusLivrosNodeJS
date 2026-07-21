@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const bibliotecas = require('../services/bibliotecas');
+import bibliotecas from '../services/bibliotecas.js';
 
 /**
  * GET
@@ -88,4 +88,4 @@ router.delete('/Biblioteca', async function(req, res, next) {
   }
 });
 
-module.exports = router;
+export default router;
