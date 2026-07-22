@@ -38,19 +38,16 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch with Nodemon",
+            "name": "Lanzar co Nodemon",
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/app.js",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
-            "runtimeArgs": [
-                "cross-env",
-                "NODE_ENTORNO=local",
-                "QUAL_SQL=mySQ",
-                "node",
-                "${workspaceFolder}/index.js"
-            ]
+            "env": {
+                "QUAL_SQL": "mySQL",
+                "NODE_ENTORNO": "local"
+            }
         }
     ]
 }

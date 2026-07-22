@@ -40,7 +40,8 @@ const allowedOrigins = [
   'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
   'https://osteuslivrosangular.onrender.com', // Frontend de render.com
   'http://localhost:4210',
-  'http://localhost:4230'
+  'http://localhost:4230',
+  'http://localhost:5002'   // Para as chamdas dende o swagger (OpenApi)
 ];
 
 app.use(cors({
