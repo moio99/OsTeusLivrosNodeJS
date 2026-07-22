@@ -24,7 +24,7 @@ async function getLivros(idUsuario){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': 0, 'quantidade': data.length};
 
   return {
@@ -77,7 +77,7 @@ async function getLivrosParaListadoMovel(idUsuario){
     data = await LerFicheiroJSON();
     origemDados = 'Ficheiro JSON';
   }
-  console.log(data.length + ' elementos devoltos. ' + origemDados);
+  console.log(data.length + ' elementos obtidos. ' + origemDados);
 
   const date = new Date();
   const dateFormatada = date.toLocaleDateString('es-ES', {
@@ -128,7 +128,7 @@ async function getLivroPorTitulo(idUsuario, titulo){
   );
   
   const livro = helper.emptyOrRows(dadosLivro);
-  console.log(livro.length + ' elementos devoltos');
+  console.log(livro.length + ' elementos obtidos');
 
   const meta = {'id': livro.length > 0 ? livro[0].id : 0, 'quantidade': livro.length};
 
@@ -153,7 +153,7 @@ async function getLivrosUltimaLectura(idUsuario){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': 0, 'quantidade': data.length};
 
   return {
@@ -193,7 +193,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'Idioma': idioma};
 
   return {
@@ -233,7 +233,7 @@ async function getLivrosPorAno(idUsuario, ano){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'Ano': ano};
 
   return {
@@ -277,7 +277,7 @@ async function getLivrosPorGenero(idUsuario, genero){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'Genero': genero};
 
   return {
@@ -303,7 +303,7 @@ async function getLivrosPorAutor(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -329,7 +329,7 @@ async function getLivrosPorEditorial(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -355,7 +355,7 @@ async function getLivrosPorBiblioteca(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -381,7 +381,7 @@ async function getLivrosPorColecom(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -407,7 +407,7 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -429,7 +429,7 @@ async function getLivrosSerie(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
   const meta = {'id': id, 'quantidade': data.length};
 
   return {

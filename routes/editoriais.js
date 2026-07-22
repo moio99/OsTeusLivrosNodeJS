@@ -15,13 +15,6 @@ import editoriais from '../services/editoriais.js';
  *   get:
  *     tags: [Editoriais]
  *     description: Obtem o listado das editoriais.
- *     parameters:
- *       - in: query
- *         name: idUsuario
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID do usuario
  *     responses:
  *       200:
  *         description: Éxito total.
@@ -79,24 +72,19 @@ router.get('/EditorialPorNome', async function(req, res, next) {
  *     description: Obtem umha editorial.
  *     parameters:
  *       - in: query
- *         name: idUsuario
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID do usuario
- *       - in: query
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
  *         description: ID da editorial
+ *         example: 89
  *     responses:
  *       200:
  *         description: Éxito total.
  *       400:
  *         description: Parámetros incorrectos
  *       404:
- *         description: Editorial nom encontrada
+ *         description: Editorial nom atopada
  */
  router.get('/Editorial', async function(req, res, next) {
   try {

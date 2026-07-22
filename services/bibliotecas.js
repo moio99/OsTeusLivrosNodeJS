@@ -11,7 +11,7 @@ async function getBibliotecas(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 
@@ -32,7 +32,7 @@ async function getBiblioteca(idUsuario, id){
   );
   
   const biblioteca = helper.emptyOrRows(dadosBiblioteca);
-  console.log(biblioteca.length + ' elementos devoltos');
+  console.log(biblioteca.length + ' elementos obtidos');
 
   const meta = {'id': id};
 
@@ -52,7 +52,7 @@ async function getBibliotecaPorNome(idUsuario, nome){
   );
   
   const biblioteca = helper.emptyOrRows(dadosBiblioteca);
-  console.log(biblioteca.length + ' elementos devoltos');
+  console.log(biblioteca.length + ' elementos obtidos');
 
   const meta = {'id': biblioteca.length > 0 ? biblioteca[0].id : 0, 'quantidade': biblioteca.length};
 
@@ -74,7 +74,7 @@ async function getBibliotecasCosLivros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 

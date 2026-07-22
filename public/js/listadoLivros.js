@@ -19,7 +19,7 @@ async function getLivros() {
       console.error('Nom se atoparom livros:', error);
       return;
     }
-    console.log(data.origemDados, 'origemDados elementos devoltos');
+    console.log(data.origemDados, 'origemDados elementos obtidos');
     renderTitulo(data.nomeFiltro, data.origemDados);
 
     const idiomas = [...new Set(data.livros.map(livro => livro.nomeIdioma))];

@@ -11,7 +11,7 @@ async function getColecons(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 
@@ -30,7 +30,7 @@ async function getColecom(idUsuario, id){
   );
   
   const colecom = helper.emptyOrRows(dadosColecom);
-  console.log(colecom.length + ' elementos devoltos');
+  console.log(colecom.length + ' elementos obtidos');
 
   const meta = {'id': id};
 
@@ -50,7 +50,7 @@ async function getColecomPorNome(idUsuario, nome){
   );
   
   const colecom = helper.emptyOrRows(dadosColecom);
-  console.log(colecom.length + ' elementos devoltos');
+  console.log(colecom.length + ' elementos obtidos');
 
   const meta = {'id': colecom.length > 0 ? colecom[0].id : 0, 'quantidade': colecom.length};
 
@@ -72,7 +72,7 @@ async function getColeconsCosLivros(idUsuario){
   );
 
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 

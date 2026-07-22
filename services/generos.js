@@ -11,7 +11,7 @@ async function getGeneros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 
@@ -30,7 +30,7 @@ async function getGenero(idUsuario, id){
   );
   
   const genero = helper.emptyOrRows(dadosGenero);
-  console.log(genero.length + ' elementos devoltos');
+  console.log(genero.length + ' elementos obtidos');
 
   const meta = {'id': id};
 
@@ -50,7 +50,7 @@ async function getGeneroPorNome(idUsuario, nome){
   );
   
   const genero = helper.emptyOrRows(dadosGenero);
-  console.log(genero.length + ' elementos devoltos');
+  console.log(genero.length + ' elementos obtidos');
 
   const meta = {'id': genero.length > 0 ? genero[0].id : 0, 'quantidade': genero.length};
 
@@ -93,7 +93,7 @@ async function getGenerosCosLivros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosGeneros);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'nada': 'nada'};
 

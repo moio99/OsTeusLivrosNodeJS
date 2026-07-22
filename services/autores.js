@@ -18,7 +18,7 @@ async function getAutores(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'quantidade': data.length};
 
@@ -38,7 +38,7 @@ async function getAutorPorNome(idUsuario, nome){
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
-  console.log(autor.length + ' elementos devoltos');
+  console.log(autor.length + ' elementos obtidos');
 
   const meta = {'id': autor.length > 0 ? autor[0].id : 0, 'quantidade': autor.length};
 
@@ -70,7 +70,7 @@ async function getAutoresFiltrados(idUsuario, id, tipo){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'quantidade': data.length};
 
@@ -92,7 +92,7 @@ async function getAutoresPorNacons(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'quantidade': data.length};
 
@@ -114,7 +114,7 @@ async function getAutoresPorPaises(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'quantidade': data.length};
 
@@ -148,7 +148,7 @@ async function getAutor(idUsuario, id){
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
-  console.log(autor.length + ' elementos devoltos');
+  console.log(autor.length + ' elementos obtidos');
 
   const meta = {'id': id, 'quantidade': autor.length};
 

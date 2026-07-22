@@ -252,7 +252,7 @@ async function getTodo(idUsuario) {
 
 async function getGenerico(datos){
   const data = helper.emptyOrRows(datos);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'quantidade': data.length};
 

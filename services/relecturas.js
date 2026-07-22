@@ -27,7 +27,7 @@ async function getRelectura(idUsuario, idRelectura){
   const dadosRelectura = await db.query(query);
   
   const data = helper.emptyOrRows(dadosRelectura);
-  console.log(data.length + ' elementos devoltos');
+  console.log(data.length + ' elementos obtidos');
 
   const meta = {'id': idRelectura};
 
