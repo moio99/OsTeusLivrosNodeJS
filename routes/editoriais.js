@@ -14,6 +14,7 @@ import editoriais from '../services/editoriais.js';
  * /editoriais:
  *   get:
  *     tags: [Editoriais]
+ *     summary: Obtem o listado das
  *     description: Obtem o listado das editoriais.
  *     responses:
  *       200:
@@ -69,7 +70,8 @@ router.get('/EditorialPorNome', async function(req, res, next) {
  * /editoriais/Editorial:
  *   get:
  *     tags: [Editoriais]
- *     description: Obtem umha editorial.
+ *     summary: Obtem umha editorial concreta
+ *     description: Obtem umha editorial polo id.
  *     parameters:
  *       - in: query
  *         name: id

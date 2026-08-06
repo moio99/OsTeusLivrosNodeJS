@@ -10,6 +10,7 @@
     "devRender": "cross-env NODE_ENTORNO=local QUAL_SQL=render nodemon ./index.js",
     "devSupabase": "cross-env NODE_ENTORNO=local QUAL_SQL=PosgreSQLsupabase nodemon ./index.js",
     "Para_subir_a_Supabase": "http://localhost:5002/api/ConstruconsBD/SubidaAWeb",
+    "Para_ciar_txts_coa_insercom_dos_dados": "http://localhost:5002/api/ConstruconsBD/CiarSQLsInsercom",
     "start": "node index.js",
     "startLocal": "cross-env NODE_ENTORNO=railway nodemon ./index.js",
     "test": "node --test",

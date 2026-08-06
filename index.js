@@ -18,6 +18,8 @@ import relecturasRouter from "./routes/relecturas.js";
 import estilosLiterariosRouter from "./routes/estilosLiterarios.js";
 import paginasRouter from "./routes/paginas.js";
 import construconsBD from "./routes/construconsBD.js";
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,38 +70,28 @@ app.use(cors({
 //app.options('*', cors());
 
 
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
 
-// Configuración de OpenAPI / Swagger
+// Configuraçom de OpenAPI / Swagger
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'A miña API en Node 20',
+      title: 'A minha API em Node 20',
       version: '1.0.0',
-      description: 'Documentación automatizada da miña API',
+      description: 'Documentaçom automatizada da minha API',
     },
     servers: [{ url: `http://localhost:${port}/api` }],
   },
-  apis: ['./app.js', './routes/*.js'], // Ruta onde o paquete buscará os teus comentarios de documentación
+  apis: ['./routes/*.js'], // Rotas onde o paquete buscará os teus comentarios de documentación
 };
-
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-/**
- * @openapi
- * /estadisticas:
- *   get:
- *     description: Obtén as estadísticas.
- *     responses:
- *       200:
- *         description: Éxito total.
- */
-app.get('/estadisticas', (req, res) => {
-  res.json([{ id: 1, nome: 'Goretti' }]);
+// Ruta para servir a especificación en JSON puro
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerDocs);
 });
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(middleware.requestLogger)
 app.use('/api/login', loginRouter)

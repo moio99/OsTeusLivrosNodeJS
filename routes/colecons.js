@@ -40,7 +40,8 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  * /colecons/Colecom:
  *   get:
  *     tags: [Coleçons]
- *     description: Obtem umha coleçom.
+ *     summary: Obtem umha coleçom concreta
+ *     description: Obtem umha coleçom polo id.
  *     parameters:
  *       - in: query
  *         name: id
