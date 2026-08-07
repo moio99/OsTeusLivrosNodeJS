@@ -16,15 +16,14 @@ function escapeSqlValue(value) {
 }
 
 function getFilenamePrefix() {
-  const dataHoje = new Date().toISOString().slice(0, 10);
-  return `bd-${dataHoje}`;
+  return `bd-${new Date().toISOString().slice(0, 10)}`;
 }
 
-async function salvarDadosSQL(idUsuario) {
-  console.log('Petiçom de salvarDados ' + new Date().toJSON());
+async function salvarDadosSQL(nomeBD = getFilenamePrefix()) {
+  console.log('Petiçom de salvarDadosSQL ' + new Date().toJSON());
 
-  const nomeData = getFilenamePrefix();
-  const caminhoDados = path.join(__dirname, '../data/' + nomeData);
+  const nomePasta = getFilenamePrefix();
+  const caminhoDados = path.join(__dirname, '../data/' + nomePasta);
   const arquivoContinente = path.join(caminhoDados, `Continente.txt`);
   const arquivoPais = path.join(caminhoDados, `Pais.txt`);
   const arquivoIdiomas = path.join(caminhoDados, `Idiomas.txt`);
@@ -90,19 +89,19 @@ async function salvarDadosSQL(idUsuario) {
 
     const linhasContinente = (continentes || []).map((continente) => {
       // o ?? está por se o C maiúsculo dá problemas, nesse caso usaria continente.idcontinente
-      return `INSERT INTO \`${nomeData}\`.\`Continente\` (\`idContinente\`,\`Nome\`) VALUES (${escapeSqlValue(continente.idContinente ?? continente.idcontinente)}, ${escapeSqlValue(continente.Nome ?? continente.nome)});`;
+      return `INSERT INTO \`${nomeBD }\`.\`Continente\` (\`idContinente\`,\`Nome\`) VALUES (${escapeSqlValue(continente.idContinente ?? continente.idcontinente)}, ${escapeSqlValue(continente.Nome ?? continente.nome)});`;
     });
     const linhasPais = (paises || []).map((pais) => {
-      return `INSERT INTO \`${nomeData}\`.\`Pais\` (\`idPais\`,\`Nome\`,\`fkContinente\`) VALUES (${escapeSqlValue(pais.idPais ?? pais.idpais)}, ${escapeSqlValue(pais.Nome ?? pais.nome)}, ${escapeSqlValue(pais.fkContinente ?? pais.fkcontinente)});`;
+      return `INSERT INTO \`${nomeBD }\`.\`Pais\` (\`idPais\`,\`Nome\`,\`fkContinente\`) VALUES (${escapeSqlValue(pais.idPais ?? pais.idpais)}, ${escapeSqlValue(pais.Nome ?? pais.nome)}, ${escapeSqlValue(pais.fkContinente ?? pais.fkcontinente)});`;
     });
     const linhasIdiomas = (idiomas || []).map((idioma) => {
-      return `INSERT INTO \`${nomeData}\`.\`Idioma\` (\`idIdioma\`,\`Nome\`,\`Codigo\`) VALUES (${escapeSqlValue(idioma.idIdioma ?? idioma.idIdioma)}, ${escapeSqlValue(idioma.Nome ?? idioma.nome)}, ${escapeSqlValue(idioma.Codigo ?? idioma.codigo)});`;
+      return `INSERT INTO \`${nomeBD }\`.\`Idioma\` (\`idIdioma\`,\`Nome\`,\`Codigo\`) VALUES (${escapeSqlValue(idioma.idIdioma ?? idioma.idIdioma)}, ${escapeSqlValue(idioma.Nome ?? idioma.nome)}, ${escapeSqlValue(idioma.Codigo ?? idioma.codigo)});`;
     });
     const linhasNacionalidades = (nacionalidades || []).map((nacionalidade) => {
-      return `INSERT INTO \`${nomeData}\`.\`Nacionalidade\` (\`idNacionalidade\`,\`Nome\`,\`fkPais\`,\`fkContinente\`) VALUES (${escapeSqlValue(nacionalidade.idNacionalidade ?? nacionalidade.idnacionalidade)}, ${escapeSqlValue(nacionalidade.Nome ?? nacionalidade.nome)}, ${escapeSqlValue(nacionalidade.fkPais ?? nacionalidade.fkpais)}, ${escapeSqlValue(nacionalidade.fkContinente ?? nacionalidade.fkcontinente)});`;
+      return `INSERT INTO \`${nomeBD }\`.\`Nacionalidade\` (\`idNacionalidade\`,\`Nome\`,\`fkPais\`,\`fkContinente\`) VALUES (${escapeSqlValue(nacionalidade.idNacionalidade ?? nacionalidade.idnacionalidade)}, ${escapeSqlValue(nacionalidade.Nome ?? nacionalidade.nome)}, ${escapeSqlValue(nacionalidade.fkPais ?? nacionalidade.fkpais)}, ${escapeSqlValue(nacionalidade.fkContinente ?? nacionalidade.fkcontinente)});`;
     });
     const linhasUsuarios = (usuarios || []).map((usuario) => {
-      return `INSERT INTO \`${nomeData}\`.\`Usuario\` (\`idUsuario\`,\`Nome\`,\`pass\`,\`Pergunta\`,\`Contestacom\`,\`Correio\`,\`fkIdioma\`,\`Ativado\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Usuario\` (\`idUsuario\`,\`Nome\`,\`pass\`,\`Pergunta\`,\`Contestacom\`,\`Correio\`,\`fkIdioma\`,\`Ativado\`) VALUES (
   ${escapeSqlValue(usuario.idUsuario ?? usuario.idusuario)}
 , ${escapeSqlValue(usuario.Nome ?? usuario.nome)}
 , ${escapeSqlValue(usuario.pass ?? usuario.pass)}
@@ -113,7 +112,7 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(usuario.Ativado ?? usuario.ativado)}
 );`;});
     const linhasAutores = (autores || []).map((autor) => {
-      return `INSERT INTO \`${nomeData}\`.\`Autor\` (\`idAutor\`, \`fkUsuario\`, \`Nome\`, \`NomeReal\`, \`fkNacionalidade\`, \`fkPais\`, \`LugarNacemento\`, \`DataNacemento\`, \`DataDefuncom\`, \`Premios\`, \`web\`, \`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Autor\` (\`idAutor\`, \`fkUsuario\`, \`Nome\`, \`NomeReal\`, \`fkNacionalidade\`, \`fkPais\`, \`LugarNacemento\`, \`DataNacemento\`, \`DataDefuncom\`, \`Premios\`, \`web\`, \`Comentario\`) VALUES (
   ${escapeSqlValue(autor.idAutor ?? autor.idautor)}
 , ${escapeSqlValue(autor.fkUsuario ?? autor.fkusuario)}
 , ${escapeSqlValue(autor.Nome ?? autor.nome)}
@@ -128,7 +127,7 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(autor.Comentario ?? autor.comentario)}
 );`;});
     const linhasBibliotecas = (bibliotecas || []).map((biblioteca) => {
-      return `INSERT INTO \`${nomeData}\`.\`Biblioteca\` (\`idBiblioteca\`, \`fkUsuario\`, \`Nome\`, \`Endereco\`, \`Localidade\`, \`Telefone\`, \`DataAsociamento\`, \`DataRenovacom\`, \`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Biblioteca\` (\`idBiblioteca\`, \`fkUsuario\`, \`Nome\`, \`Endereco\`, \`Localidade\`, \`Telefone\`, \`DataAsociamento\`, \`DataRenovacom\`, \`Comentario\`) VALUES (
   ${escapeSqlValue(biblioteca.idBiblioteca ?? biblioteca.idbiblioteca)}
 , ${escapeSqlValue(biblioteca.fkUsuario ?? biblioteca.fkusuario)}
 , ${escapeSqlValue(biblioteca.Nome ?? biblioteca.nome)}
@@ -140,7 +139,7 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(biblioteca.Comentario ?? biblioteca.comentario)}
 );`;});
     const linhasColecons = (colecons || []).map((colecom) => {
-      return `INSERT INTO \`${nomeData}\`.\`Colecom\` (\`idColecom\`, \`fkUsuario\`, \`Nome\`, \`ISBN\`, \`web\`, \`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Colecom\` (\`idColecom\`, \`fkUsuario\`, \`Nome\`, \`ISBN\`, \`web\`, \`Comentario\`) VALUES (
   ${escapeSqlValue(colecom.idColecom ?? colecom.idcolecom)}
 , ${escapeSqlValue(colecom.fkUsuario ?? colecom.fkusuario)}
 , ${escapeSqlValue(colecom.Nome ?? colecom.nome)}
@@ -149,7 +148,7 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(colecom.Comentario ?? colecom.comentario)}
 );`;});
     const linhasEditoriais = (editoriais || []).map((editorial) => {
-      return `INSERT INTO \`${nomeData}\`.\`Editorial\` (\`idEditorial\`, \`fkUsuario\`, \`Nome\`, \`Direicom\`, \`web\`, \`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Editorial\` (\`idEditorial\`, \`fkUsuario\`, \`Nome\`, \`Direicom\`, \`web\`, \`Comentario\`) VALUES (
   ${escapeSqlValue(editorial.idEditorial ?? editorial.ideditorial)}
 , ${escapeSqlValue(editorial.fkUsuario ?? editorial.fkusuario)}
 , ${escapeSqlValue(editorial.Nome ?? editorial.nome)}
@@ -158,14 +157,14 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(editorial.Comentario ?? editorial.comentario)}
 );`;});
     const linhasGeneros = (generos || []).map((genero) => {
-      return `INSERT INTO \`${nomeData}\`.\`Genero\` (\`idGenero\`, \`fkUsuario\`, \`Nome\`, \`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Genero\` (\`idGenero\`, \`fkUsuario\`, \`Nome\`, \`Comentario\`) VALUES (
   ${escapeSqlValue(genero.idGenero ?? genero.idgenero)}
 , ${escapeSqlValue(genero.fkUsuario ?? genero.fkusuario)}
 , ${escapeSqlValue(genero.Nome ?? genero.nome)}
 , ${escapeSqlValue(genero.Comentario ?? genero.comentario)}
 );`;});
     const linhasLivros = (livros || []).map((livro) => {
-      return `INSERT INTO \`${nomeData}\`.\`Livro\` (\`idLivro\`, \`fkUsuario\`, \`Titulo\`, \`TituloOriginal\`, \`fkGenero\`, \`fkSubGenero\`, \`fkBiblioteca\`, \`fkEditorial\`, \`fkColecom\`, \`ISBN\`, \`Electronico\`, \`Paginas\`, \`PaginasLidas\`, \`Lido\`, \`TempoLeitura\`, \`DataFimLeitura\`, \`fkIdioma\`, \`fkIdiomaOriginal\`, \`DataCriacom\`, \`DataEdicom\`, \`NumeroEdicom\`, \`Premios\`, \`Descricom\`, \`Comentario\`, \`Pontuacom\`, \`fkIdiomaDaEntrada\`, \`SomSerie\`, \`idSerie\`, \`fkEstilo\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Livro\` (\`idLivro\`, \`fkUsuario\`, \`Titulo\`, \`TituloOriginal\`, \`fkGenero\`, \`fkSubGenero\`, \`fkBiblioteca\`, \`fkEditorial\`, \`fkColecom\`, \`ISBN\`, \`Electronico\`, \`Paginas\`, \`PaginasLidas\`, \`Lido\`, \`TempoLeitura\`, \`DataFimLeitura\`, \`fkIdioma\`, \`fkIdiomaOriginal\`, \`DataCriacom\`, \`DataEdicom\`, \`NumeroEdicom\`, \`Premios\`, \`Descricom\`, \`Comentario\`, \`Pontuacom\`, \`fkIdiomaDaEntrada\`, \`SomSerie\`, \`idSerie\`, \`fkEstilo\`) VALUES (
   ${escapeSqlValue(livro.idLivro ?? livro.idlivro)}
 , ${escapeSqlValue(livro.fkUsuario ?? livro.fkusuario)}
 , ${escapeSqlValue(livro.Titulo ?? livro.titulo)}
@@ -197,7 +196,7 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(livro.fkEstilo ?? livro.fkestilo)}
 );`;});
     const linhasRelecturas = (relecturas || []).map((relectura) => {
-      return `INSERT INTO \`${nomeData}\`.\`Relectura\` (\`idRelectura\`, \`fkLivro\`, \`fkUsuario\`, \`Titulo\`, \`fkBiblioteca\`, \`fkEditorial\`, \`fkColecom\`, \`ISBN\`, \`Electronico\`, \`Paginas\`, \`PaginasLidas\`, \`Lido\`, \`TempoLeitura\`, \`DataFimLeitura\`, \`fkIdioma\`, \`DataEdicom\`, \`NumeroEdicom\`, \`Comentario\`, \`Pontuacom\`, \`fkIdiomaDaEntrada\`, \`SomSerie\`, \`idSerie\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Relectura\` (\`idRelectura\`, \`fkLivro\`, \`fkUsuario\`, \`Titulo\`, \`fkBiblioteca\`, \`fkEditorial\`, \`fkColecom\`, \`ISBN\`, \`Electronico\`, \`Paginas\`, \`PaginasLidas\`, \`Lido\`, \`TempoLeitura\`, \`DataFimLeitura\`, \`fkIdioma\`, \`DataEdicom\`, \`NumeroEdicom\`, \`Comentario\`, \`Pontuacom\`, \`fkIdiomaDaEntrada\`, \`SomSerie\`, \`idSerie\`) VALUES (
   ${escapeSqlValue(relectura.idRelectura ?? relectura.idrelectura)}
 , ${escapeSqlValue(relectura.fkLivro ?? relectura.fklivro)}
 , ${escapeSqlValue(relectura.fkUsuario ?? relectura.fkusuario)}
@@ -222,21 +221,21 @@ async function salvarDadosSQL(idUsuario) {
 , ${escapeSqlValue(relectura.idSerie ?? relectura.idserie)}
 );`;});
     const linhasAutoresR = (autoresR || []).map((autorR) => {
-      return `INSERT INTO \`${nomeData}\`.\`Autores\` (\`idAutores\`,\`fkUsuario\`,\`fkLivro\`,\`fkAutor\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Autores\` (\`idAutores\`,\`fkUsuario\`,\`fkLivro\`,\`fkAutor\`) VALUES (
   ${escapeSqlValue(autorR.idAutores ?? autorR.idautores)}
 , ${escapeSqlValue(autorR.fkUsuario ?? autorR.fkusuario)}
 , ${escapeSqlValue(autorR.fkLivro ?? autorR.fklivro)}
 , ${escapeSqlValue(autorR.fkAutor ?? autorR.fkautor)}
 );`;});
     const linhasGenerosR = (generosR || []).map((generoR) => {
-      return `INSERT INTO \`${nomeData}\`.\`Generos\` (\`idGeneros\`,\`fkUsuario\`,\`fkLivro\`,\`fkGenero\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`Generos\` (\`idGeneros\`,\`fkUsuario\`,\`fkLivro\`,\`fkGenero\`) VALUES (
   ${escapeSqlValue(generoR.idGeneros ?? generoR.idgeneros)}
 , ${escapeSqlValue(generoR.fkUsuario ?? generoR.fkusuario)}
 , ${escapeSqlValue(generoR.fkLivro ?? generoR.fklivro)}
 , ${escapeSqlValue(generoR.fkGenero ?? generoR.fkgenero)}
 );`;});
     const linhasEstilosLiterarios = (estilosLiterarios || []).map((estiloLiterario) => {
-      return `INSERT INTO \`${nomeData}\`.\`EstiloLiterario\` (\`idEstilo\`,\`fkUsuario\`,\`Nome\`,\`Comentario\`) VALUES (
+      return `INSERT INTO \`${nomeBD }\`.\`EstiloLiterario\` (\`idEstilo\`,\`fkUsuario\`,\`Nome\`,\`Comentario\`) VALUES (
   ${escapeSqlValue(estiloLiterario.idEstilo ?? estiloLiterario.idestiloLiterario)}
 , ${escapeSqlValue(estiloLiterario.fkUsuario ?? estiloLiterario.fkusuario)}
 , ${escapeSqlValue(estiloLiterario.Nome ?? estiloLiterario.nome)}
@@ -309,7 +308,7 @@ async function salvarDadosSQL(idUsuario) {
       registrosEstilosLiterarios: linhasEstilosLiterarios.length
     };
   } catch (err) {
-    console.error(`Erro ao executar salvarDados em zmantementos-salvar-dados`, err.message);
+    console.error(`Erro ao executar salvarDadosSQL em zmantementos-salvar-dados.js`, err.message);
     return false;
   }
 }

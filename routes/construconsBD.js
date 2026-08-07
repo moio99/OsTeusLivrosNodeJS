@@ -3,6 +3,7 @@ const router = express.Router();
 import db from '../utils/db.js';
 import estadisticas from '../services/estadisticas.js';
 import subidaWeb from '../services/zmantemento-subida-web.js';
+import ciarBD from '../services/zmantemento-criar-BD.js';
 import salvarDados from '../services/zmantemento-salvar-dados.js';
 
 // Query para crear la tabla
@@ -109,15 +110,31 @@ router.get('/SubidaAWeb', async function(req, res, next) {
   }
 });
 
+router.get('/CiarSQLsBD', async function(req, res, next) {
+  console.log('Petiçom /CiarSQLsBD');
+  try {
+    const resultado = await ciarBD.ciarSQLsCriacomBD(req.query.nomeBD);
+    if (!resultado) {
+      console.error('❌ Erro ao criar os arquivos');
+      return res.status(500).json({ error: 'Erro ao criar os arquivos' });
+    }
+    console.log('✅ Arquivos criados com sucesso');
+    res.json(resultado);
+  } catch (err) {
+    console.error(`Erro guardando os dados `, err.message);
+    next(err);
+  }
+});
+
 router.get('/CiarSQLsInsercom', async function(req, res, next) {
   console.log('Petiçom /CiarSQLsInsercom');
   try {
-    const resultado = await salvarDados.salvarDadosSQL();
+    const resultado = await salvarDados.salvarDadosSQL(req.query.nomeBD);
     if (!resultado) {
-      console.error('❌ Erro ao guardar os dados');
-      return res.status(500).json({ error: 'Erro ao guardar os dados' });
+      console.error('❌ Erro ao criar os arquivos');
+      return res.status(500).json({ error: 'Erro ao criar os arquivos' });
     }
-    console.log('✅ Dados guardados com sucesso');
+    console.log('✅ Arquivos criados com sucesso');
     res.json(resultado);
   } catch (err) {
     console.error(`Erro guardando os dados `, err.message);

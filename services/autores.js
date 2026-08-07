@@ -6,7 +6,7 @@ async function getAutores(idUsuario){
   console.log('Petiçom de getAutores ' + new Date().toJSON());
   const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
+    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosAutores = await db.query(
     `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade}
       FROM Autor a
@@ -52,7 +52,7 @@ async function getAutoresFiltrados(idUsuario, id, tipo){
   console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
   const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
+    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
     FROM Autor a
     LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor

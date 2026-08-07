@@ -81,7 +81,7 @@ async function getGenerosCosLivros(idUsuario){
   console.log('Petiçom de getGenerosCosLivros ' + new Date().toJSON());
   const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED)';
+    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosGeneros = await db.query(
     `SELECT g.idGenero as id, g.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
       FROM Genero g
