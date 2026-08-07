@@ -72,10 +72,10 @@ async function salvarDadosSQL(nomeBD = getFilenamePrefix()) {
       'SELECT idGenero, fkUsuario, Nome, Comentario FROM Genero;'
     );
     const livros = await db.query(
-      `SELECT idLivro, fkUsuario, Titulo, TituloOriginal, fkGenero, fkSubGenero, fkBiblioteca, fkEditorial, fkColecom, ISBN, Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DATE_FORMAT(DataFimLeitura,'%Y-%m-%d'), fkIdioma, fkIdiomaOriginal, DATE_FORMAT(DataCriacom, '%Y-%m-%d'), DATE_FORMAT(DataEdicom, '%Y-%m-%d'), NumeroEdicom, Premios, Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie, fkEstilo FROM Livro;`
+      `SELECT idLivro, fkUsuario, Titulo, TituloOriginal, fkGenero, fkSubGenero, fkBiblioteca, fkEditorial, fkColecom, ISBN, Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DATE_FORMAT(DataFimLeitura,'%Y-%m-%d') AS DataFimLeitura, fkIdioma, fkIdiomaOriginal, DATE_FORMAT(DataCriacom, '%Y-%m-%d') AS DataCriacom, DATE_FORMAT(DataEdicom, '%Y-%m-%d') AS DataEdicom, NumeroEdicom, Premios, Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie, fkEstilo FROM Livro;`
     )
     const relecturas = await db.query(
-      `SELECT idRelectura, fkLivro, fkUsuario, Titulo, fkBiblioteca, fkEditorial, fkColecom, ISBN, Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DATE_FORMAT(DataFimLeitura,'%Y-%m-%d'), fkIdioma, DATE_FORMAT(DataEdicom, '%Y-%m-%d'), NumeroEdicom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie FROM Relectura;`
+      `SELECT idRelectura, fkLivro, fkUsuario, Titulo, fkBiblioteca, fkEditorial, fkColecom, ISBN, Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DATE_FORMAT(DataFimLeitura,'%Y-%m-%d') AS DataFimLeitura, fkIdioma, DATE_FORMAT(DataEdicom, '%Y-%m-%d') AS DataEdicom, NumeroEdicom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie FROM Relectura;`
     )
     const autoresR = await db.query(
       'SELECT idAutores, fkUsuario, fkLivro, fkAutor FROM Autores;'
