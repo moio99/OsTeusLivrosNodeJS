@@ -14,20 +14,18 @@ loginRouter.post('/', async (request, response) => {
   }
 
   const rows = await db.query(
-    `SELECT * FROM Usuario WHERE Nome = '${nome}' AND Pass = '${contrasinal}' AND Ativado = true;`
+    `SELECT * FROM usuario WHERE nome = '${nome}' AND pass = '${contrasinal}' AND ativado = true;`
   );
   if (rows.length === 0) {
     return response.status(401).json({
       error: 'inválidos nome do usuario ou contrasinal'
     })
   } else {
-    console.log(rows);
     const userForToken = {
-      nome: rows[0].Nome,
-      id: rows[0].idUsuario,
-      idioma: rows[0].fkIdioma
+      nome: rows[0].nome,
+      id: rows[0].idusuario,
+      idioma: rows[0].fkidioma
     }
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', userForToken);
     // o token expira em uma hora (60*60 segundos)
     const token = jwt.sign(userForToken, process.env.SEGREDO_PARA_O_TOKEN, { expiresIn: 60*60 });
 
