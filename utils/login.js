@@ -21,11 +21,13 @@ loginRouter.post('/', async (request, response) => {
       error: 'inválidos nome do usuario ou contrasinal'
     })
   } else {
+    console.log(rows);
     const userForToken = {
       nome: rows[0].Nome,
       id: rows[0].idUsuario,
       idioma: rows[0].fkIdioma
     }
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', userForToken);
     // o token expira em uma hora (60*60 segundos)
     const token = jwt.sign(userForToken, process.env.SEGREDO_PARA_O_TOKEN, { expiresIn: 60*60 });
 
