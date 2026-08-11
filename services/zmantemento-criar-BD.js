@@ -22,8 +22,6 @@ function getFilenamePrefix() {
 async function ciarSQLsCriacomBD(nomeBD = getFilenamePrefix()) {
   console.log('Petiçom de ciarSQLsCriacomBD ' + new Date().toJSON());
 
-  const nomePasta = getFilenamePrefix();
-
   try {
     // Obtém lista de tabelas da base de dados atual
     const tablesRows = await db.query('SHOW TABLES');
@@ -58,9 +56,10 @@ async function ciarSQLsCriacomBD(nomeBD = getFilenamePrefix()) {
       }
     }
 
-    const outDir = path.join(__dirname, '..', 'data');
+    const nomePasta = getFilenamePrefix();
+    const outDir = path.join(__dirname, `../data/${nomePasta}`);
     await fs.mkdir(outDir, { recursive: true });
-    const fileName = `QueriesCriacom_${nomeBD}.txt`;
+    const fileName = `0QueriesCriacom_${nomeBD}.txt`;
     const outPath = path.join(outDir, fileName);
     await fs.writeFile(outPath, content, 'utf8');
     console.log(`Ficheiro escrito: ${outPath}`);
