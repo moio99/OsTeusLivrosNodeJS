@@ -43,7 +43,6 @@ router.get('/ProbaAa', async function(req, res, next) {
     next(err);
   }
 });
-
 router.get('/ProbaA', async function(req, res, next) {
   console.log('Petiçom /ProbaA');
   const pgClient = await db.pool.connect();
