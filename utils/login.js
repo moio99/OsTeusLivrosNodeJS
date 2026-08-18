@@ -22,9 +22,9 @@ loginRouter.post('/', async (request, response) => {
     })
   } else {
     const userForToken = {
-      nome: rows[0].nome,
-      id: rows[0].idusuario,
-      idioma: rows[0].fkidioma
+      nome: rows[0].Nome,
+      id: rows[0].idUsuario,
+      idioma: rows[0].fkIdioma
     }
     // o token expira em uma hora (60*60 segundos)
     const token = jwt.sign(userForToken, process.env.SEGREDO_PARA_O_TOKEN, { expiresIn: 60*60 });
