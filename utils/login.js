@@ -14,7 +14,7 @@ loginRouter.post('/', async (request, response) => {
   }
 
   const rows = await db.query(
-    `SELECT Nome AS nome, idUsuario AS idusuario, fkIdioma AS fkidioma FROM usuario WHERE nome = '${nome}' AND pass = '${contrasinal}' AND ativado = true;`
+    `SELECT Nome AS nome, idUsuario AS idusuario, fkIdioma AS fkidioma FROM usuario WHERE Nome = '${nome}' AND pass = '${contrasinal}' AND ativado = true;`
   );
   if (rows.length === 0) {
     return response.status(401).json({

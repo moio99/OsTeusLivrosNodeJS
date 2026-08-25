@@ -19,7 +19,7 @@ import outros from '../services/outros.js';
  */
 router.get('/NacionalidadeNome', async function(req, res, next) {
   try {
-    res.json(await outros.getNacionalidadeNome(req.idUsuario, req.query.id));
+    res.json(await outros.getNacionalidadeNome(req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o nome da nacionalidade`, err.message);
     next(err);
@@ -43,7 +43,7 @@ router.get('/NacionalidadeNome', async function(req, res, next) {
  */
 router.get('/PaisNome', async function(req, res, next) {
   try {
-    res.json(await outros.getPaisNome(req.idUsuario, req.query.id));
+    res.json(await outros.getPaisNome(req.query.id));
   } catch (err) {
     console.error(`Erro ao obter o nome do pais`, err.message);
     next(err);
