@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getNacionalidades(){
-  console.log('Petiçom de getNacionalidades ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getNacionalidades ' + new Date().toJSON());
   const dadosNacionalidades = await db.query(
     `SELECT n.idNacionalidade as id, n.Nome as nome
        , n.fkPais, p.Nome as nomePais, n.fkContinente, c.Nome as nomeContinente
@@ -15,7 +15,7 @@ async function getNacionalidades(){
 }
 
 async function getNacionalidadeNome(id){
-  console.log(`Petiçom de getNacionalidadeNome id: ${id} data: ${new Date().toJSON()}`);
+  console.log(`Petiçom OUTROS para getNacionalidadeNome id: ${id} data: ${new Date().toJSON()}`);
   const dadosNacionalidade = await db.query(
     `SELECT n.Nome as nome
       FROM Nacionalidade n
@@ -32,7 +32,7 @@ async function getNacionalidadeNome(id){
 }
 
 async function getPaises(){
-  console.log('Petiçom de getPaises ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getPaises ' + new Date().toJSON());
   const dadosPaises = await db.query(
     `SELECT p.idPais as id, p.Nome as nome, p.fkContinente, c.Nome as nomeContinente
       FROM Pais p
@@ -43,7 +43,7 @@ async function getPaises(){
 }
 
 async function getPaisNome(id){
-  console.log(`Petiçom de getPaisNome id: ${id} data: ${new Date().toJSON()}`);
+  console.log(`Petiçom OUTROS para getPaisNome id: ${id} data: ${new Date().toJSON()}`);
   const dadosPais = await db.query(
     `SELECT p.Nome as nome
       FROM Pais p
@@ -60,7 +60,7 @@ async function getPaisNome(id){
 }
 
 async function getAutores(idUsuario){
-  console.log('Petiçom de getAutores ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getAutores ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT a.idAutor id, a.Nome as nome, a.Comentario as comentario
       FROM Autor a
@@ -72,7 +72,7 @@ async function getAutores(idUsuario){
 }
 
 async function getBibliotecas(idUsuario){
-  console.log('Petiçom de getBibliotecas ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getBibliotecas ' + new Date().toJSON());
   const dadosBibliotecas = await db.query(
     `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as endereco, b.Localidade as localidade
         , b.Telefone as telefone, b.DataAsociamento as dataAsociamento
@@ -86,7 +86,7 @@ async function getBibliotecas(idUsuario){
 }
 
 async function getEditoriais(idUsuario){
-  console.log('Petiçom de getEditoriais ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getEditoriais ' + new Date().toJSON());
   const dadosEditoriais = await db.query(
     `SELECT e.idEditorial id, e.Nome as nome, e.Direicom as direicom, e.web
         , e.Comentario as comentario
@@ -99,7 +99,7 @@ async function getEditoriais(idUsuario){
 }
 
 async function getGeneros(idUsuario){
-  console.log('Petiçom de getGeneros ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getGeneros ' + new Date().toJSON());
   const dadosGeneros = await db.query(
     `SELECT g.idGenero id, g.Nome as nome, g.Comentario as comentario
       FROM Genero g
@@ -111,7 +111,7 @@ async function getGeneros(idUsuario){
 }
 
 async function getColecons(idUsuario){
-  console.log('Petiçom de getColecons ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getColecons ' + new Date().toJSON());
   const dadosColecons = await db.query(
     `SELECT c.idColecom id, c.Nome as nome, c.ISBN, c.web, c.Comentario as comentario
       FROM Colecom c
@@ -123,7 +123,7 @@ async function getColecons(idUsuario){
 }
 
 async function getEstilosLiterarios(idUsuario){
-  console.log('Petiçom de getEstilosLiterarios ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getEstilosLiterarios ' + new Date().toJSON());
   const dadosEstilos = await db.query(
     `SELECT e.idEstilo id, e.Nome as nome, e.Comentario as comentario
       FROM EstiloLiterario e
@@ -135,7 +135,7 @@ async function getEstilosLiterarios(idUsuario){
 }
 
 async function getIdiomas(){
-  console.log('Petiçom de getIdiomas ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getIdiomas ' + new Date().toJSON());
   const dados = await db.query(
     `SELECT i.idIdioma id, i.Nome as nome, i.Codigo as codigo
       FROM Idioma i
@@ -146,7 +146,7 @@ async function getIdiomas(){
 }
 
 async function getIdiomaNome(id){
-  console.log(`Petiçom de getIdiomaNome id: ${id} data: ${new Date().toJSON()}`);
+  console.log(`Petiçom OUTROS para getIdiomaNome id: ${id} data: ${new Date().toJSON()}`);
   const dadosIdioma = await db.query(
     `SELECT i.Nome as nome
       FROM Idioma i
@@ -163,7 +163,7 @@ async function getIdiomaNome(id){
 }
 
 async function getSeriesLivro(idUsuario){
-  console.log('Petiçom de getSeriesLivro ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getSeriesLivro ' + new Date().toJSON());
   const dados = await db.query(
     `SELECT l.idLivro id, l.Titulo as "titulo"
       FROM Livro l
@@ -175,7 +175,7 @@ async function getSeriesLivro(idUsuario){
 }
 
 async function getUltimaLeitura(idUsuario){
-  console.log('Petiçom de getUltimaLeitura ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getUltimaLeitura ' + new Date().toJSON());
   const dados = await db.query(
     `SELECT MAX(l.DataFimLeitura) as "ultimaLeitura"
       FROM Livro l
@@ -191,8 +191,8 @@ async function getUltimaLeitura(idUsuario){
 
 
 async function getUltimasLeituras(idUsuario){
-  console.log('Petiçom de getUltimasLeituras ' + new Date().toJSON());
-  const condicomTempo = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom OUTROS para getUltimasLeituras ' + new Date().toJSON());
+  const condicomTempo = db.ePosgreSQL() ?
       `AND (
         EXTRACT(YEAR FROM l.DataFimLeitura) = EXTRACT(YEAR FROM CURRENT_DATE)
         OR 
@@ -219,7 +219,7 @@ async function getUltimasLeituras(idUsuario){
 }
 
 async function getTodo(idUsuario) {
-  console.log('Petiçom de getTodo ' + new Date().toJSON());
+  console.log('💬 Petiçom OUTROS para getTodo ' + new Date().toJSON());
   const nacionalidades = await getNacionalidades();
   const paises = await getPaises();
   const autores = await getAutores(idUsuario);
@@ -252,7 +252,7 @@ async function getTodo(idUsuario) {
 
 async function getGenerico(datos){
   const data = helper.emptyOrRows(datos);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'quantidade': data.length};
 

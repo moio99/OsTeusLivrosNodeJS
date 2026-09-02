@@ -20,7 +20,7 @@ function getFilenamePrefix() {
 }
 
 async function ciarSQLsCriacomBD(nomeBD = getFilenamePrefix()) {
-  console.log('Petiçom de ciarSQLsCriacomBD ' + new Date().toJSON());
+  console.log('💬 Petiçom de ciarSQLsCriacomBD ' + new Date().toJSON());
 
   try {
     // Obtém lista de tabelas da base de dados atual

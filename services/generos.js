@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getGeneros(idUsuario){
-  console.log('Petiçom de getGeneros ' + new Date().toJSON());
+  console.log('💬 Petiçom de getGeneros ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT g.idGenero as id, e.Nome as nome
       FROM Genero g
@@ -11,7 +11,7 @@ async function getGeneros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -22,7 +22,7 @@ async function getGeneros(idUsuario){
 }
 
 async function getGenero(idUsuario, id){
-  console.log('Petiçom de getGenero ' + new Date().toJSON());
+  console.log('💬 Petiçom de getGenero ' + new Date().toJSON());
   const dadosGenero = await db.query(
     `SELECT e.idGenero as id, e.Nome as nome, e.Comentario as comentario  
       FROM Genero e
@@ -42,7 +42,7 @@ async function getGenero(idUsuario, id){
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getGeneroPorNome(idUsuario, nome){
-  console.log('Petiçom de getGeneroPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getGeneroPorNome ' + new Date().toJSON());
   const dadosGenero = await db.query(
     `SELECT g.idGenero as id
       FROM Genero g
@@ -61,7 +61,7 @@ async function getGeneroPorNome(idUsuario, nome){
 }
 
 async function getGeneroNome(idUsuario, id){
-  console.log('Petiçom de getGeneroNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getGeneroNome ' + new Date().toJSON());
   const dadosGenero = await db.query(
     `SELECT e.Nome as nome
       FROM Genero e
@@ -78,8 +78,8 @@ async function getGeneroNome(idUsuario, id){
 }
 
 async function getGenerosCosLivros(idUsuario){
-  console.log('Petiçom de getGenerosCosLivros ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getGenerosCosLivros ' + new Date().toJSON());
+  const quantidade = db.ePosgreSQL() ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosGeneros = await db.query(
@@ -93,7 +93,7 @@ async function getGenerosCosLivros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosGeneros);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -105,12 +105,12 @@ async function getGenerosCosLivros(idUsuario){
 
 // FUNCIONA O PUT mas o post nom porque dá um erro de geraçom do autonumérico para idgenero
 async function postGenero(idUsuario, genero){
-  console.log('Petiçom de postGenero ' + genero.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postGenero ' + genero.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   let queryInsert = `INSERT INTO Genero
     (fkUsuario, Nome, Comentario)
     VALUES (?, ?, ?)`;
-  if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+  if (db.ePosgreSQL()) {
     queryInsert = `INSERT INTO Genero
       (fkUsuario, Nome, Comentario)
       VALUES ($1, $2, $3)
@@ -124,14 +124,14 @@ async function postGenero(idUsuario, genero){
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-    if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+    if (db.ePosgreSQL()) {
       idResult = ResultSetHeader[0].idgenero;
     } else if (ResultSetHeader.affectedRows == 1)
       idResult = ResultSetHeader.insertId
     }  
   );
   
-  console.log('id: ' + idResult + ' genero creado');
+  console.log('✅ id: ' + idResult + ' genero creado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -140,14 +140,14 @@ async function postGenero(idUsuario, genero){
 }
 
 async function putGenero(idUsuario, genero){
-  console.log('Petiçom de putGenero ' + genero.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putGenero ' + genero.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
   let queryInsert = `UPDATE Genero SET
       Nome = ?,
       Comentario = ?
     WHERE idGenero = ? AND fkUsuario = ?;`;
-  if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+  if (db.ePosgreSQL()) {
     queryInsert = `UPDATE Genero SET
         Nome = $1,
         Comentario = $2
@@ -161,14 +161,14 @@ async function putGenero(idUsuario, genero){
     idUsuario
   ];
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-    if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+    if (db.ePosgreSQL()) {
       idResult = ResultSetHeader[0].idgenero;
     } else if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
       idResult = genero.id;
     }
   );
   
-  console.log('id: ' + idResult + ' genero actualizado');
+  console.log('✅ id: ' + idResult + ' genero actualizado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -177,7 +177,7 @@ async function putGenero(idUsuario, genero){
 }
 
 async function borrarGenero(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
   await db.query(
     `DELETE FROM Genero WHERE idGenero = ${id} AND fkUsuario = ${idUsuario};`
@@ -187,7 +187,7 @@ async function borrarGenero(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' genero borrado');
+  console.log('✅ id: ' + idResult + ' genero borrado');
   const meta = {'id': idResult};
   return {
     idResult,

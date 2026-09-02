@@ -22,24 +22,24 @@ async function query(sql, params, isMigracom = false) {
   let pgClient;
   let dados;
   try {
-    if (!isMigracom && process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+    if (!isMigracom && ePosgreSQL()) {
       pgClient = await pool.connect();
       const salPosgreSQL = sql
         .replaceAll('YEAR(', 'EXTRACT(YEAR FROM ');
       const resultado = await pgClient.query(salPosgreSQL, params);
-      console.log(`✅ posgreSQL ${process.env.QUAL_SQL}`);
+      console.log(`💿 posgreSQL ${process.env.QUAL_SQL}`);
       return resultado.rows;
     } else {
-      let entorno = '✅ local';
-      if (process.env.NODE_ENTORNO === 'local') {
+      let entorno = 'local';
+      if (process.env.NODE_ENTORNO === entorno) {
         connection = await mysql.createConnection(configLocal.db);
       } else {
         connection = await mysql.createConnection(configRailway);
-        entorno = `✅ posgreSQL railway`;
+        entorno = 'posgreSQL railway';
       }
       dados = await connection.execute(sql, params);
       if (dados && dados[0]) {
-        console.log(entorno);
+        console.log(`💿 ${entorno}`);
         return dados[0];
       }
     }
@@ -55,6 +55,11 @@ async function query(sql, params, isMigracom = false) {
     }
   }
   return 0;
+}
+
+function ePosgreSQL() {
+    const posgre = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL'
+    return posgre;
 }
 
 function stringOuNull(value) {
@@ -86,5 +91,5 @@ function numberOu0(value) {
 }
 
 export default {
-  query, stringOuNull, stringOuNullSimple, numberOuNull, numberOu0, pool
+  query, ePosgreSQL, stringOuNull, stringOuNullSimple, numberOuNull, numberOu0, pool
 }

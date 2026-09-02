@@ -2,12 +2,12 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getPaginasPorIdiomaEAno(idUsuario){
-  console.log('Petiçom de getPaginasPorIdiomaEAno ' + new Date().toJSON());
+  console.log('💬 Petiçom de getPaginasPorIdiomaEAno ' + new Date().toJSON());
 
   let quantidadepaginasUU = ', CONVERT(SUM(uu.quantidadepaginas), UNSIGNED) as "quantidadepaginas"';
   let quantidadepaginasL = ', CONVERT(SUM(l.PaginasLidas), UNSIGNED) as "quantidadepaginas"';
   let quantidadepaginasR = ', CONVERT(SUM(r.PaginasLidas), UNSIGNED) as "quantidadepaginas"';
-  if (process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL') {
+  if (db.ePosgreSQL()) {
     quantidadepaginasUU = ', SUM(uu.quantidadepaginas)::INTEGER as "quantidadepaginas"';
     quantidadepaginasL = ', SUM(l.PaginasLidas)::INTEGER as "quantidadepaginas"';
     quantidadepaginasR = ', SUM(r.PaginasLidas)::INTEGER as "quantidadepaginas"';

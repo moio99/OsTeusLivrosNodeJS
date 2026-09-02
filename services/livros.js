@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const DATA_FILE = path.join(__dirname, '../data/DadosLivros.json');
 
 async function getLivros(idUsuario){
-  console.log('Petiçom de getLivros');
+  console.log('💬 Petiçom de getLivros');
   let select = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
     , l.DataFimLeitura as "dataFimLeitura"
     , ar.idAutor as "idAutor", ar.Nome as "nomeAutor"
@@ -24,7 +24,7 @@ async function getLivros(idUsuario){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': 0, 'quantidade': data.length};
 
   return {
@@ -53,7 +53,7 @@ const camposLivrosPorRxxx = `
   `;
 
 async function getLivrosParaListadoMovel(idUsuario){
-  console.log('Petiçom de getLivros');
+  console.log('💬 Petiçom de getLivros');
   let select = `SELECT ${camposLivrosPorLxxx}
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
     , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
@@ -120,7 +120,7 @@ async function LerFicheiroJSON() {
 
 // Para evitar ter na BD dous co mesmo Titulo.
 async function getLivroPorTitulo(idUsuario, titulo){
-  console.log('Petiçom de getLivroPorTitulo ' + new Date().toJSON());
+  console.log('💬 Petiçom de getLivroPorTitulo ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT l.idLivro as id
       FROM Livro l
@@ -139,7 +139,7 @@ async function getLivroPorTitulo(idUsuario, titulo){
 }
 
 async function getLivrosUltimaLectura(idUsuario){
-  console.log('Petiçom de getLivrosUltimaLectura');
+  console.log('💬 Petiçom de getLivrosUltimaLectura');
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as "dataFimLeitura"
     , ar.idAutor, ar.Nome as "nomeAutor"
@@ -153,7 +153,7 @@ async function getLivrosUltimaLectura(idUsuario){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': 0, 'quantidade': data.length};
 
   return {
@@ -163,7 +163,7 @@ async function getLivrosUltimaLectura(idUsuario){
 }
 
 async function getLivrosPorIdioma(idUsuario, idioma){
-  console.log('Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
+  console.log('💬 Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
   let query = `SELECT uu.* FROM (
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", i.Nome as "nomeFiltro"
@@ -186,14 +186,14 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ? 
+  query += db.ePosgreSQL() ? 
       ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
     : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'Idioma': idioma};
 
   return {
@@ -203,7 +203,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
 }
 
 async function getLivrosPorAno(idUsuario, ano){
-  console.log('Petiçom de getLivrosPorAno para o ano: ' + ano);
+  console.log('💬 Petiçom de getLivrosPorAno para o ano: ' + ano);
   let query = `SELECT uu.* FROM (
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", ${ano} as "nomeFiltro"
@@ -226,14 +226,14 @@ async function getLivrosPorAno(idUsuario, ano){
         WHERE r.fkUsuario = ${idUsuario} 
         AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ? 
+  query += db.ePosgreSQL() ? 
       ' ORDER BY uu."titulo" ASC;' 
     : ' ORDER BY uu.titulo ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'Ano': ano};
 
   return {
@@ -243,7 +243,7 @@ async function getLivrosPorAno(idUsuario, ano){
 }
 
 async function getLivrosPorGenero(idUsuario, genero){
-  console.log('Petiçom de getLivrosPorGenero para o genero: ' + genero);
+  console.log('💬 Petiçom de getLivrosPorGenero para o genero: ' + genero);
   let query = `SELECT uu.* FROM (
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", g.Nome as "nomeFiltro"
@@ -270,14 +270,14 @@ async function getLivrosPorGenero(idUsuario, genero){
         WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero} AND r.Lido = true
     ) AS uu`;
-  query += process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ? 
+  query += db.ePosgreSQL() ? 
       ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
     : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'Genero': genero};
 
   return {
@@ -287,7 +287,7 @@ async function getLivrosPorGenero(idUsuario, genero){
 }
 
 async function getLivrosPorAutor(idUsuario, id){
-  console.log('Petiçom de getLivrosPorAutor para o idAutor: ' + id);
+  console.log('💬 Petiçom de getLivrosPorAutor para o idAutor: ' + id);
   let query =
     `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.DataFimLeitura as "dataFimLeitura"
       , l.lido
@@ -303,7 +303,7 @@ async function getLivrosPorAutor(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -313,7 +313,7 @@ async function getLivrosPorAutor(idUsuario, id){
 }
 
 async function getLivrosPorEditorial(idUsuario, id){
-  console.log('Petiçom de getLivrosPorEditorial para o idEditorial: ' + id);
+  console.log('💬 Petiçom de getLivrosPorEditorial para o idEditorial: ' + id);
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
@@ -329,7 +329,7 @@ async function getLivrosPorEditorial(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -339,7 +339,7 @@ async function getLivrosPorEditorial(idUsuario, id){
 }
 
 async function getLivrosPorBiblioteca(idUsuario, id){
-  console.log('Petiçom de getLivrosPorBiblioteca para a idBiblioteca: ' + id);
+  console.log('💬 Petiçom de getLivrosPorBiblioteca para a idBiblioteca: ' + id);
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
@@ -355,7 +355,7 @@ async function getLivrosPorBiblioteca(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -365,7 +365,7 @@ async function getLivrosPorBiblioteca(idUsuario, id){
 }
 
 async function getLivrosPorColecom(idUsuario, id){
-  console.log('Petiçom de getLivrosPorColecom para a idColecom: ' + id);
+  console.log('💬 Petiçom de getLivrosPorColecom para a idColecom: ' + id);
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
@@ -381,7 +381,7 @@ async function getLivrosPorColecom(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -391,7 +391,7 @@ async function getLivrosPorColecom(idUsuario, id){
 }
 
 async function getLivrosPorEstiloLiterario(idUsuario, id){
-  console.log('Petiçom de getLivrosPorEstiloLiterario para a idEstiloLiterario: ' + id);
+  console.log('💬 Petiçom de getLivrosPorEstiloLiterario para a idEstiloLiterario: ' + id);
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
@@ -407,7 +407,7 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -417,19 +417,19 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
 }
 
 async function getLivrosSerie(idUsuario, id){
-  console.log('Petiçom de getLivrosSerie para o idLivro: ' + id);
+  console.log('💬 Petiçom de getLivrosSerie para o idLivro: ' + id);
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, ar.idAutor, ar.Nome as "nomeAutor"
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario} 
       AND l.idSerie = ${id} `;
-  query += process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ? 
+  query += db.ePosgreSQL() ? 
       ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;'
     : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;';
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
   data = LivroComMaisDumAutor(data);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -466,8 +466,8 @@ function LivroComMaisDumAutor(data) {
 }
 
 async function getLivro(idUsuario, id){
-  console.log('Petiçom de getLivro para o id: ' + id);
-  const dataSelect = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getLivro para o id: ' + id);
+  const dataSelect = db.ePosgreSQL() ?
       `, TO_CHAR(l.DataFimLeitura, 'DD/MM/YYYY') as "DataFimLeitura"
        , TO_CHAR(l.DataCriacom, 'DD/MM/YYYY') as "DataCriacom"
        , TO_CHAR(l.DataEdicom, 'DD/MM/YYYY') as "DataEdicom"`
@@ -572,7 +572,7 @@ async function getLivro(idUsuario, id){
 }
 
 async function postLivro(idUsuario, livro){
-  console.log('Petiçom de postLivro ' + livro.titulo + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postLivro ' + livro.titulo + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `
     INSERT INTO Livro
@@ -630,7 +630,7 @@ async function postLivro(idUsuario, livro){
     await db.query(qGeneros);
   }
     
-  console.log('id: ' + idResult + ' livro creado');
+  console.log('✅ id: ' + idResult + ' livro creado');
   
   return {
     idResult
@@ -638,7 +638,7 @@ async function postLivro(idUsuario, livro){
 }
 
 async function putLivro(idUsuario, livro){
-  console.log('Petiçom de putLivro ' + livro.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putLivro ' + livro.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   
   await borrarAutoresAsigandos(idUsuario, livro.id);
@@ -717,7 +717,7 @@ async function putLivro(idUsuario, livro){
     }
   );
   
-  console.log('id: ' + idResult + ' livro actualizado');
+  console.log('✅ id: ' + idResult + ' livro actualizado');
   return {
     idResult
   }
@@ -772,7 +772,7 @@ async function borrarLivro(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' livro borrado');
+  console.log('✅ id: ' + idResult + ' livro borrado');
   const meta = {'id': idResult};
   return {
     idResult,

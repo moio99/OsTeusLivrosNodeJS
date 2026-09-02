@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function subidaWeb(idUsuario){
-  console.log('Petiçom de subidaWeb ' + new Date().toJSON());
+  console.log('💬 Petiçom de subidaWeb ' + new Date().toJSON());
   const pgClient = await db.pool.connect();
   try {
     // await pgClient.query('BEGIN');

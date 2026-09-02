@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getEstilosLiterarios(idUsuario){
-  console.log('Petiçom de getEstilosLiterarios ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEstilosLiterarios ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT e.idEstilo as id, e.Nome as "nome"
       FROM EstiloLiterario e
@@ -11,7 +11,7 @@ async function getEstilosLiterarios(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -22,7 +22,7 @@ async function getEstilosLiterarios(idUsuario){
 }
 
 async function getEstilosLiterario(idUsuario, id){
-  console.log('Petiçom de getEstiloLiterario ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEstiloLiterario ' + new Date().toJSON());
   const dadosEstiloLiterario = await db.query(
     `SELECT e.idEstilo as id, e.Nome as nome, e.Comentario as comentario
       FROM EstiloLiterario e
@@ -42,7 +42,7 @@ async function getEstilosLiterario(idUsuario, id){
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getEstiloLiterarioPorNome(idUsuario, nome){
-  console.log('Petiçom de getEstiloLiterarioPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEstiloLiterarioPorNome ' + new Date().toJSON());
   const dadosEstiloLiterario = await db.query(
     `SELECT e.idEstilo as id
       FROM EstiloLiterario e
@@ -61,8 +61,8 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
 }
 
 async function getEstilosLiterariosCosLivros(idUsuario){
-  console.log('Petiçom de getEstilosLiterariosCosLivros ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getEstilosLiterariosCosLivros ' + new Date().toJSON());
+  const quantidade = db.ePosgreSQL() ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosLivro = await db.query(
@@ -75,7 +75,7 @@ async function getEstilosLiterariosCosLivros(idUsuario){
   );
 
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -86,7 +86,7 @@ async function getEstilosLiterariosCosLivros(idUsuario){
 }
 
 async function postEstiloLiterario(idUsuario, EstiloLiterario){
-  console.log('Petiçom de postEstiloLiterario ' + EstiloLiterario.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postEstiloLiterario ' + EstiloLiterario.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `INSERT INTO EstiloLiterario
     (fkUsuario, Nome, Comentario)
@@ -104,7 +104,7 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
       }
     );
   
-  console.log('id: ' + idResult + ' EstiloLiterario creado');
+  console.log('✅ id: ' + idResult + ' EstiloLiterario creado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -113,7 +113,7 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
 }
 
 async function putEstiloLiterario(idUsuario, EstiloLiterario){
-  console.log('Petiçom de putEstiloLiterario ' + EstiloLiterario.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putEstiloLiterario ' + EstiloLiterario.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `UPDATE EstiloLiterario SET
       Nome = ?,
@@ -132,7 +132,7 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
     }
   );
   
-  console.log('id: ' + idResult + ' EstiloLiterario actualizado');
+  console.log('✅ id: ' + idResult + ' EstiloLiterario actualizado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -141,7 +141,7 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
 }
 
 async function borrarEstiloLiterario(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
   await db.query(
     `DELETE FROM EstiloLiterario WHERE idEstilo = ${id} AND fkUsuario = ${idUsuario};`
@@ -151,7 +151,7 @@ async function borrarEstiloLiterario(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' EstiloLiterario borrada');
+  console.log('✅ id: ' + idResult + ' EstiloLiterario borrada');
   const meta = {'id': idResult};
   return {
     idResult,

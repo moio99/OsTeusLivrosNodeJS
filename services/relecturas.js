@@ -2,8 +2,8 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getRelectura(idUsuario, idRelectura){
-  console.log('Petiçom de getRelectura ' + new Date().toJSON() + ' idRelectura: ' + idRelectura);
-  const dataSelect = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getRelectura ' + new Date().toJSON() + ' idRelectura: ' + idRelectura);
+  const dataSelect = db.ePosgreSQL() ?
       `, TO_CHAR(r.DataFimLeitura, 'DD/MM/YYYY') as dataFimLeitura
        , TO_CHAR(r.DataEdicom, 'DD/MM/YYYY') as dataEdicom`
     : `, DATE_FORMAT(r.DataFimLeitura,'%d/%m/%Y') as dataFimLeitura
@@ -27,7 +27,7 @@ async function getRelectura(idUsuario, idRelectura){
   const dadosRelectura = await db.query(query);
   
   const data = helper.emptyOrRows(dadosRelectura);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'id': idRelectura};
 
@@ -38,7 +38,7 @@ async function getRelectura(idUsuario, idRelectura){
 }
 
 async function getRelecturas(idUsuario, idLivro){
-  console.log('Petiçom de getRelecturas ' + new Date().toJSON() + ' idLivro: ' + idLivro);
+  console.log('💬 Petiçom de getRelecturas ' + new Date().toJSON() + ' idLivro: ' + idLivro);
   let query = `SELECT r.idRelectura id, r.titulo, r.paginas, r.lido, r.DataFimLeitura as "dataFimLeitura"
       , r.TempoLeitura as "diasLeitura", r.pontuacom
       FROM Relectura r
@@ -57,7 +57,7 @@ async function getRelecturas(idUsuario, idLivro){
 }
 
 async function postRelectura(idUsuario, relectura){
-  console.log('Petiçom de postRelectura ' + relectura.titulo + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postRelectura ' + relectura.titulo + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `
     INSERT INTO Relectura
@@ -101,7 +101,7 @@ async function postRelectura(idUsuario, relectura){
       }
     );
     
-  console.log('id: ' + idResult + ' relectura creada');
+  console.log('✅ id: ' + idResult + ' relectura creada');
   
   return {
     idResult
@@ -109,7 +109,7 @@ async function postRelectura(idUsuario, relectura){
 }
 
 async function putRelectura(idUsuario, relectura){
-  console.log('Petiçom de putRelectura ' + relectura.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putRelectura ' + relectura.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   
   const queryInsert = `UPDATE Relectura SET
@@ -164,7 +164,7 @@ async function putRelectura(idUsuario, relectura){
     }
   );
   
-  console.log('id: ' + idResult + ' relectura actualizada');
+  console.log('✅ id: ' + idResult + ' relectura actualizada');
   return {
     idResult
   }
@@ -182,7 +182,7 @@ async function borrarRelectura(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' relectura borrada');
+  console.log('✅ id: ' + idResult + ' relectura borrada');
   const meta = {'id': idResult};
   return {
     idResult,

@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getEditoriais(idUsuario){
-  console.log('Petiçom de getEditoriais ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEditoriais ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT e.idEditorial as id, e.Nome as nome, e.web  
       FROM Editorial e
@@ -11,7 +11,7 @@ async function getEditoriais(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -22,7 +22,7 @@ async function getEditoriais(idUsuario){
 }
 
 async function getEditorial(idUsuario, id){
-  console.log('Petiçom de getEditorial ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEditorial ' + new Date().toJSON());
   const dadosEditorial = await db.query(
     `SELECT e.idEditorial as id, e.Nome as nome, e.Direicom as direicom, e.web, e.Comentario as comentario  
       FROM Editorial e
@@ -47,8 +47,8 @@ async function getEditorial(idUsuario, id){
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getEditorialPorNome(idUsuario, nome){
-  console.log('Petiçom de getEditorialPorNome ' + idUsuario, nome);
-  console.log('Petiçom de getEditorialPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEditorialPorNome ' + idUsuario, nome);
+  console.log('💬 Petiçom de getEditorialPorNome ' + new Date().toJSON());
   const dadosEditorial = await db.query(
     `SELECT e.idEditorial as id
       FROM Editorial e
@@ -67,7 +67,7 @@ async function getEditorialPorNome(idUsuario, nome){
 }
 
 async function getEditoriaisCosLivros(idUsuario){
-  console.log('Petiçom de getEditoriaisCosLivros ' + new Date().toJSON());
+  console.log('💬 Petiçom de getEditoriaisCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT e.idEditorial as id, e.Nome as nome, e.web, COUNT(l.idLivro) as "quantidadeLivros" 
       FROM Editorial e
@@ -78,7 +78,7 @@ async function getEditoriaisCosLivros(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -89,7 +89,7 @@ async function getEditoriaisCosLivros(idUsuario){
 }
 
 async function postEditorial(idUsuario, editorial){
-  console.log('Petiçom de postEditorial ' + editorial.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postEditorial ' + editorial.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `INSERT INTO Editorial
     (fkUsuario, Nome, Direicom, web, Comentario)
@@ -108,7 +108,7 @@ async function postEditorial(idUsuario, editorial){
       }
     );
   
-  console.log('id: ' + idResult + ' editorial creada');
+  console.log('✅ id: ' + idResult + ' editorial creada');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -117,7 +117,7 @@ async function postEditorial(idUsuario, editorial){
 }
 
 async function putEditorial(idUsuario, editorial){
-  console.log('Petiçom de putEditorial ' + editorial.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putEditorial ' + editorial.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
   const queryInsert = `UPDATE Editorial SET
@@ -140,7 +140,7 @@ async function putEditorial(idUsuario, editorial){
     }
   );
   
-  console.log('id: ' + idResult + ' editorial actualizada');
+  console.log('✅ id: ' + idResult + ' editorial actualizada');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -149,7 +149,7 @@ async function putEditorial(idUsuario, editorial){
 }
 
 async function borrarEditorial(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
   await db.query(
     `DELETE FROM Editorial WHERE idEditorial = ${id} AND fkUsuario = ${idUsuario};`
@@ -159,7 +159,7 @@ async function borrarEditorial(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' editorial borrada');
+  console.log('✅ id: ' + idResult + ' editorial borrada');
   const meta = {'id': idResult};
   return {
     idResult,

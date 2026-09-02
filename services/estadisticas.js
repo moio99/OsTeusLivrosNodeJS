@@ -8,29 +8,29 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_FILE = path.join(__dirname, '../data/DadosEstadisticas');
 
-const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+const quantidade = db.ePosgreSQL() ?
     `, SUM(uu.PaginasLidas)::INTEGER AS quantidadepaginas
      , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
   : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
      , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
-FROM (
-  SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
-    FROM Livro l
-        RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
-    WHERE l.fkUsuario = {idUsuario_reemprazo}
-    AND l.Lido = true
-    -- AND (l.idSerie IS NULL OR l.idSerie =  0)
-  UNION ALL
-    SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas
-    FROM Relectura r
-        RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
-    WHERE r.fkUsuario = {idUsuario_reemprazo}
-    AND r.Lido = true
-    -- AND (r.idSerie IS NULL OR r.idSerie =  0)
-  ) AS uu
-GROUP BY uu.id, uu.nome
-ORDER BY quantidade DESC, lower(nome) ASC;`;
+  FROM (
+    SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
+      FROM Livro l
+          RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
+      WHERE l.fkUsuario = {idUsuario_reemprazo}
+      AND l.Lido = true
+      -- AND (l.idSerie IS NULL OR l.idSerie =  0)
+    UNION ALL
+      SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas
+      FROM Relectura r
+          RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
+      WHERE r.fkUsuario = {idUsuario_reemprazo}
+      AND r.Lido = true
+      -- AND (r.idSerie IS NULL OR r.idSerie =  0)
+    ) AS uu
+  GROUP BY uu.id, uu.nome
+  ORDER BY quantidade DESC, lower(nome) ASC;`;
 const queryPorGenero = `SELECT uu.id, uu.nome
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
@@ -87,7 +87,7 @@ const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quant
   ORDER BY quantidade DESC, lower(nome) ASC;`;
 
 async function getEstadisticas(idUsuario, tipo){
-  console.log('Petiçom de getEstadisticas para o tipo: ' + tipo)
+  console.log('💬 Petiçom de getEstadisticas para o tipo: ' + tipo)
   let dados;
   switch (tipo) {
     case '1':

@@ -2,7 +2,7 @@ import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
 async function getColecons(idUsuario){
-  console.log('Petiçom de getColecons ' + new Date().toJSON());
+  console.log('💬 Petiçom de getColecons ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT c.idColecom as id, c.Nome as nome, c.web  
       FROM Colecom c
@@ -11,7 +11,7 @@ async function getColecons(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -22,7 +22,7 @@ async function getColecons(idUsuario){
 }
 
 async function getColecom(idUsuario, id){
-  console.log('Petiçom de getColecom ' + new Date().toJSON());
+  console.log('💬 Petiçom de getColecom ' + new Date().toJSON());
   const dadosColecom = await db.query(
     `SELECT c.idColecom as id, c.Nome as nome, c.ISBN as isbn, c.web, c.Comentario as comentario
       FROM Colecom c
@@ -42,7 +42,7 @@ async function getColecom(idUsuario, id){
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getColecomPorNome(idUsuario, nome){
-  console.log('Petiçom de getColecomPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getColecomPorNome ' + new Date().toJSON());
   const dadosColecom = await db.query(
     `SELECT c.idColecom as id
       FROM Colecom c
@@ -61,7 +61,7 @@ async function getColecomPorNome(idUsuario, nome){
 }
 
 async function getColeconsCosLivros(idUsuario){
-  console.log('Petiçom de getColeconsCosLivros ' + new Date().toJSON());
+  console.log('💬 Petiçom de getColeconsCosLivros ' + new Date().toJSON());
   const dadosLivro = await db.query(
     `SELECT c.idColecom as id, c.Nome as nome, c.web, COUNT(l.idLivro) as "quantidadeLivros"
       FROM Colecom c
@@ -72,7 +72,7 @@ async function getColeconsCosLivros(idUsuario){
   );
 
   const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'nada': 'nada'};
 
@@ -83,7 +83,7 @@ async function getColeconsCosLivros(idUsuario){
 }
 
 async function postColecom(idUsuario, colecom){
-  console.log('Petiçom de postColecom ' + colecom.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postColecom ' + colecom.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const queryInsert = `INSERT INTO Colecom
     (fkUsuario, Nome, ISBN, web, Comentario)
@@ -103,7 +103,7 @@ async function postColecom(idUsuario, colecom){
       }
     );
   
-  console.log('id: ' + idResult + ' colecom creado');
+  console.log('✅ id: ' + idResult + ' coleçom creado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -112,9 +112,9 @@ async function postColecom(idUsuario, colecom){
 }
 
 async function putColecom(idUsuario, colecom){
-  console.log('Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  const queryInsert = `UPDATE Colecom SET
+  const queryInsert = `UPDATE Coleçom SET
       Nome = ?,
       ISBN = ?,
       web = ?,
@@ -135,7 +135,7 @@ async function putColecom(idUsuario, colecom){
     }
   );
   
-  console.log('id: ' + idResult + ' colecom actualizado');
+  console.log('✅ id: ' + idResult + ' coleçom actualizado');
   const meta = {'id': idResult};
   return {
     idResult,
@@ -144,7 +144,7 @@ async function putColecom(idUsuario, colecom){
 }
 
 async function borrarColecom(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
   await db.query(
     `DELETE FROM Colecom WHERE idColecom = ${id} AND fkUsuario = ${idUsuario};`
@@ -154,7 +154,7 @@ async function borrarColecom(idUsuario, id) {
     }
   );
 
-  console.log('id: ' + idResult + ' colecom borrada');
+  console.log('✅ id: ' + idResult + ' coleçom borrada');
   const meta = {'id': idResult};
   return {
     idResult,

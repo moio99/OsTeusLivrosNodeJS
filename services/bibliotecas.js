@@ -1,17 +1,21 @@
 import db from '../utils/db.js';
 import helper from '../utils/helper.js';
+import Biblioteca from '../models/biblioteca.js';
 
 async function getBibliotecas(idUsuario){
-  console.log('Petiçom de getBibliotecas ' + new Date().toJSON());
+  console.log('💬 Petiçom de getBibliotecas' + new Date().toJSON());
+  const p1 = db.ePosgreSQL() ? '$1' : '?';
   const dadosLivro = await db.query(
     `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as dataRenovacom  
       FROM Biblioteca b
-      WHERE b.fkUsuario = ${idUsuario}   
-      ORDER BY lower(b.Nome) ASC;`
+      WHERE b.fkUsuario =  ${p1}
+      ORDER BY lower(b.Nome) ASC;`,
+      [idUsuario]
   );
   
-  const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  const rows = helper.emptyOrRows(dadosLivro);
+  console.log(`✅ ${rows.length} elementos obtidos`);
+  const data = rows.map(row => new Biblioteca.Biblioteca(row));
 
   const meta = {'nada': 'nada'};
 
@@ -22,59 +26,74 @@ async function getBibliotecas(idUsuario){
 }
 
 async function getBiblioteca(idUsuario, id){
-  console.log('Petiçom de getBiblioteca ' + new Date().toJSON());
+  console.log('💬 Petiçom de getBiblioteca ' + new Date().toJSON());
+  
+  const p1 = db.ePosgreSQL() ? '$1' : '?';
+  const p2 = db.ePosgreSQL() ? '$2' : '?';
+
   const dadosBiblioteca = await db.query(
     `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as endereco, b.Localidade as localidade
       , b.Telefone as telefone, b.DataAsociamento as dataAsociamento, b.DataRenovacom as dataRenovacom
       , b.Comentario as comentario
       FROM Biblioteca b
-      WHERE b.fkUsuario = ${idUsuario} AND b.idBiblioteca = ${id} ;`
+      WHERE b.fkUsuario = ${p1} AND b.idBiblioteca = ${p2} ;`,
+    [idUsuario, id]
   );
-  
-  const biblioteca = helper.emptyOrRows(dadosBiblioteca);
-  console.log(biblioteca.length + ' elementos obtidos');
+
+  const rows = helper.emptyOrRows(dadosBiblioteca);
+  console.log(`✅ ${rows.length} elementos obtidos`);
+  const data = rows.map(row => new Biblioteca.BibliotecaDetalhe(row));   // Precisso voltar um listado inda que só tenha um elemento
 
   const meta = {'id': id};
 
   return {
-    data: biblioteca,
+    data: data,
     meta
   }
 }
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getBibliotecaPorNome(idUsuario, nome){
-  console.log('Petiçom de getBibliotecaPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getBibliotecaPorNome ' + new Date().toJSON());
+
+  const p1 = db.ePosgreSQL() ? '$1' : '?';
+  const p2 = db.ePosgreSQL() ? '$2' : '?';
+
   const dadosBiblioteca = await db.query(
     `SELECT b.idBiblioteca as id
       FROM Biblioteca b
-      WHERE b.fkUsuario = ${idUsuario} AND b.Nome like '%${nome}%' ;`
+      WHERE b.fkUsuario = ${p1} AND b.Nome LIKE ${p2};`,
+    [idUsuario, `%${nome}%`]
   );
   
-  const biblioteca = helper.emptyOrRows(dadosBiblioteca);
-  console.log(biblioteca.length + ' elementos obtidos');
+  const rows = helper.emptyOrRows(dadosBiblioteca);
+  console.log(`✅ ${rows.length} elementos obtidos`);
+  const data = new Biblioteca.ElementoId(rows[0]);
 
-  const meta = {'id': biblioteca.length > 0 ? biblioteca[0].id : 0, 'quantidade': biblioteca.length};
+  const meta = {'id': rows.length > 0 ? data.id : 0, 'quantidade': rows.length};
 
   return {
-    data: biblioteca,
+    data: data,
     meta
   }
 }
 
 async function getBibliotecasCosLivros(idUsuario){
-  console.log('Petiçom de getBibliotecasCosLivros ' + new Date().toJSON());
+  console.log('💬 Petiçom de getBibliotecasCosLivros ' + new Date().toJSON());
+  const p1 = db.ePosgreSQL() ? '$1' : '?';
   const dadosLivro = await db.query(
     `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as "dataRenovacom", COUNT(l.idLivro) as "quantidadeLivros"
       FROM Biblioteca b
       LEFT JOIN Livro l on l.fkBiblioteca = b.idBiblioteca
-      WHERE b.fkUsuario = ${idUsuario}
+      WHERE b.fkUsuario = ${p1}
       GROUP BY b.idBiblioteca
-      ORDER BY lower(b.Nome) ASC;`
+      ORDER BY lower(b.Nome) ASC;`,
+      [idUsuario]
   );
   
-  const data = helper.emptyOrRows(dadosLivro);
-  console.log(data.length + ' elementos obtidos');
+  const rows = helper.emptyOrRows(dadosLivro);
+  console.log(`✅ ${rows.length} elementos obtidos`);
+  const data = rows.map(row => new Biblioteca.BibliotecaCosLivros(row));
 
   const meta = {'nada': 'nada'};
 
@@ -85,11 +104,18 @@ async function getBibliotecasCosLivros(idUsuario){
 }
 
 async function postBiblioteca(idUsuario, biblioteca){
-  console.log('Petiçom de postBiblioteca ' + biblioteca.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postBiblioteca ' + biblioteca.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  const queryInsert = `INSERT INTO Biblioteca
-    (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  let queryInsert = '';
+  if (db.ePosgreSQL()) {
+    queryInsert = `INSERT INTO Biblioteca
+      (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+  } else {
+    queryInsert = `INSERT INTO Biblioteca
+      (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  }
 
   const dadosInsert = [
     idUsuario,
@@ -108,7 +134,7 @@ async function postBiblioteca(idUsuario, biblioteca){
       }
     );
   
-  console.log('id: ' + idResult + ' biblioteca creada');
+  console.log(`✅ id: ${idResult} biblioteca creada`);
   const meta = {'id': idResult};
   return {
     idResult,
@@ -117,10 +143,22 @@ async function postBiblioteca(idUsuario, biblioteca){
 }
 
 async function putBiblioteca(idUsuario, biblioteca){
-  console.log('Petiçom de putBiblioteca ' + biblioteca.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putBiblioteca ' + biblioteca.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  const queryInsert = `UPDATE Biblioteca SET
+  let queryUpdate = '';
+  if (db.ePosgreSQL()) {
+    queryUpdate = `UPDATE Biblioteca SET
+      Nome = $1,
+      Endereco = $2,
+      Localidade = $3,
+      Telefone = $4,
+      DataAsociamento = $5,
+      DataRenovacom = $6,
+      Comentario = $7
+    WHERE idBiblioteca = $8 AND fkUsuario = $9;`;
+  } else {
+    queryUpdate = `UPDATE Biblioteca SET
       Nome = ?,
       Endereco = ?,
       Localidade = ?,
@@ -129,8 +167,9 @@ async function putBiblioteca(idUsuario, biblioteca){
       DataRenovacom = ?,
       Comentario = ?
     WHERE idBiblioteca = ? AND fkUsuario = ?;`;
+  }
 
-  const dadosInsert = [
+  const dadosUpdate = [
     db.stringOuNullSimple(biblioteca.nome),    
     db.stringOuNullSimple(biblioteca.endereco),
     db.stringOuNullSimple(biblioteca.localidade),
@@ -141,13 +180,13 @@ async function putBiblioteca(idUsuario, biblioteca){
     biblioteca.id,
     idUsuario
   ];
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
         idResult = biblioteca.id;
     }
   );
   
-  console.log('id: ' + idResult + ' biblioteca actualizada');
+  console.log(`✅ id: ${idResult} biblioteca actualizada`);
   const meta = {'id': idResult};
   return {
     idResult,
@@ -156,17 +195,22 @@ async function putBiblioteca(idUsuario, biblioteca){
 }
 
 async function borrarBiblioteca(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
+  
   let idResult = 0;
+  const p1 = db.ePosgreSQL() ? '$1' : '?';
+  const p2 = db.ePosgreSQL() ? '$2' : '?';
+
   await db.query(
-    `DELETE FROM Biblioteca WHERE idBiblioteca = ${id} AND fkUsuario = ${idUsuario};`
+    `DELETE FROM Biblioteca WHERE idBiblioteca = ${p1} AND fkUsuario = ${p2};`,
+    [id, idUsuario]
   ).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1)
         idResult = id;
     }
   );
 
-  console.log('id: ' + idResult + ' biblioteca borrada');
+  console.log(`✅ id: ${idResult} biblioteca borrada`);
   const meta = {'id': idResult};
   return {
     idResult,

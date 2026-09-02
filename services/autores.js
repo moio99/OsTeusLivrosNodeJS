@@ -3,8 +3,8 @@ import helper from '../utils/helper.js';
 import livro from './livros.js';
 
 async function getAutores(idUsuario){
-  console.log('Petiçom de getAutores ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getAutores ' + new Date().toJSON());
+  const quantidade = db.ePosgreSQL() ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosAutores = await db.query(
@@ -18,7 +18,7 @@ async function getAutores(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'quantidade': data.length};
 
@@ -30,7 +30,7 @@ async function getAutores(idUsuario){
 
 // Para evitar ter na BD dous co mesmo nome.
 async function getAutorPorNome(idUsuario, nome){
-  console.log('Petiçom de getAutorPorNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getAutorPorNome ' + new Date().toJSON());
   const dadosAutor = await db.query(
     `SELECT a.idAutor as id
       FROM Autor a
@@ -49,8 +49,8 @@ async function getAutorPorNome(idUsuario, nome){
 }
 
 async function getAutoresFiltrados(idUsuario, id, tipo){
-  console.log('Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
-  const quantidade = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
+  const quantidade = db.ePosgreSQL() ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
     : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
@@ -70,7 +70,7 @@ async function getAutoresFiltrados(idUsuario, id, tipo){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'quantidade': data.length};
 
@@ -81,7 +81,7 @@ async function getAutoresFiltrados(idUsuario, id, tipo){
 }
 
 async function getAutoresPorNacons(idUsuario){
-  console.log('Petiçom de getAutoresPorNacions ' + new Date().toJSON());
+  console.log('💬 Petiçom de getAutoresPorNacions ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT n.idNacionalidade as id, n.Nome as nome, COUNT(a.idAutor) as "quantidadeAutores"
       FROM Autor a
@@ -92,7 +92,7 @@ async function getAutoresPorNacons(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'quantidade': data.length};
 
@@ -103,7 +103,7 @@ async function getAutoresPorNacons(idUsuario){
 }
 
 async function getAutoresPorPaises(idUsuario){
-  console.log('Petiçom de getAutoresPorPaises ' + new Date().toJSON());
+  console.log('💬 Petiçom de getAutoresPorPaises ' + new Date().toJSON());
   const dadosAutores = await db.query(
     `SELECT p.idPais as id, p.Nome as nome, COUNT(a.idAutor) as "quantidadeAutores"
       FROM Autor a
@@ -114,7 +114,7 @@ async function getAutoresPorPaises(idUsuario){
   );
   
   const data = helper.emptyOrRows(dadosAutores);
-  console.log(data.length + ' elementos obtidos');
+  console.log(`✅ ${data.length} elementos obtidos`);
 
   const meta = {'quantidade': data.length};
 
@@ -125,8 +125,8 @@ async function getAutoresPorPaises(idUsuario){
 }
 
 async function getAutor(idUsuario, id){
-  console.log('Petiçom de getAutor id: ' + id + ' tempo ' + new Date().toJSON());
-  const dataSelect = process.env.QUAL_SQL?.length > 8 && process.env.QUAL_SQL?.substring(0, 9) === 'PosgreSQL' ?
+  console.log('💬 Petiçom de getAutor id: ' + id + ' tempo ' + new Date().toJSON());
+  const dataSelect = db.ePosgreSQL() ?
       `, TO_CHAR(a.DataNacemento, 'DD/MM/YYYY') as "dataNacemento"
        , TO_CHAR(a.DataDefuncom, 'DD/MM/YYYY') as "dataDefuncom", a.Premios as "premios", a.web`
     : `, DATE_FORMAT(a.DataNacemento,'%d/%m/%Y') as "dataNacemento"
@@ -159,7 +159,7 @@ async function getAutor(idUsuario, id){
 }
 
 async function postAutor(idUsuario, autor){
-  console.log('Petiçom de postAutor ' + autor.nome + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de postAutor ' + autor.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
   const queryInsert = `INSERT INTO Autor
@@ -188,7 +188,7 @@ async function postAutor(idUsuario, autor){
       }
     );
   
-  console.log('id: ' + idResult + ' autor creado');
+  console.log(`✅ id: ${idResult} autor creado`);
   const meta = {'id': idResult};
   return {
     idResult,
@@ -197,7 +197,7 @@ async function postAutor(idUsuario, autor){
 }
 
 async function putAutor(idUsuario, autor){
-  console.log('Petiçom de putAutor ' + autor.id + ' data: ' + new Date().toJSON());
+  console.log('💬 Petiçom de putAutor ' + autor.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
   const queryInsert = `UPDATE Autor SET
@@ -226,7 +226,7 @@ async function putAutor(idUsuario, autor){
     }
   );
   
-  console.log('id: ' + idResult + ' autor actualizado');
+  console.log(`✅ id: ${idResult} autor actualizado`);
   const meta = {'id': idResult};
   return {
     idResult,
@@ -235,7 +235,7 @@ async function putAutor(idUsuario, autor){
 }
 
 async function borrarAutor(idUsuario, id) {
-  console.log('id pra borrar: ' + id);
+  console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
 
   let dados = livro.getLivrosPorAutor(id);
@@ -256,7 +256,7 @@ async function borrarAutor(idUsuario, id) {
     );
   }
 
-  console.log('id: ' + idResult + ' autor borrado');
+  console.log(`✅ id: ${idResult} autor borrado`);
   const meta = {'id': idResult};
   return {
     idResult,

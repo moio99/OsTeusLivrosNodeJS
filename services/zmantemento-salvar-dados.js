@@ -20,7 +20,7 @@ function getFilenamePrefix() {
 }
 
 async function salvarDadosSQL(nomeBD = getFilenamePrefix()) {
-  console.log('Petiçom de salvarDadosSQL ' + new Date().toJSON());
+  console.log('💬 Petiçom de salvarDadosSQL ' + new Date().toJSON());
 
   const nomePasta = getFilenamePrefix();
   const caminhoDados = path.join(__dirname, '../data/' + nomePasta);

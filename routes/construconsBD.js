@@ -16,7 +16,7 @@ const createTableQuery = `
 `;
 
 router.get('/ProbaC', async function(req, res, next) {
-  console.log('Petiçom /ProbaC');
+  console.log('💬 Petiçom /ProbaC');
   // Ejecutar la consulta
   db.pool.query(createTableQuery, (err, res) => {
     if (err) {
@@ -34,7 +34,7 @@ router.get('/ProbaC', async function(req, res, next) {
 
 // SELECT
 router.get('/ProbaAa', async function(req, res, next) {
-  console.log('Petiçom /ProbaAa');
+  console.log('💬 Petiçom /ProbaAa');
   try {
     const resultado = await estadisticas.getEstadisticas('2', '3');
     res.json(resultado);
@@ -44,7 +44,7 @@ router.get('/ProbaAa', async function(req, res, next) {
   }
 });
 router.get('/ProbaA', async function(req, res, next) {
-  console.log('Petiçom /ProbaA');
+  console.log('💬 Petiçom /ProbaA');
   const pgClient = await db.pool.connect();
   try {
     res.json(await pgClient.query(
@@ -60,7 +60,7 @@ router.get('/ProbaA', async function(req, res, next) {
 
 // CRIAÇOM
 router.get('/ProbaC', async function(req, res, next) {
-  console.log('Petiçom /ProbaC');
+  console.log('💬 Petiçom /ProbaC');
   const { nome, email, idade } = req.query;
   try {
     res.json(await db.pool.query(
@@ -77,7 +77,7 @@ router.get('/ProbaC', async function(req, res, next) {
 
 // Update
 router.get('/ProbaU', async function(req, res, next) {
-  console.log('Petiçom /ProbaC PosgreSQL');
+  console.log('💬 Petiçom /ProbaC PosgreSQL');
   // const { nome, email, idade } = req.query;
   try {
     res.json(await db.pool.query(
@@ -94,7 +94,7 @@ router.get('/ProbaU', async function(req, res, next) {
 
 // INSERT
 router.get('/SubidaAWeb', async function(req, res, next) {
-  console.log('Petiçom /SubidaAWeb');
+  console.log('💬 Petiçom /SubidaAWeb');
   try {
     const resultado = await subidaWeb.subidaWeb();
     if (!resultado) {
@@ -110,7 +110,7 @@ router.get('/SubidaAWeb', async function(req, res, next) {
 });
 
 router.get('/CiarSQLsBD', async function(req, res, next) {
-  console.log('Petiçom /CiarSQLsBD');
+  console.log('💬 Petiçom /CiarSQLsBD');
   try {
     const resultado = await ciarBD.ciarSQLsCriacomBD(req.query.nomeBD);
     if (!resultado) {
@@ -126,7 +126,7 @@ router.get('/CiarSQLsBD', async function(req, res, next) {
 });
 
 router.get('/CiarSQLsInsercom', async function(req, res, next) {
-  console.log('Petiçom /CiarSQLsInsercom');
+  console.log('💬 Petiçom /CiarSQLsInsercom');
   try {
     const resultado = await salvarDados.salvarDadosSQL(req.query.nomeBD);
     if (!resultado) {
