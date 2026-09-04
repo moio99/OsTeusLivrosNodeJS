@@ -68,9 +68,12 @@ async function getBibliotecaPorNome(idUsuario, nome){
   
   const rows = helper.emptyOrRows(dadosBiblioteca);
   console.log(`✅ ${rows.length} elementos obtidos`);
-  const data = new Biblioteca.ElementoId(rows[0]);
-
-  const meta = {'id': rows.length > 0 ? data.id : 0, 'quantidade': rows.length};
+  let data = null; 
+  let meta = {'id': 0, 'quantidade': rows.length};
+  if (rows.length > 0) {
+    data = new Biblioteca.ElementoId(rows[0]);
+    meta.id = data.id;
+  }
 
   return {
     data: data,
