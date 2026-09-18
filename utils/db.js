@@ -39,7 +39,7 @@ async function query(sql, params, isMigracom = false) {
       }
       dados = await connection.execute(sql, params);
       if (dados && dados[0]) {
-        console.log(`💿 ${entorno}`);
+        console.log(`💿 ${entorno} dados[0].length ${dados[0].length}`);
         return dados[0];
       }
     }

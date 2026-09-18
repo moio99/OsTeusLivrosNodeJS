@@ -91,7 +91,8 @@ async function getEstadisticas(idUsuario, tipo){
   let dados;
   switch (tipo) {
     case '1':
-      dados = await db.query(queryPorIdioma.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      const queryPorIdiomaLista = queryPorIdioma.replaceAll('{idUsuario_reemprazo}', idUsuario);
+      dados = await db.query(queryPorIdiomaLista);
       break;
     case '2':
       dados = await db.query(queryPorGenero.replaceAll('{idUsuario_reemprazo}', idUsuario));
@@ -105,22 +106,22 @@ async function getEstadisticas(idUsuario, tipo){
     default:
       return ''
   }
-  const data = await GestomDados(dados, tipo);
+  const data = await GestomDados(dados, tipo, idUsuario);
 
   return data;
 }
 
-async function GestomDados(dados, tipo){
+async function GestomDados(dados, tipo, idUsuario){
   let origemDados = 'BD';
   let data = helper.emptyOrRows(dados);
   if (tipo !== '4') {
     if (data?.length > 0) {
       if (process.env.NODE_ENTORNO === 'local') {
-        await EscreverFicheiroJSON(data, tipo);
+        await EscreverFicheiroJSON(data, tipo, idUsuario);
       }
     } else {
-      const dataJS = await LerFicheiroJSON(tipo);
-      data = JSON.parse(dataJS);
+      const dataJS = await LerFicheiroJSON(tipo, idUsuario);
+      data = dataJS;
       origemDados = 'Ficheiro JSON';
     }
   }
@@ -133,8 +134,8 @@ async function GestomDados(dados, tipo){
   };
 }
 
-async function EscreverFicheiroJSON(dados, tipo) {
-  const nomeArquivo = DATA_FILE + tipo + '.json';
+async function EscreverFicheiroJSON(dados, tipo, idUsuario) {
+  const nomeArquivo = `${DATA_FILE}_${tipo}_${idUsuario}.json`;
   const dadosJson = JSON.stringify(dados, null, 2);
   try {
     const existingData = await fs.readFile(nomeArquivo, 'utf8');
@@ -148,14 +149,18 @@ async function EscreverFicheiroJSON(dados, tipo) {
   }
 }
 
-async function LerFicheiroJSON(tipo) {
-  const nomeArquivo = DATA_FILE + tipo + '.json';
+async function LerFicheiroJSON(tipo, idUsuario) {
+  const nomeArquivo = `${DATA_FILE}_${tipo}_${idUsuario}.json`;
   try {
     const data = await fs.readFile(nomeArquivo, 'utf8');
-    return data;
+    return JSON.parse(data);
   } catch (error) {
-    console.error('Erro ao ler o arquivo das estadísticas fallback:', error.message);
-    throw new Error('Nom foi posível obtener dados nem da API nem do arquivo fallback');
+    if (error.code === 'ENOENT') {
+      console.warn('O arquivo json nom existe. Devolvendo estrutura baleira.');
+    } else {
+      console.error('Erro ao ler o arquivo de estatísticas:', error.message);
+    }
+    return [];
   }
 }
 

@@ -113,8 +113,12 @@ async function LerFicheiroJSON() {
     const data = await fs.readFile(DATA_FILE, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    console.error('Erro ao ler o arquivo do listado dos livros fallback:', error.message);
-    throw new Error('Nom foi posível obtener dados nem da API nem do arquivo fallback');
+    if (error.code === 'ENOENT') {
+      console.warn('O arquivo json nom existe. Devolvendo estrutura baleira.');
+    } else {
+      console.error('Erro ao ler o arquivo do listado dos livros fallback:', error.message);
+    }
+    return [];
   }
 }
 
