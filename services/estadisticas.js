@@ -22,7 +22,7 @@ const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quan
       AND l.Lido = true
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
-      SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas
+      SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
           RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
       WHERE r.fkUsuario = {idUsuario_reemprazo}
@@ -31,16 +31,18 @@ const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quan
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(nome) ASC;`;
-const queryPorGenero = `SELECT uu.id, uu.nome
+const queryPorGenero = `SELECT uu.id, uu.nome, GROUP_CONCAT(ano) AS anos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
-      SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, 0 as numRelecturas
+      SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, YEAR(l.DataFimLeitura) as ano
+        , 0 as numRelecturas
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
     UNION ALL
-      SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, 1 as numRelecturas
+      SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, YEAR(l.DataFimLeitura) as ano
+        , 1 as numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r  
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
@@ -54,12 +56,14 @@ const queryPorGenero = `SELECT uu.id, uu.nome
 const queryPorAno = `SELECT uu.id, uu.nome
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
-      SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome, l.PaginasLidas, 0 as numRelecturas
+      SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome
+        , l.PaginasLidas, 0 as numRelecturas
       FROM Livro l
       WHERE l.fkUsuario = {idUsuario_reemprazo}
       AND l.Lido = true
     UNION ALL
-      SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome, r.PaginasLidas, 1 as numRelecturas
+      SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome, r.PaginasLidas
+        , 1 as numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
       WHERE r.fkUsuario = {idUsuario_reemprazo}
       AND r.Lido = true
@@ -76,7 +80,7 @@ const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quant
       WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
-    SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas
+    SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
       RIGHT JOIN Autores ars ON r.fkLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
@@ -96,6 +100,17 @@ async function getEstadisticas(idUsuario, tipo){
       break;
     case '2':
       dados = await db.query(queryPorGenero.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      dados = dados.map(value => {
+          const matrizAnos = value.anos 
+            ? value.anos.split(',').map(Number)   // Convirto "2021,2022" para [2021, 2022]
+            : [];
+
+          return {
+            ...value,
+            anos: matrizAnos
+          };
+        }
+      );
       break;
     case '3':
       dados = await db.query(queryPorAno.replaceAll('{idUsuario_reemprazo}', idUsuario));
