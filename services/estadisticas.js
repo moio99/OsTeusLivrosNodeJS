@@ -108,8 +108,8 @@ async function getEstadisticas(idUsuario, tipo){
       dados = await db.query(queryPorIdiomaLista);
       break;
     case '2':
-      dados = await db.query(queryPorGenero.replaceAll('{idUsuario_reemprazo}', idUsuario));
-      dados = dados.map(value => {
+      const rowsGeneros = await db.query(queryPorGenero.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      dados = rowsGeneros.map(value => {
           const matrizAnos = value.anos 
             ? value.anos.split(',').map(Number)   // Convirto "2021,2022" para [2021, 2022]
             : [];
@@ -122,8 +122,8 @@ async function getEstadisticas(idUsuario, tipo){
       );
       break;
     case '3':
-      dados = await db.query(queryPorAno.replaceAll('{idUsuario_reemprazo}', idUsuario));
-      dados = dados.map(value => {
+      const rowsAnos = await db.query(queryPorAno.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      dados = rowsAnos.map(value => {
           const matrizGeneros = value.generos 
             ? value.generos.split(',').map(Number)   // Convirto "2,15,17" para [2, 15, 17]
             : [];
