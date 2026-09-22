@@ -15,26 +15,28 @@ const quantidade = db.ePosgreSQL() ?
      , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
 const concatenacom = db.ePosgreSQL() ? `string_agg(` : `GROUP_CONCAT(`;
 const concatenacomFim = db.ePosgreSQL() ? `::text, ',')` : `)`;
+const idIntegerPosgreSQL = db.ePosgreSQL() ? `::INTEGER` : ``;
+const p1 = db.ePosgreSQL() ? '$1' : '?';
 
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
     SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
       FROM Livro l
           RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
-      WHERE l.fkUsuario = {idUsuario_reemprazo}
+      WHERE l.fkUsuario = ${p1}
       AND l.Lido = true
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
       SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
           RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
-      WHERE r.fkUsuario = {idUsuario_reemprazo}
+      WHERE r.fkUsuario = ${p1}
       AND r.Lido = true
       -- AND (r.idSerie IS NULL OR r.idSerie =  0)
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(nome) ASC;`;
-const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}ano${concatenacomFim} AS anos
+const queryPorGenero = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenacom}ano${concatenacomFim} AS anos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, YEAR(l.DataFimLeitura) as ano
@@ -42,7 +44,7 @@ const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}ano${concatenacomF
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
+      WHERE l.fkUsuario = ${p1} AND l.Lido = true
     UNION ALL
       SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, YEAR(r.DataFimLeitura) as ano
         , 1 as numRelecturas -- se fosem mais de um sumarase
@@ -50,13 +52,13 @@ const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}ano${concatenacomF
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE l.fkUsuario = {idUsuario_reemprazo}
+      WHERE l.fkUsuario = ${p1}
       AND l.Lido = true
   ) as uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
 
-const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenacomFim} AS generos
+const queryPorAno = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenacom}idsGenero${concatenacomFim} AS generos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome
@@ -64,7 +66,7 @@ const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenac
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE l.fkUsuario = {idUsuario_reemprazo}
+      WHERE l.fkUsuario = ${p1}
       AND l.Lido = true
       GROUP BY l.DataFimLeitura, l.paginaslidas
     UNION ALL
@@ -74,7 +76,7 @@ const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenac
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE r.fkUsuario = {idUsuario_reemprazo}
+      WHERE r.fkUsuario = ${p1}
       AND r.Lido = true
       GROUP BY r.DataFimLeitura, r.PaginasLidas
     ) AS uu
@@ -87,14 +89,14 @@ const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quant
       FROM Livro l
       RIGHT JOIN Autores ars ON l.idLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
+      WHERE l.fkUsuario = ${p1} AND l.Lido = true
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
     SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
       RIGHT JOIN Autores ars ON r.fkLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE r.fkUsuario = {idUsuario_reemprazo} AND r.Lido = true
+      WHERE r.fkUsuario = ${p1} AND r.Lido = true
       -- AND (r.idSerie IS NULL OR r.idSerie =  0)
   ) as uu
   GROUP BY uu.id, uu.nome
@@ -105,11 +107,12 @@ async function getEstadisticas(idUsuario, tipo){
   let dados;
   switch (tipo) {
     case '1':
-      const queryPorIdiomaLista = queryPorIdioma.replaceAll('{idUsuario_reemprazo}', idUsuario);
-      dados = await db.query(queryPorIdiomaLista);
+      dados = db.ePosgreSQL() ? await db.query(queryPorIdioma, [idUsuario])
+        : await db.query(queryPorIdioma, [idUsuario, idUsuario]);
       break;
     case '2':
-      const rowsGeneros = await db.query(queryPorGenero.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      const rowsGeneros = db.ePosgreSQL() ? await db.query(queryPorGenero, [idUsuario])
+        : await db.query(queryPorGenero, [idUsuario, idUsuario]);
       dados = rowsGeneros.map(value => {
           const matrizAnos = value.anos 
             ? value.anos.split(',').map(Number)   // Convirto "2021,2022" para [2021, 2022]
@@ -121,9 +124,11 @@ async function getEstadisticas(idUsuario, tipo){
           };
         }
       );
+console.log(dados);
       break;
     case '3':
-      const rowsAnos = await db.query(queryPorAno.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      const rowsAnos = db.ePosgreSQL() ? await db.query(queryPorAno, [idUsuario])
+        : await db.query(queryPorAno, [idUsuario, idUsuario]);
       dados = rowsAnos.map(value => {
           const matrizGeneros = value.generos 
             ? value.generos.split(',').map(Number)   // Convirto "2,15,17" para [2, 15, 17]
@@ -137,7 +142,8 @@ async function getEstadisticas(idUsuario, tipo){
       );
       break;
     case '4':
-      dados = await db.query(queryPorAutor.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      dados = db.ePosgreSQL() ? await db.query(queryPorAutor, [idUsuario])
+        : await db.query(queryPorAutor, [idUsuario, idUsuario]);
       break;
     default:
       return ''
