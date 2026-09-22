@@ -13,6 +13,8 @@ const quantidade = db.ePosgreSQL() ?
      , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
   : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
      , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
+const concatenacom = db.ePosgreSQL() ? 'string_agg' : 'GROUP_CONCAT';
+
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
     SELECT l.fkIdioma AS id, i.Nome AS nome, l.PaginasLidas, 0 AS numRelecturas
@@ -31,7 +33,7 @@ const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quan
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(nome) ASC;`;
-const queryPorGenero = `SELECT uu.id, uu.nome, GROUP_CONCAT(ano) AS anos
+const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}(ano) AS anos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, YEAR(l.DataFimLeitura) as ano
@@ -53,29 +55,31 @@ const queryPorGenero = `SELECT uu.id, uu.nome, GROUP_CONCAT(ano) AS anos
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
 
-const queryPorAno = `SELECT uu.id, uu.nome, GROUP_CONCAT(idGenero) AS generos
+const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}(idsGenero) AS generos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome
-        , l.PaginasLidas, g.idGenero, 0 as numRelecturas
+        , l.PaginasLidas, ${concatenacom}(g.idGenero) as idsGenero, 0 as numRelecturas
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo}
       AND l.Lido = true
+      GROUP BY l.DataFimLeitura
     UNION ALL
       SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome
-        , r.PaginasLidas, g.idGenero, 1 as numRelecturas -- se fosem mais de um sumarase
+        , r.PaginasLidas, ${concatenacom}(g.idGenero) as idsGenero, 1 as numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE r.fkUsuario = {idUsuario_reemprazo}
       AND r.Lido = true
+      GROUP BY r.DataFimLeitura
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY uu.id DESC;`;
-  
+
 const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
     SELECT ar.idAutor as id, ar.Nome as nome, l.PaginasLidas, 0 AS numRelecturas
