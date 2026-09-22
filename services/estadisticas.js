@@ -66,7 +66,7 @@ const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenac
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo}
       AND l.Lido = true
-      GROUP BY l.DataFimLeitura
+      GROUP BY l.DataFimLeitura, l.paginaslidas
     UNION ALL
       SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome
         , r.PaginasLidas, ${concatenacom}g.idGenero${concatenacomFim} as idsGenero, 1 as numRelecturas -- se fosem mais de um sumarase
@@ -76,7 +76,7 @@ const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenac
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE r.fkUsuario = {idUsuario_reemprazo}
       AND r.Lido = true
-      GROUP BY r.DataFimLeitura
+      GROUP BY r.DataFimLeitura, r.PaginasLidas
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY uu.id DESC;`;
