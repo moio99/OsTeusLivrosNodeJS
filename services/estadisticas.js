@@ -13,8 +13,8 @@ const quantidade = db.ePosgreSQL() ?
      , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
   : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
      , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
-const concatenacom = db.ePosgreSQL() ? 'string_agg(' : 'GROUP_CONCAT(';
-const concatenacomFim = db.ePosgreSQL() ? `::TEXT, ',')` : `)`;
+const concatenacom = db.ePosgreSQL() ? `string_agg(` : `GROUP_CONCAT(`;
+const concatenacomFim = db.ePosgreSQL() ? `::text, ',')` : `)`;
 
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
