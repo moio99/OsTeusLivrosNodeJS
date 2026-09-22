@@ -41,9 +41,9 @@ const queryPorGenero = `SELECT uu.id, uu.nome, GROUP_CONCAT(ano) AS anos
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo} AND l.Lido = true
     UNION ALL
-      SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, YEAR(l.DataFimLeitura) as ano
+      SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, YEAR(r.DataFimLeitura) as ano
         , 1 as numRelecturas -- se fosem mais de um sumarase
-      FROM Relectura r  
+      FROM Relectura r
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
@@ -53,18 +53,23 @@ const queryPorGenero = `SELECT uu.id, uu.nome, GROUP_CONCAT(ano) AS anos
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
 
-const queryPorAno = `SELECT uu.id, uu.nome
+const queryPorAno = `SELECT uu.id, uu.nome, GROUP_CONCAT(idGenero) AS generos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome
-        , l.PaginasLidas, 0 as numRelecturas
+        , l.PaginasLidas, g.idGenero, 0 as numRelecturas
       FROM Livro l
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = {idUsuario_reemprazo}
       AND l.Lido = true
     UNION ALL
-      SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome, r.PaginasLidas
-        , 1 as numRelecturas -- se fosem mais de um sumarase
+      SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome
+        , r.PaginasLidas, g.idGenero, 1 as numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
+        INNER JOIN Livro l ON r.fkLivro = l.idLivro
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE r.fkUsuario = {idUsuario_reemprazo}
       AND r.Lido = true
     ) AS uu
@@ -114,6 +119,17 @@ async function getEstadisticas(idUsuario, tipo){
       break;
     case '3':
       dados = await db.query(queryPorAno.replaceAll('{idUsuario_reemprazo}', idUsuario));
+      dados = dados.map(value => {
+          const matrizGeneros = value.generos 
+            ? value.generos.split(',').map(Number)   // Convirto "2,15,17" para [2, 15, 17]
+            : [];
+
+          return {
+            ...value,
+            generos: matrizGeneros
+          };
+        }
+      );
       break;
     case '4':
       dados = await db.query(queryPorAutor.replaceAll('{idUsuario_reemprazo}', idUsuario));
