@@ -13,7 +13,8 @@ const quantidade = db.ePosgreSQL() ?
      , SUM(uu.numRelecturas)::INTEGER AS "quantidadeRelecturas"`
   : `, CONVERT(SUM(uu.PaginasLidas), UNSIGNED) AS quantidadepaginas
      , CONVERT(SUM(uu.numRelecturas), UNSIGNED) AS "quantidadeRelecturas"`;
-const concatenacom = db.ePosgreSQL() ? 'string_agg' : 'GROUP_CONCAT';
+const concatenacom = db.ePosgreSQL() ? 'string_agg(' : 'GROUP_CONCAT(';
+const concatenacomFim = db.ePosgreSQL() ? `, ',')` : `)`;
 
 const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quantidade}
   FROM (
@@ -33,7 +34,7 @@ const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quan
     ) AS uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(nome) ASC;`;
-const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}(ano) AS anos
+const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}ano${concatenacomFim} AS anos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT g.idGenero as id, g.Nome as nome, l.PaginasLidas, YEAR(l.DataFimLeitura) as ano
@@ -55,11 +56,11 @@ const queryPorGenero = `SELECT uu.id, uu.nome, ${concatenacom}(ano) AS anos
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
 
-const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}(idsGenero) AS generos
+const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}idsGenero${concatenacomFim} AS generos
   , COUNT(uu.id) as quantidade ${quantidade}
   FROM (
       SELECT YEAR(l.DataFimLeitura) as id, YEAR(l.DataFimLeitura) as nome
-        , l.PaginasLidas, ${concatenacom}(g.idGenero) as idsGenero, 0 as numRelecturas
+        , l.PaginasLidas, ${concatenacom}g.idGenero${concatenacomFim} as idsGenero, 0 as numRelecturas
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
@@ -68,7 +69,7 @@ const queryPorAno = `SELECT uu.id, uu.nome, ${concatenacom}(idsGenero) AS genero
       GROUP BY l.DataFimLeitura
     UNION ALL
       SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome
-        , r.PaginasLidas, ${concatenacom}(g.idGenero) as idsGenero, 1 as numRelecturas -- se fosem mais de um sumarase
+        , r.PaginasLidas, ${concatenacom}g.idGenero${concatenacomFim} as idsGenero, 1 as numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
         INNER JOIN Livro l ON r.fkLivro = l.idLivro
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
