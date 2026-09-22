@@ -72,7 +72,8 @@ async function getEstilosLiterariosCosLivros(idUsuario){
       LEFT JOIN Livro l on l.fkEstilo = e.idEstilo
       WHERE e.fkUsuario = ${p1}
       GROUP BY e.idEstilo
-      ORDER BY e.idEstilo ASC;`
+      ORDER BY e.idEstilo ASC;`,
+    [idUsuario]
   );
 
   const data = helper.emptyOrRows(dadosLivro);
