@@ -35,10 +35,9 @@ router.get('/ListadoLivros', async function(req, res, next) {
     
     // Reemplazar os placeholders
     const html = htmlPagina
-      .replace('--idUsuario--', idUsuario)
+      .replaceAll('--AidUsuarioA--', idUsuario)
       .replace('--tipo--', tipo)
-      .replace('--chave--', chave)
-      .replace('--AidUsuarioA--', idUsuario);
+      .replace('--chave--', chave);
 
     res.send(html);
 
@@ -154,7 +153,7 @@ router.get('/Estadisticas', async function(req, res, next) {
     
     // Reemplazar os placeholders
     const html = htmlPagina
-      .replace('--idUsuario--', idUsuario);
+      .replaceAll('--AidUsuarioA--', idUsuario);
 
     res.send(html);
 
@@ -182,11 +181,15 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
       }).join('');    // Para que nom componha umha matriz
       
       res.send(`
-        <div class="botomFechar">
-          <span>${resultado.meta.origemDados}</span>
-          <div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
-        </div>
-        ${html}`
+        <div class="contedor-principal">
+          <div class="coluna-esquerda">
+            ${html}
+          </div>
+          <div class="coluna-dereita botomFechar">
+            <span>${resultado.meta.origemDados}</span>
+            <div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+          </div>
+        </div>`
       );
     }
   } catch (err) {

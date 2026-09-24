@@ -1,21 +1,26 @@
 <!-- views/estadisticas.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="gl">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Livros</title>
-    <link rel="stylesheet" href="/styles/listadoLivros.css">
+    <link rel="stylesheet" href="/styles/comum.css">
+    <link rel="stylesheet" href="/styles/estadisticas.css">
     <script>
       // Variavel global accesible dende o arquivo externo, será reemplazada polo valor
-      var idUsuario = '--idUsuario--';      // ponho as cominhas para que nom me proteste o editor
+      var idUsuario = '--AidUsuarioA--';      // ponho as cominhas para que nom me proteste o editor
     </script>
     <script src="/js/estadisticas.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="contido-pagina">
       <h2>Estadísticas dos livros lidos</h2>
       <img id="carregando" src="/images/carregando.gif" alt="Carregando...">
+      <div class="infoTopo">
+        <a id="aListadoLivros" href="/api/paginas/ListadoLivros?idUsuario=--AidUsuarioA--&tipo=0">ir a Listado de livros completo</a>
+        <span id="origemDados"></span>
+      </div>
 
       <div>
         <h4 class="book-row" onclick="getEstadisticas('1', 'livrosPorIdioma')">Livros por idioma</h4>

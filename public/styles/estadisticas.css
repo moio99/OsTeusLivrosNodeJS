@@ -1,0 +1,12 @@
+/* Alinha os dous subcontedores principais em paralelo */
+.contedor-principal {
+  display: flex;
+  justify-content: space-between; /* Deija espacio intermedio se os blocos nom ocupam todo o ancho */
+  align-items: flex-start;        /* Alinha ambos blocos ao tope superior */
+  gap: 20px;                      /* Separaçom física entre a esquerda e a dereita */
+}
+
+.coluna-dereita {
+  align-items: baseline;
+  flex: 0 0 auto;   /* evita que ocupe mais do seu contido */
+}

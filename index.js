@@ -16,7 +16,7 @@ import coleconsRouter from "./routes/colecons.js";
 import outrosRouter from "./routes/outros.js";
 import relecturasRouter from "./routes/relecturas.js";
 import estilosLiterariosRouter from "./routes/estilosLiterarios.js";
-import paginasRouter from "./routes/paginas.js";
+import paginasRouter from "./routes/aWebPaginas.js";
 import construconsBD from "./routes/construconsBD.js";
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
