@@ -151,7 +151,6 @@ th {
   background-color: var(--input-bg);
   position: sticky;
   top: 0;
-  cursor: pointer;
 }
 
 .book-row {
