@@ -42,9 +42,22 @@ const allowedOrigins = [
   'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
   'https://osteuslivrosangular.onrender.com', // Frontend de render.com
   'http://localhost:4210',
+  'http://localhost:4211',  // Para Java
   'http://localhost:4230',
   'http://localhost:5002'   // Para as chamdas dende o swagger (OpenApi)
 ];
+
+/* é un middleware de Express (Node.js). A súa función é interceptar todas as peticións que chegan ao teu servidor
+   para engadirlles unha "tarxeta de instrucións de seguridade" chamada Content-Security-Policy (CSP)
+   antes de que a páxina se mostre no navegador.
+*/
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';"
+  );
+  next();
+});
 
 app.use(cors({
   origin: function (origin, callback) {
