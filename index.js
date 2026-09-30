@@ -60,7 +60,9 @@ app.use(cors({
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho',
+    'Cache-Control', 'Pragma', 'Expires'       // os engadim no front para que as petiçons de GET nom as cachee o navegador
+  ],
   exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados
   credentials: true,
   preflightContinue: false,
