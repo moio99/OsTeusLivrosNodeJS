@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import livros from '../services/livros.js';
+import livros from '../../services/livros.js';
 
 /**
  * GET

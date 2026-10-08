@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import autores from '../services/autores.js';
+import autores from '../../services/autores.js';
 
 /**
  * GET

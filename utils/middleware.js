@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const requestLogger = (request, response, next) => {
   console.info('Method:', request.method)
   console.info('Path:  ', request.path)
-  if (!request.path.includes('/login')) {
+  if (!request.path.includes('/login') && process.env.NODE_ENTORNO === 'local') {
     console.info('Body:  ', request.body)
   }
   console.info('---------------------------------------------------FIM')
@@ -11,7 +11,10 @@ const requestLogger = (request, response, next) => {
 }
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+  if (process.env.NODE_ENTORNO === 'local')
+    response.status(404).send({ error: 'O endpoint nom é conhecido' })
+  else
+    response.status(404).send({ error: 'unknown endpoint' })
 }
 
 /* const tokenExtractor = (request, response, next) => {
@@ -23,7 +26,7 @@ const unknownEndpoint = (request, response) => {
   next()
 } */
 
-const userExtractor = (request, response, next) => {
+const controlUsuario = (request, response, next) => {
   console.info('Method:', request.method)
   if (request.method === 'OPTIONS') {
     // Nas solicitudes complexas a primeira solicitude é a de OPTIONS, e a resposta está baleira, nom vai o token
@@ -86,6 +89,6 @@ export default {
   requestLogger,
   unknownEndpoint,
   //tokenExtractor,
-  userExtractor,
+  controlUsuario,
   errorHandler
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import graficos from '../services/graficos.js';
+import graficos from '../../services/graficos.js';
 
 /**
  * GET

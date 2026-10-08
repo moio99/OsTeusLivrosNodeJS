@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import estadisticas from '../services/estadisticas.js';
+import estadisticas from '../../services/estadisticas.js';
 
 /**
  * GET

@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import editoriais from '../services/editoriais.js';
+import editoriais from '../../services/editoriais.js';
 
 /**
  * @openapi

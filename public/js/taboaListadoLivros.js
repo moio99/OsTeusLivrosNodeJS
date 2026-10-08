@@ -9,7 +9,7 @@ async function getLivros() {
   try {
     loadingElement.style.display = 'block';
     document.getElementById('aEstadisticas').style.display = 'none';
-    const response = await fetch(`/api/paginas/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
+    const response = await fetch(`/api/paginas/taboa/DadosLivros?idUsuario=${idUsuario}&tipo=${idTipo}&chave=${idChave}`);
     if (!response.ok) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
@@ -183,7 +183,7 @@ async function getDetalhesDoLivro(idLivro) {
   else {
     try {
       document.getElementById('carregando').style.display = 'block';
-      const response = await fetch(`/api/Paginas/DetalhesDoLivro?idLivro=${idLivro}`)
+      const response = await fetch(`/api/Paginas/taboa/DetalhesDoLivro?idLivro=${idLivro}`)
         .finally(() => {
           document.getElementById('carregando').style.display = 'none';
         });                

@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import bibliotecas from '../services/bibliotecas.js';
+import bibliotecas from '../../services/bibliotecas.js';
 
 /**
  * GET

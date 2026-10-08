@@ -11,7 +11,7 @@ async function getEstadisticas(tipo, idDiv) {
   else {
     try {
       document.getElementById('carregando').style.display = 'block';
-      const response = await fetch(`/api/paginas/DadosEstadisticas?idUsuario=${idUsuario}&tipo=${tipo}&idDiv=${idDiv}`)
+      const response = await fetch(`/api/paginas/estadisticas/DadosEstadisticas?idUsuario=${idUsuario}&tipo=${tipo}&idDiv=${idDiv}`)
         .finally(() => {
           document.getElementById('carregando').style.display = 'none';
         });                

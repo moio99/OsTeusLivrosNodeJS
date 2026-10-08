@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import estiloLiterario from '../services/estilosLiterarios.js';
+import estiloLiterario from '../../services/estilosLiterarios.js';
 
 /**
  * GET

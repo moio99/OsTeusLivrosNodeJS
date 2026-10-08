@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import outros from '../services/outros.js';
+import outros from '../../services/outros.js';
 
 /**
  * GET Nacionalidades

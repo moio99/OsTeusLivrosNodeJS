@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import generos from '../services/generos.js';
+import generos from '../../services/generos.js';
 
 /**
  * GET

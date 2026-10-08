@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import colecons from '../services/colecons.js';
+import colecons from '../../services/colecons.js';
 
 /**
  * @openapi
