@@ -1,6 +1,5 @@
 import express from 'express';
 const router = express.Router();
-import livros from '../../services/livros.js';
 import estadisticas from '../../services/estadisticas.js';
 // const fs = require('fs');
 import fs from 'fs/promises';

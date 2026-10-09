@@ -1,7 +1,6 @@
 /* de commonJS (com require) o passo a ESModules (com imports)
 */
 import express from "express";
-import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -20,6 +19,7 @@ import relecturasRouter from "./routes/angular/relecturas.js";
 import estilosLiterariosRouter from "./routes/angular/estilosLiterarios.js";
 import paginasRouter from "./routes/paginasHTML/routerHtml.js";
 import construconsBD from "./routes/construconsBD.js";
+import corsMiddleware from "./middlewares/cors.js"
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
@@ -40,54 +40,23 @@ app.use(express.static('public'));    // para poder carregar no html o estadisti
 // __dirname  variavel global especial em Node.js que contem a rota absoluta do directorio onde se atopa o arquivo atual
 app.use(express.static(path.join(__dirname, 'public')));
 
-const allowedOrigins = [
-  'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
-  'https://osteuslivrosangular.onrender.com', // Frontend de render.com
-  'http://localhost:4210',
-  'http://localhost:4211',  // Para Java
-  'http://localhost:4230',
-  'http://localhost:5002'   // Para as chamdas dende o swagger (OpenApi)
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir solicitudes sin 'origin' (como Postman o móviles)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.some(allowedOrigin => origin.startsWith(allowedOrigin))) {
-      return callback(null, true);
-    } else {
-      console.warn('⚠ Origem bloqueado polas CORS:', origin);
-      return callback(new Error('Origem nom permitido'), false);
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'rolroleiro', 'usuarinho',
-    'Cache-Control', 'Pragma', 'Expires'       // os engadim no front para que as petiçons de GET nom as cachee o navegador
-  ],
-  exposedHeaders: ['rolroleiro', 'usuarinho'], // Headers personalizados
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}));
-
-// Manejo explícito de OPTIONS para todas las rutas
-//app.options('*', cors());
+app.use(corsMiddleware());
+// antes do de enriba ussa isto:  app.use(cors({
+//   origin: function (origin, callback) {
 
 
-
-// Configuraçom de OpenAPI / Swagger
+// Configuraçom de OpenAPI / Swagger      http://localhost:5002/api-docs
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'A minha API em Node 20',
+      title: 'A minha API em Node 20 com OpenAPI',
       version: '1.0.0',
       description: 'Documentaçom automatizada da minha API',
     },
-    servers: [{ url: `http://localhost:${port}/api` }],
+    servers: [{ url: `http://localhost:${port}/api`}],
   },
-  apis: ['./routes/*.js'], // Rotas onde o paquete buscará os teus comentarios de documentación
+  apis: ['./routes/angular/*.js'], // Rotas onde o paquete buscará os teus comentarios de documentación
 };
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 

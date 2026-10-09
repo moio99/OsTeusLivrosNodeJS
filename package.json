@@ -6,16 +6,17 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENTORNO=local QUAL_SQL=mySQL nodemon ./index.js",
-    "Para_facer_a_consulta_basica": "http://localhost:5002/api/paginas/ListadoLivros?idUsuario=2&tipo=0",
     "devRender": "cross-env NODE_ENTORNO=local QUAL_SQL=render nodemon ./index.js",
     "devSupabase": "cross-env NODE_ENTORNO=local QUAL_SQL=PosgreSQLsupabase nodemon ./index.js",
-    "Para_subir_a_Supabase": "http://localhost:5002/api/ConstruconsBD/SubidaAWeb",
-    "Para_ciar_txts_coa_criacom_da_BD": "http://localhost:5002/api/ConstruconsBD/CiarSQLsBD?nomeBD=NomeDaBD",
-    "Para_ciar_txts_coa_insercom_dos_dados": "http://localhost:5002/api/ConstruconsBD/CiarSQLsInsercom?nomeBD=NomeDaBD",
     "start": "node index.js",
     "startLocal": "cross-env NODE_ENTORNO=railway nodemon ./index.js",
     "test": "node --test",
-    "Pagina_do_listado_da_api_em_supabase": "https://osteuslivrosnodejs.onrender.com/api/paginas/ListadoLivros?idUsuario=2&tipo=0"
+    "Para_facer_a_consulta_basica": "http://localhost:5002/api/paginas/taboa/ListadoLivros?idUsuario=2&tipo=0",
+    "Para_acceder_ao_swagger": "http://localhost:5002/api-docs",
+    "Para_subir_a_Supabase": "http://localhost:5002/api/ConstruconsBD/SubidaAWeb",
+    "Para_ciar_txts_coa_criacom_da_BD": "http://localhost:5002/api/ConstruconsBD/CiarSQLsBD?nomeBD=NomeDaBD",
+    "Para_ciar_txts_coa_insercom_dos_dados": "http://localhost:5002/api/ConstruconsBD/CiarSQLsInsercom?nomeBD=NomeDaBD",
+    "Pagina_do_listado_da_api_em_supabase": "https://osteuslivrosnodejs.onrender.com/api/paginas/taboa/ListadoLivros?idUsuario=2&tipo=0"
   },
   "keywords": [],
   "author": "",
