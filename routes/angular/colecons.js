@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import colecons from '../../services/colecons.js';
+import colecons from '../../services/Colecons.js';
 
 /**
  * @openapi
@@ -37,7 +37,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
 
 /**
  * @openapi
- * /colecons/Colecom:
+ * /Colecons/Colecom:
  *   get:
  *     tags: [Coleçons]
  *     summary: Obtem umha coleçom concreta
@@ -72,7 +72,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
 
 /**
  * @openapi
- * /colecons/Colecom:
+ * /Colecons/Colecom:
  *   post:
  *     tags: [Coleçons]
  *     summary: Crea umha nova coleçom
@@ -110,32 +110,19 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  *             schema:
  *               type: object
  *               properties:
- *                 mensagem:
- *                   type: string
- *                   example: "Coleçom creada correctamente"
- *                 colecom:
+ *                 idResult:
+ *                   type: integer
+ *                   example: 3
+ *                   description: O identificador do resultado da operación.
+ *                 meta:
  *                   type: object
  *                   properties:
  *                     id:
  *                       type: integer
- *                       example: 5
- *                     nome:
- *                       type: string
- *                       example: "Coleçom mini"
- *                     isbn:
- *                       type: string
- *                       example: "12-3456-789"
- *                     web:
- *                       type: string
- *                       example: "www.editorialgalaxia.com/mini"
- *                     comentario:
- *                       type: string
- *                       example: "A coleçom dos livros pequenos"
- *                     idUsuario:
- *                       type: integer
- *                       example: 1
+ *                       example: 3
+ *                       description: O identificador interno do recurso afectado.
  *       400:
- *         description: Datos incorrectos ou incompletos
+ *         description: Dados incorrectos ou incompletos
  *         content:
  *           application/json:
  *             schema:
@@ -145,7 +132,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  *                   type: string
  *                   example: "Faltan campos obrigatorios"
  *       409:
- *         description: Já existe umha coleçom con ese nome
+ *         description: Já existe umha coleçom com ese nome
  *         content:
  *           application/json:
  *             schema:
@@ -153,7 +140,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Já existe umha coleçom con ese nome"
+ *                   example: "Já existe umha coleçom com ese nome"
  *       500:
  *         description: Erro interno do servidor
  */
@@ -168,7 +155,7 @@ router.post('/Colecom', async function(req, res, next) {
 
 /**
  * @openapi
- * /colecons/Colecom:
+ * /Colecons/Colecom:
  *   put:
  *     tags: [Coleçons]
  *     summary: Actualiza umha coleçom
@@ -181,9 +168,6 @@ router.post('/Colecom', async function(req, res, next) {
  *             type: object
  *             required:
  *               - nome
- *               - isbn
- *               - web
- *               - comentario
  *             properties:
  *               id:
  *                 type: integer
@@ -213,32 +197,19 @@ router.post('/Colecom', async function(req, res, next) {
  *             schema:
  *               type: object
  *               properties:
- *                 mensagem:
- *                   type: string
- *                   example: "Coleçom creada correctamente"
- *                 colecom:
+ *                 idResult:
+ *                   type: integer
+ *                   example: 3
+ *                   description: O identificador do resultado da operación.
+ *                 meta:
  *                   type: object
  *                   properties:
  *                     id:
  *                       type: integer
- *                       example: 5
- *                     nome:
- *                       type: string
- *                       example: "Coleçom mini"
- *                     isbn:
- *                       type: string
- *                       example: "12-3456-789"
- *                     web:
- *                       type: string
- *                       example: "www.editorialgalaxia.com/mini"
- *                     comentario:
- *                       type: string
- *                       example: "A coleçom dos livros pequenos"
- *                     idUsuario:
- *                       type: integer
- *                       example: 1
+ *                       example: 3
+ *                       description: O identificador interno do recurso afectado.
  *       400:
- *         description: Datos incorrectos ou incompletos
+ *         description: Dados incorrectos ou incompletos
  *         content:
  *           application/json:
  *             schema:
@@ -277,7 +248,7 @@ router.put('/Colecom', async function(req, res, next) {
 
 /**
  * @openapi
- * /colecons/Colecom:
+ * /Colecons/Colecom:
  *   delete:
  *     tags: [Coleçons]
  *     summary: Elimina umha coleçom
@@ -298,32 +269,19 @@ router.put('/Colecom', async function(req, res, next) {
  *             schema:
  *               type: object
  *               properties:
- *                 mensagem:
- *                   type: string
- *                   example: "Coleçom eliminada correctamente"
- *                 colecom:
+ *                 idResult:
+ *                   type: integer
+ *                   example: 3
+ *                   description: O identificador do resultado da operación.
+ *                 meta:
  *                   type: object
  *                   properties:
  *                     id:
  *                       type: integer
- *                       example: 20
- *                     nome:
- *                       type: string
- *                       example: "Coleçom mini"
- *                     isbn:
- *                       type: string
- *                       example: "12-3456-789"
- *                     web:
- *                       type: string
- *                       example: "www.editorialgalaxia.com/mini"
- *                     comentario:
- *                       type: string
- *                       example: "A coleçom dos livros pequenos"
- *                     idUsuario:
- *                       type: integer
- *                       example: 1
+ *                       example: 3
+ *                       description: O identificador interno do recurso afectado.
  *       400:
- *         description: Datos incorrectos ou incompletos
+ *         description: Dados incorrectos ou incompletos
  *         content:
  *           application/json:
  *             schema:

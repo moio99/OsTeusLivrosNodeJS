@@ -2,31 +2,10 @@ import express from 'express';
 const router = express.Router();
 import bibliotecas from '../../services/bibliotecas.js';
 
-/**
- * GET
- */
-router.get('/', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await bibliotecas.getBibliotecas(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter as bibliotecas `, err.message);
-    next(err);
-  }
-});
+import BibliotecaController from '../../controllers/bibliotecas.js'
 
-/**
- * GET
- */
-router.get('/BibliotecaPorNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await bibliotecas.getBibliotecaPorNome(req.idUsuario, req.query.nome));
-  } catch (err) {
-    console.error(`Erro ao obter a biblioteca polo nome `, err.message);
-    next(err);
-  }
-});
+router.get('/', BibliotecaController.getAll);
+router.get('/BibliotecaPorNome', BibliotecaController.getByNome);
 
 
 /**
