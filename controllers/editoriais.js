@@ -1,6 +1,6 @@
 import editoriais from '../services/editoriais.js';
 
-export class BibliotecaController {
+export class EditorialController {
   static async getAll(req, res, next) {
     try {
       // res.json(await programmingLanguages.getMultiple(req.query.page));
@@ -80,4 +80,5 @@ export class BibliotecaController {
   }
 }
 
-export default BibliotecaController;
+export default EditorialController;
+  

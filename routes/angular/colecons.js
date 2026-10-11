@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import colecons from '../../services/Colecons.js';
+import ColecomController from '../../controllers/colecons.js'
 
 /**
  * @openapi
@@ -10,30 +10,59 @@ import colecons from '../../services/Colecons.js';
  */
 
 /**
- * GET
+ * @openapi
+ * /Colecons:
+ *   get:
+ *     tags: [Coleçons]
+ *     summary: Obtem o listado das coleçons.
+ *     description: Obtem o listado básico das coleçons.
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ *       400:
+ *         description: Parámetros incorrectos
+ *       404:
+ *         description: Editorials nom encontradas
  */
-router.get('/ColecomPorNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await colecons.getColecomPorNome(req.idUsuario, req.query.nome));
-  } catch (err) {
-    console.error(`Erro ao obter a colecom polo nome `, err.message);
-    next(err);
-  }
-});
-
+router.get('/', ColecomController.getAll);
 
 /**
- * GET
+ * @openapi
+ * /Colecons/ColecomPorNome:
+ *   get:
+ *     tags: [Coleçons]
+ *     summary: Obtem umha coleçom
+ *     description: Filtra polo nome da coleçom.
+ *     parameters:
+ *       - in: query
+ *         name: nome
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome da coleçom
+ *         example: 'Coleçom mini'
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ *       400:
+ *         description: Parámetros incorrectos
+ *       404:
+ *         description: Editorial nom atopada
  */
- router.get('/ColeconsCosLivros', async function(req, res, next) {
-  try {
-    res.json(await colecons.getColeconsCosLivros(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter as colecons cos livros`, err.message);
-    next(err);
-  }
-});
+ router.get('/ColecomPorNome', ColecomController.getByNome);
+
+/**
+ * @openapi
+ * /Colecons/ColeconsCosLivros:
+ *   get:
+ *     tags: [Coleçons]
+ *     summary: Listado de cloeçons cos livros.
+ *     description: Um listado de cloeçons onde por cara umha vem o número de livros que tem.
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ */
+router.get('/ColeconsCosLivros', ColecomController.getColeconsCosLivros);
 
 /**
  * @openapi
@@ -58,17 +87,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  *       404:
  *         description: Coleçom nom atopada
  */
- router.get('/Colecom', async function(req, res, next) {
-  try {
-    if (!req.query.id) {
-      return res.status(400).json({ error: 'Faltam parámetros necesarios' });
-    }
-    res.json(await colecons.getColecom(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter a colecom `, err.message);
-    next(err);
-  }
-});
+ router.get('/Colecom', ColecomController.getColecom);
 
 /**
  * @openapi
@@ -144,14 +163,7 @@ router.get('/ColecomPorNome', async function(req, res, next) {
  *       500:
  *         description: Erro interno do servidor
  */
-router.post('/Colecom', async function(req, res, next) {
-  try {
-    res.json(await colecons.postColecom(req.idUsuario, req.body));
-  } catch (err) {
-    console.error(`Erro tentando criar umha colecom`, err.message);
-    next(err);
-  }
-});
+router.post('/Colecom', ColecomController.postColecom);
 
 /**
  * @openapi
@@ -231,20 +243,7 @@ router.post('/Colecom', async function(req, res, next) {
  *       500:
  *         description: Erro interno do servidor
  */
-router.put('/Colecom', async function(req, res, next) {
-  try {
-    if (!req.body) {
-      return res.status(400).json({ error: 'Faltam parámetros necesarios' });
-    }
-    else
-      res.json(await colecons.putColecom(req.idUsuario, req.body));
-    
-
-  } catch (err) {
-    console.error(`Erro tentando actualizar umha colecom`, err.message);
-    next(err);
-  }
-});
+router.put('/Colecom', ColecomController.putColecom);
 
 /**
  * @openapi
@@ -313,18 +312,6 @@ router.put('/Colecom', async function(req, res, next) {
  *       500:
  *         description: Erro interno do servidor
  */
-router.delete('/Colecom', async function(req, res, next) {
-  try {
-    if (!req.query.id) {
-      return res.status(400).json({ error: 'Faltam parámetros necesarios' });
-    }
-    else
-      res.json(await colecons.borrarColecom(req.idUsuario, req.query.id));
-    
-  } catch (err) {
-    console.error(`Erro tentando borrar umha colecom`, err.message);
-    next(err);
-  }
-});
+router.delete('/Colecom', ColecomController.deleteColecom);
 
 export default router;

@@ -114,7 +114,7 @@ async function postColecom(idUsuario, colecom){
 async function putColecom(idUsuario, colecom){
   console.log('💬 Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  const queryInsert = `UPDATE Coleçom SET
+  const queryInsert = `UPDATE Colecom SET
       Nome = ?,
       ISBN = ?,
       web = ?,

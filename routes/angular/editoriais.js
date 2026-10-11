@@ -1,7 +1,5 @@
 import express from 'express';
 const router = express.Router();
-import editoriais from '../../services/editoriais.js';
-
 import EditorialController from '../../controllers/editoriais.js'
 
 /**
@@ -16,8 +14,8 @@ import EditorialController from '../../controllers/editoriais.js'
  * /Editoriais:
  *   get:
  *     tags: [Editoriais]
- *     summary: Obtem o listado das
- *     description: Obtem o listado das editoriais.
+ *     summary: Obtem o listado das editoriais.
+ *     description: Obtem o listado básico das editoriais.
  *     responses:
  *       200:
  *         description: Éxito total.
@@ -58,7 +56,7 @@ router.get('/EditorialPorNome', EditorialController.getByNome);
  * /Editoriais/EditoriaisCosLivros:
  *   get:
  *     tags: [Editoriais]
- *     summary: Listado de editorriais cos livros.
+ *     summary: Listado de editoriais cos livros.
  *     description: Um listado de editoriais onde por cara umha vem o número de livros que tem.
  *     responses:
  *       200:
