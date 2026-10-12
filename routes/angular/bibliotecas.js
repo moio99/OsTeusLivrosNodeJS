@@ -49,15 +49,15 @@ router.get('/', BibliotecaController.getAll);
  *       404:
  *         description: Editorial nom atopada
  */
- router.get('/BibliotecaPorNome', BibliotecaController.getByNome);
+router.get('/BibliotecaPorNome', BibliotecaController.getByNome);
 
 /**
  * @openapi
  * /Bibliotecas/BibliotecasCosLivros:
  *   get:
  *     tags: [Bibliotecas]
- *     summary: Listado de cloeçons cos livros.
- *     description: Um listado de cloeçons onde por cara umha vem o número de livros que tem.
+ *     summary: Listado de bibliotecas cos livros.
+ *     description: Um listado de bibliotecas onde por cara umha vem o número de livros que tem.
  *     responses:
  *       200:
  *         description: Éxito total.
@@ -87,7 +87,7 @@ router.get('/BibliotecasCosLivros', BibliotecaController.getBibliotecasCosLivros
  *       404:
  *         description: Biblioteca nom atopada
  */
- router.get('/Biblioteca', BibliotecaController.getBiblioteca);
+router.get('/Biblioteca', BibliotecaController.getBiblioteca);
 
 /**
  * @openapi

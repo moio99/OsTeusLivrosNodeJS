@@ -9,9 +9,9 @@ const configLocal = {
     database: "osteuslivros" */
     user: "root",               // windows
     password: "neveira",
-    // database: "bd-2024-09-12",
+    database: "bd-2024-09-12",
     // database: "NomeN",
-    database: "osteuslivros",
+    // database: "osteuslivros",
     //connectionLimit : 10,
   },
   listPerPage: 10,

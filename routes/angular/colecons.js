@@ -49,7 +49,7 @@ router.get('/', ColecomController.getAll);
  *       404:
  *         description: Editorial nom atopada
  */
- router.get('/ColecomPorNome', ColecomController.getByNome);
+router.get('/ColecomPorNome', ColecomController.getByNome);
 
 /**
  * @openapi
@@ -87,7 +87,7 @@ router.get('/ColeconsCosLivros', ColecomController.getColeconsCosLivros);
  *       404:
  *         description: Coleçom nom atopada
  */
- router.get('/Colecom', ColecomController.getColecom);
+router.get('/Colecom', ColecomController.getColecom);
 
 /**
  * @openapi

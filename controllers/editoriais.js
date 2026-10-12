@@ -3,7 +3,6 @@ import editoriais from '../services/editoriais.js';
 export class EditorialController {
   static async getAll(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await editoriais.getEditoriais(req.idUsuario));
     } catch (err) {
       console.error(`Erro ao obter as editoriais `, err.message);
@@ -13,7 +12,6 @@ export class EditorialController {
 
   static async getByNome(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await editoriais.getEditorialPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
       console.error(`Erro ao obter a editorial polo nome `, err.message);
@@ -23,7 +21,6 @@ export class EditorialController {
 
   static async getEditoriaisCosLivros(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await editoriais.getEditoriaisCosLivros(req.idUsuario));
     } catch (err) {
       console.error(`Erro ao obter as editoriais cos livros`, err.message);

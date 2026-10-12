@@ -3,7 +3,6 @@ import colecons from '../services/colecons.js';
 export class ColecomController {
   static async getAll(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await colecons.getColecons(req.idUsuario));
     } catch (err) {
       console.error(`Erro ao obter as coleçons `, err.message);
@@ -13,7 +12,6 @@ export class ColecomController {
 
   static async getByNome(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await colecons.getColecomPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
       console.error(`Erro ao obter a coleçons polo nome `, err.message);
@@ -23,7 +21,6 @@ export class ColecomController {
 
   static async getColeconsCosLivros(req, res, next) {
     try {
-      // res.json(await programmingLanguages.getMultiple(req.query.page));
       res.json(await colecons.getColeconsCosLivros(req.idUsuario));
     } catch (err) {
       console.error(`Erro ao obter as coleçons cos livros`, err.message);
