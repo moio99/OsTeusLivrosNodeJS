@@ -1,18 +1,25 @@
 import express from 'express';
 const router = express.Router();
-import graficos from '../../services/graficos.js';
+import GraficoController from '../../controllers/graficos.js';
 
 /**
- * GET
+ * @openapi
+ * tags:
+ *   - name: Gráficos
+ *     description: Gráficos e estatísticas da biblioteca
  */
-router.get('/PaginasPorIdiomaEAno', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await graficos.getPaginasPorIdiomaEAno(req.idUsuario, req.query.tipo));
-  } catch (err) {
-    console.error(`Erro ao obter os dados dos gráficos PaginasPorIdiomaEAno `, err.message);
-    next(err);
-  }
-});
+
+/**
+ * @openapi
+ * /Graficos/PaginasPorIdiomaEAno:
+ *   get:
+ *     tags: [Gráficos]
+ *     summary: Obtem as páxinas lidas por idioma e ano.
+ *     description: Devolve o número de páxinas lidas por idioma e ano, contando livros e relecturas do usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/PaginasPorIdiomaEAno', GraficoController.getPaginasPorIdiomaEAno);
 
 export default router;

@@ -1,101 +1,185 @@
 import express from 'express';
 const router = express.Router();
-import generos from '../../services/generos.js';
+import GeneroController from '../../controllers/generos.js';
 
 /**
- * GET
+ * @openapi
+ * tags:
+ *   - name: Géneros
+ *     description: Gestom dos géneros literarios
  */
-router.get('/', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await generos.getGeneros(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os generos `, err.message);
-    next(err);
-  }
-});
+
+/**
+ * @openapi
+ * /Generos:
+ *   get:
+ *     tags: [Géneros]
+ *     summary: Obtem os géneros.
+ *     description: Devolve a lista de géneros do usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/', GeneroController.getAll);
 
 
 /**
- * GET
+ * @openapi
+ * /Generos/GenerosCosLivros:
+ *   get:
+ *     tags: [Géneros]
+ *     summary: Obtem os géneros cos seus livros.
+ *     description: Devolve os géneros xunto co número de livros asociados e lidos.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/GenerosCosLivros', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await generos.getGenerosCosLivros(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os generos cos livros`, err.message);
-    next(err);
-  }
-});
+router.get('/GenerosCosLivros', GeneroController.getGenerosCosLivros);
 
 /**
- * GET
+ * @openapi
+ * /Generos/Genero:
+ *   get:
+ *     tags: [Géneros]
+ *     summary: Obtem um género.
+ *     description: Busca um género polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do género.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/Genero', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await generos.getGenero(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o genero `, err.message);
-    next(err);
-  }
-});
+router.get('/Genero', GeneroController.getGenero);
 
 /**
- * GET
+ * @openapi
+ * /Generos/GeneroPorNome:
+ *   get:
+ *     tags: [Géneros]
+ *     summary: Busca um género polo nome.
+ *     description: Busca o género do usuario que coincide co nome indicado.
+ *     parameters:
+ *       - in: query
+ *         name: nome
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome do género que se quere buscar.
+ *         example: Fantasia
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
-router.get('/GeneroPorNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await generos.getGeneroPorNome(req.idUsuario, req.query.nome));
-  } catch (err) {
-    console.error(`Erro ao obter o genero polo nome `, err.message);
-    next(err);
-  }
-});
+router.get('/GeneroPorNome', GeneroController.getGeneroPorNome);
 
-router.get('/GeneroNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await generos.getGeneroNome(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o generoNome `, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /Generos/GeneroNome:
+ *   get:
+ *     tags: [Géneros]
+ *     summary: Obtem o nome dum género.
+ *     description: Busca o nome do género polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do género.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Nome do género devolto correctamente.
+ */
+router.get('/GeneroNome', GeneroController.getGeneroNome);
 
-/* POST Genero */
-router.post('/Genero', async function(req, res, next) {
-  try {
-    res.json(await generos.postGenero(req.idUsuario, req.body));
-  } catch (err) {
-    console.error(`Erro tentando criar um genero`, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /Generos/Genero:
+ *   post:
+ *     tags: [Géneros]
+ *     summary: Crea um género.
+ *     description: Engade um novo género para o usuario autenticado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nome]
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: Nome do género.
+ *                 example: Fantasia
+ *               comentario:
+ *                 type: string
+ *                 nullable: true
+ *                 description: Comentario opcional.
+ *     responses:
+ *       200:
+ *         description: Género creado correctamente.
+ */
+router.post('/Genero', GeneroController.postGenero);
 
-/* PUT Genero */
-router.put('/Genero', async function(req, res, next) {
-  try {
-    res.json(await generos.putGenero(req.idUsuario, req.body));
-  } catch (err) {
-    console.error(`Erro tentando actualizar um genero`, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /Generos/Genero:
+ *   put:
+ *     tags: [Géneros]
+ *     summary: Actualiza um género.
+ *     description: Actualiza o nome e o comentario do género indicado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, nome]
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: Identificador do género.
+ *                 example: 1
+ *               nome:
+ *                 type: string
+ *                 description: Novo nome do género.
+ *                 example: Fantasia
+ *               comentario:
+ *                 type: string
+ *                 nullable: true
+ *                 description: Comentario opcional.
+ *     responses:
+ *       200:
+ *         description: Género actualizado correctamente.
+ */
+router.put('/Genero', GeneroController.putGenero);
 
-/* DELETE Genero */
-router.delete('/Genero', async function(req, res, next) {
-  try {
-    if (req.query.id != undefined)
-      res.json(await generos.borrarGenero(req.idUsuario, req.query.id));
-    else
-      console.error('Nom chegou o id');
-  } catch (err) {
-    console.error(`Erro tentando borrar um genero`, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /Generos/Genero:
+ *   delete:
+ *     tags: [Géneros]
+ *     summary: Elimina um género.
+ *     description: Elimina o género do usuario autenticado co identificador indicado.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do género.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Solicitude de eliminación procesada.
+ */
+router.delete('/Genero', GeneroController.deleteGenero);
 
 export default router;

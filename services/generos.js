@@ -4,7 +4,7 @@ import helper from '../utils/helper.js';
 async function getGeneros(idUsuario){
   console.log('💬 Petiçom de getGeneros ' + new Date().toJSON());
   const dadosLivro = await db.query(
-    `SELECT g.idGenero as id, e.Nome as nome
+    `SELECT g.idGenero as id, g.Nome as nome
       FROM Genero g
       WHERE g.fkUsuario = ${idUsuario}   
       ORDER BY lower(g.Nome) ASC;`

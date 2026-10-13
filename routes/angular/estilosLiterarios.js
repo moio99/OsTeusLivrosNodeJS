@@ -1,101 +1,164 @@
 import express from 'express';
 const router = express.Router();
-import estiloLiterario from '../../services/estilosLiterarios.js';
+import EstiloLiterarioController from '../../controllers/estilosLiterarios.js';
 
 /**
- * GET
+ * @openapi
+ * tags:
+ *   - name: Estilos literarios
+ *     description: Gestom dos estilos literarios
  */
-router.get('/', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstilosLiterarios(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os Estilos Literarios `, err.message);
-    next(err);
-  }
-});
+
+/**
+ * @openapi
+ * /EstilosLiterarios:
+ *   get:
+ *     tags: [Estilos literarios]
+ *     summary: Obtem os estilos literarios.
+ *     description: Devolve a lista de estilos literarios do usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/', EstiloLiterarioController.getAll);
 
 
 /**
- * GET
+ * @openapi
+ * /EstilosLiterarios/EstilosLiterariosCosLivros:
+ *   get:
+ *     tags: [Estilos literarios]
+ *     summary: Obtem os estilos literarios cos seus livros.
+ *     description: Devolve os estilos literarios xunto co número de livros asociados.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/EstilosLiterariosCosLivros', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstilosLiterariosCosLivros(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os Estilos Literarios cos livros`, err.message);
-    next(err);
-  }
-});
+router.get('/EstilosLiterariosCosLivros', EstiloLiterarioController.getEstilosLiterariosCosLivros);
 
 /**
- * GET
+ * @openapi
+ * /EstilosLiterarios/EstiloLiterario:
+ *   get:
+ *     tags: [Estilos literarios]
+ *     summary: Obtem um estilo literario.
+ *     description: Busca um estilo literario polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do estilo literario.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/EstiloLiterario', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstilosLiterario(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o EstiloLiterario `, err.message);
-    next(err);
-  }
-});
+router.get('/EstiloLiterario', EstiloLiterarioController.getEstiloLiterario);
 
 /**
- * GET
+ * @openapi
+ * /EstilosLiterarios/EstiloLiterarioPorNome:
+ *   get:
+ *     tags: [Estilos literarios]
+ *     summary: Busca estilos literarios polo nome.
+ *     description: Devolve os estilos literarios do usuario que coinciden co nome indicado.
+ *     parameters:
+ *       - in: query
+ *         name: nome
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Nome ou parte do nome que se quere buscar.
+ *         example: Narrativa
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
-router.get('/EstiloLiterarioPorNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getEstiloLiterarioPorNome(req.idUsuario, req.query.nome));
-  } catch (err) {
-    console.error(`Erro ao obter o Estilo Literario polo nome `, err.message);
-    next(err);
-  }
-});
+router.get('/EstiloLiterarioPorNome', EstiloLiterarioController.getEstiloLiterarioPorNome);
 
-/* router.get('/GeneroNome', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    res.json(await estiloLiterario.getGeneroNome(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o generoNome `, err.message);
-    next(err);
-  }
-}); */
+/**
+ * @openapi
+ * /EstilosLiterarios/EstiloLiterario:
+ *   post:
+ *     tags: [Estilos literarios]
+ *     summary: Crea um estilo literario.
+ *     description: Engade um novo estilo literario para o usuario autenticado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nome]
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 description: Nome do estilo literario.
+ *                 example: Narrativa
+ *               comentario:
+ *                 type: string
+ *                 nullable: true
+ *                 description: Comentario opcional.
+ *     responses:
+ *       200:
+ *         description: Estilo literario creado correctamente.
+ */
+router.post('/EstiloLiterario', EstiloLiterarioController.postEstiloLiterario);
 
-/* POST EstiloLiterario */
-router.post('/EstiloLiterario', async function(req, res, next) {
-  try {
-    res.json(await estiloLiterario.postEstiloLiterario(req.idUsuario, req.body));
-  } catch (err) {
-    console.error(`Erro tentando criar um Estilo Literario`, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /EstilosLiterarios/EstiloLiterario:
+ *   put:
+ *     tags: [Estilos literarios]
+ *     summary: Actualiza um estilo literario.
+ *     description: Actualiza o nome e o comentario do estilo indicado.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, nome]
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: Identificador do estilo literario.
+ *                 example: 1
+ *               nome:
+ *                 type: string
+ *                 description: Novo nome do estilo literario.
+ *                 example: Narrativa
+ *               comentario:
+ *                 type: string
+ *                 nullable: true
+ *                 description: Comentario opcional.
+ *     responses:
+ *       200:
+ *         description: Estilo literario actualizado correctamente.
+ */
+router.put('/EstiloLiterario', EstiloLiterarioController.putEstiloLiterario);
 
-/* PUT EstiloLiterario */
-router.put('/EstiloLiterario', async function(req, res, next) {
-  try {
-    res.json(await estiloLiterario.putEstiloLiterario(req.idUsuario, req.body));
-  } catch (err) {
-    console.error(`Erro tentando actualizar um Estilo Literario`, err.message);
-    next(err);
-  }
-});
-
-/* DELETE EstiloLiterario */
-router.delete('/EstiloLiterario', async function(req, res, next) {
-  try {
-    if (req.query.id != undefined)
-      res.json(await estiloLiterario.borrarEstiloLiterario(req.idUsuario, req.query.id));
-    else
-      console.error('Nom chegou o id');
-  } catch (err) {
-    console.error(`Erro tentando borrar um Estilo Literario`, err.message);
-    next(err);
-  }
-});
+/**
+ * @openapi
+ * /EstilosLiterarios/EstiloLiterario:
+ *   delete:
+ *     tags: [Estilos literarios]
+ *     summary: Elimina um estilo literario.
+ *     description: Elimina o estilo literario do usuario autenticado co identificador indicado.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do estilo literario.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Solicitude de eliminación procesada.
+ */
+router.delete('/EstiloLiterario', EstiloLiterarioController.deleteEstiloLiterario);
 
 export default router;

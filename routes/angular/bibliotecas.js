@@ -110,7 +110,7 @@ router.get('/Biblioteca', BibliotecaController.getBiblioteca);
  *                 description: Nome da biblioteca
  *                 example: "Própria"
  *               dataRenovacom:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom na biblioteca
  *                 example: "2026-05-02"
  *               endereco:
@@ -126,7 +126,7 @@ router.get('/Biblioteca', BibliotecaController.getBiblioteca);
  *                 description: telefone da biblioteca
  *                 example: "981 981 981"
  *               dataAsociamento:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da asociamento na biblioteca
  *                 example: "2001-05-02"
  *               comentario:
@@ -202,7 +202,7 @@ router.post('/Biblioteca', BibliotecaController.postBiblioteca);
  *                 description: Nome da biblioteca
  *                 example: "Própria"
  *               dataRenovacom:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom na biblioteca
  *                 example: "2026-05-02"
  *               endereco:
@@ -218,7 +218,7 @@ router.post('/Biblioteca', BibliotecaController.postBiblioteca);
  *                 description: Telefone da biblioteca
  *                 example: "981 981 981"
  *               dataAsociamento:
- *                 type: date-time
+ *                 type: date
  *                 description: Data de asociamento na biblioteca
  *                 example: "2001-05-02"
  *               comentario:

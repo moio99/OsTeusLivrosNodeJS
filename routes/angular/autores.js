@@ -159,11 +159,11 @@ router.get('/Autor', AutorController.getAutor);
  *                 description: Lugar de nacemento do autor
  *                 example: "Dublim"
  *               dataNacemento:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom no autor
  *                 example: "1906-04-13"
  *               dataDefuncom:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom no autor
  *                 example: "1989-12-22"
  *               comentario:
@@ -271,11 +271,11 @@ router.post('/Autor', AutorController.postAutor);
  *                 description: Lugar de nacemento do autor
  *                 example: "Dublim"
  *               dataNacemento:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom no autor
  *                 example: "1906-04-13"
  *               dataDefuncom:
- *                 type: date-time
+ *                 type: date
  *                 description: Data da renovaçom no autor
  *                 example: "1989-12-22"
  *               comentario:

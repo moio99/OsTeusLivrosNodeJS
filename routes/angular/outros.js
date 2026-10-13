@@ -1,101 +1,205 @@
 import express from 'express';
 const router = express.Router();
-import outros from '../../services/outros.js';
+import OutrosController from '../../controllers/outros.js';
 
 /**
- * GET Nacionalidades
+ * @openapi
+ * tags:
+ *   - name: Outros
+ *     description: Consultas de datos auxiliares
  */
- router.get('/Nacionalidades', async function(req, res, next) {
-  try {
-    res.json(await outros.getNacionalidades(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter as nacionalidades`, err.message);
-    next(err);
-  }
-});
 
 /**
- * GET Nacionalidade nome
+ * @openapi
+ * /Outros/Nacionalidades:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem as nacionalidades.
+ *     description: Devolve a lista de nacionalidades dispoñibles.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
-router.get('/NacionalidadeNome', async function(req, res, next) {
-  try {
-    res.json(await outros.getNacionalidadeNome(req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o nome da nacionalidade`, err.message);
-    next(err);
-  }
-});
+router.get('/Nacionalidades', OutrosController.getNacionalidades);
 
 /**
- * GET Paises
+ * @openapi
+ * /Outros/NacionalidadeNome:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem o nome dunha nacionalidade.
+ *     description: Busca o nome da nacionalidade polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador da nacionalidade.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Nome da nacionalidade devolto correctamente.
  */
- router.get('/Paises', async function(req, res, next) {
-  try {
-    res.json(await outros.getPaises(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os paises`, err.message);
-    next(err);
-  }
-});
+router.get('/NacionalidadeNome', OutrosController.getNacionalidadeNome);
 
 /**
- * GET Pais nome
+ * @openapi
+ * /Outros/Paises:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem os países.
+ *     description: Devolve a lista de países dispoñibles.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
-router.get('/PaisNome', async function(req, res, next) {
-  try {
-    res.json(await outros.getPaisNome(req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o nome do pais`, err.message);
-    next(err);
-  }
-});
+router.get('/Paises', OutrosController.getPaises);
 
 /**
- * GET Idioma nome
+ * @openapi
+ * /Outros/PaisNome:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem o nome dum país.
+ *     description: Busca o nome do país polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do país.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Nome do país devolto correctamente.
  */
-router.get('/IdiomaNome', async function(req, res, next) {
-  try {
-    res.json(await outros.getIdiomaNome(req.idUsuario, req.query.id));
-  } catch (err) {
-    console.error(`Erro ao obter o nome do idioma`, err.message);
-    next(err);
-  }
-});
+router.get('/PaisNome', OutrosController.getPaisNome);
 
 /**
- * GET Bibliotecas
+ * @openapi
+ * /Outros/Autores:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem os autores do usuario.
+ *     description: Devolve a lista de autores asociados ao usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/Bibliotecas', async function(req, res, next) {
-  try {
-    res.json(await outros.getBibliotecas(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter as bibliotecas`, err.message);
-    next(err);
-  }
-});
+router.get('/Autores', OutrosController.getAutores);
 
 /**
- * GET Generos
+ * @openapi
+ * /Outros/Idiomas:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem os idiomas.
+ *     description: Devolve a lista de idiomas dispoñibles.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
  */
- router.get('/Generos', async function(req, res, next) {
-  try {
-    res.json(await outros.getGeneros(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os generos`, err.message);
-    next(err);
-  }
-});
+router.get('/Idiomas', OutrosController.getIdiomas);
 
 /**
- * GET Todo
+ * @openapi
+ * /Outros/IdiomaNome:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem o nome dum idioma.
+ *     description: Busca o nome do idioma polo seu identificador.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do idioma.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Nome do idioma devolto correctamente.
  */
- router.get('/Todo', async function(req, res, next) {
-  try {
-    res.json(await outros.getTodo(req.idUsuario));
-  } catch (err) {
-    console.error(`Erro ao obter os dados de Outros`, err.message);
-    next(err);
-  }
-});
+router.get('/IdiomaNome', OutrosController.getIdiomaNome);
+
+/**
+ * @openapi
+ * /Outros/Bibliotecas:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem as bibliotecas do usuario.
+ *     description: Devolve a lista de bibliotecas asociadas ao usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/Bibliotecas', OutrosController.getBibliotecas);
+
+/**
+ * @openapi
+ * /Outros/Editoriais:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem as editoriais do usuario.
+ *     description: Devolve a lista de editoriais asociadas ao usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/Editoriais', OutrosController.getEditoriais);
+
+/**
+ * @openapi
+ * /Outros/Generos:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem os géneros do usuario.
+ *     description: Devolve a lista de géneros asociados ao usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/Generos', OutrosController.getGeneros);
+
+/**
+ * @openapi
+ * /Outros/Colecons:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem as coleccións do usuario.
+ *     description: Devolve a lista de coleccións asociadas ao usuario autenticado.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/Colecons', OutrosController.getColecons);
+
+/**
+ * @openapi
+ * /Outros/SeriesLivro:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem os livros que son cabeceira dunha serie.
+ *     description: Devolve os livros do usuario que inician unha serie.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/SeriesLivro', OutrosController.getSeriesLivro);
+
+/**
+ * @openapi
+ * /Outros/Todo:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem todos os datos auxiliares.
+ *     description: Devolve nunha única resposta os datos auxiliares do usuario e os datos xerais necesarios.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/Todo', OutrosController.getTodo);
 
 export default router;
