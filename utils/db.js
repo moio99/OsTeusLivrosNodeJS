@@ -2,12 +2,23 @@ import mysql from 'mysql2/promise';
 import config from './config.js';
 import { Pool } from 'pg';
 
-const { configLocal, configRailway, configRender, configSupabase } = config;
+const { configRailway, configRender, configSupabase } = config;
+let configuracomLocal = null;
+
+if (process.env.NODE_ENTORNO === 'local') {
+  try {
+    // IMPORT DINÁMICO: Cárregase em tempo de ejecuçom e nom dá erro ao arrincar en PRO
+    const configLocal = await import('./config-local.js');
+    configuracomLocal = configLocal.default.configLocal; 
+  } catch (error) {
+    console.log('⚠️ Nom se puido carregar config-local.js, usaram-se variaveis de contorna.');
+  }
+}
 
 // async function query(sql, params) {
-//   const connection = await mysql.createConnection(configLocal.db);
+//   const connection = await mysql.createConnection(configuracomLocal.db);
 //   /*
-//   var conPool = mysql.createPool(configLocal.db);               // em vez do anterior para enviar o Error: Too many connections.
+//   var conPool = mysql.createPool(configuracomLocal.db);               // em vez do anterior para enviar o Error: Too many connections.
 //   const connection = await conPool.getConnection();             // em vez do anterior para enviar o Error: Too many connections.
 //  */
 //   const [results, ] = await connection.execute(sql, params);
@@ -32,7 +43,7 @@ async function query(sql, params, isMigracom = false) {
     } else {
       let entorno = 'local';
       if (process.env.NODE_ENTORNO === entorno) {
-        connection = await mysql.createConnection(configLocal.db);
+        connection = await mysql.createConnection(configuracomLocal.db);
       } else {
         connection = await mysql.createConnection(configRailway);
         entorno = 'posgreSQL railway';
