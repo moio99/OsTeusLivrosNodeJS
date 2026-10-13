@@ -85,5 +85,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Podes chamar à API na direiçom http://localhost:${port}`);
+  console.log(`🐣 Podes chamar à API na direiçom http://localhost:${port}`);
 });
