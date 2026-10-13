@@ -21,7 +21,7 @@ import paginasRouter from "./routes/paginasHTML/routerHtml.js";
 import construconsBD from "./routes/construconsBD.js";
 import corsMiddleware from "./middlewares/cors.js"
 import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
+import configuracomOpenApi from "./utils/openapi.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +31,7 @@ dotenv.config(); // para usar o .env
 const port = 5002;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Para que Express entenda a petiçom de login do Swagger
 /* app.use(
   express.urlencoded({
     extended: true,
@@ -44,35 +45,18 @@ app.use(corsMiddleware());
 // antes do de enriba ussa isto:  app.use(cors({
 //   origin: function (origin, callback) {
 
+if (process.env.NODE_ENTORNO === 'local') {
+  const { swaggerDocs, uiOptions }= configuracomOpenApi.setConfiguracom(port);
 
-// Configuraçom de OpenAPI / Swagger      http://localhost:5002/api-docs
-const opcionsSwagger = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'A minha API em Node 20 com OpenAPI',
-      version: '1.0.0',
-      description: 'Documentaçom automatizada da minha API',
-    },
-    servers: [{ url: `http://localhost:${port}/api`}],
-  },
-  apis: ['./routes/angular/*.js'], // Rotas onde o paquete buscará os teus comentarios de documentación
-};
-const swaggerDocs = swaggerJsdoc(opcionsSwagger);
-const uiOptions = {
-  swaggerOptions: {
-    docExpansion: 'none', // 'list' | 'full' | 'none'  com none todas as listas aparecem colapsadas
-    tagsSorter: 'alpha', // Ordena as secçons (tags) alfabeticamente
-    // operationsSorter: 'alpha' // ordena também os endpoints dentro de cada secçom alfabeticamente
-  }
-};
+  // Ruta para servir a especificación en JSON puro
+  app.get('/api-docs.json', (req, res) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(swaggerDocs);
+  });
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, uiOptions));
 
-// Ruta para servir a especificación en JSON puro
-app.get('/api-docs.json', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(swaggerDocs);
-});
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, uiOptions));
+  console.log(`📝 Documentación de OpenAPI / Swagger disponhivel em http://localhost:${port}/api-docs/`);
+}
 
 app.use(middleware.requestLogger);
 app.use('/api/login', loginRouter);
