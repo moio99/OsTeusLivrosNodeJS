@@ -53,32 +53,6 @@ router.get('/AutorPorNome', AutorController.getByNome);
 
 /**
  * @openapi
- * /Autores/AutoresPorNacons:
- *   get:
- *     tags: [Autores]
- *     summary: Listado de autores por nacionalidade.
- *     description: Um listado de autores cos livros pola nacionalidade.
- *     responses:
- *       200:
- *         description: Éxito total.
- */
-router.get('/AutoresPorNacons', AutorController.getAutoresPorNacons);
-
-/**
- * @openapi
- * /Autores/AutoresPorPaises:
- *   get:
- *     tags: [Autores]
- *     summary: Listado de autores por paises.
- *     description: Um listado de autores cos livros polo pais.
- *     responses:
- *       200:
- *         description: Éxito total.
- */
-router.get('/AutoresPorPaises', AutorController.getAutoresPorPaises);
-
-/**
- * @openapi
  * /Autores/AutoresFiltrados:
  *   get:
  *     tags: [Autores]
@@ -104,6 +78,32 @@ router.get('/AutoresPorPaises', AutorController.getAutoresPorPaises);
  *         description: Éxito total.
  */
 router.get('/AutoresFiltrados', AutorController.getAutoresFiltrados);
+
+/**
+ * @openapi
+ * /Autores/AutoresPorNacons:
+ *   get:
+ *     tags: [Autores]
+ *     summary: Listado de autores por nacionalidade.
+ *     description: Um listado de autores cos livros pola nacionalidade.
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ */
+router.get('/AutoresPorNacons', AutorController.getAutoresPorNacons);
+
+/**
+ * @openapi
+ * /Autores/AutoresPorPaises:
+ *   get:
+ *     tags: [Autores]
+ *     summary: Listado de autores por paises.
+ *     description: Um listado de autores cos livros polo pais.
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ */
+router.get('/AutoresPorPaises', AutorController.getAutoresPorPaises);
 
 /**
  * @openapi

@@ -1,24 +1,36 @@
 import express from 'express';
 const router = express.Router();
-import estadisticas from '../../services/estadisticas.js';
+import estadisticasController from '../../controllers/estadisticas.js';
+/**
+ * @openapi
+ * tags:
+ *   - name: Estadisticas
+ *     description: Gestom de editoriais
+ */
 
 /**
- * GET
+ * @openapi
+ * /Estadisticas:
+ *   get:
+ *     tags: [Estadisticas]
+ *     summary: Obtem o listado das estadísticas.
+ *     description: Obtem o listado das estadísticas para um tipo passado.
+ *     parameters:
+ *       - in: query
+ *         name: tipo
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: tipo de estadíscas que se quere 1 por idioma, 2 por géneros e 3 por anos. 
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Éxito total.
+ *       400:
+ *         description: Parámetros incorrectos
+ *       404:
+ *         description: Estadisticas nom atopadas
  */
-router.get('/', async function(req, res, next) {
-  try {
-    // res.json(await programmingLanguages.getMultiple(req.query.page));
-    const resultado = await estadisticas.getEstadisticas(req.idUsuario, req.query.tipo);
-    if (resultado === '') {
-      res.statusMessage = `O tipo ${req.query.tipo} nom é um dos válidos`
-      res.status(404).end()
-    }
-    else 
-      res.json(resultado);
-  } catch (err) {
-    console.error(`Erro ao obter as estadísticas `, err.message);
-    next(err);
-  }
-});
+router.get('/', estadisticasController.getAll);
 
 export default router;

@@ -46,7 +46,7 @@ app.use(corsMiddleware());
 
 
 // Configuraçom de OpenAPI / Swagger      http://localhost:5002/api-docs
-const swaggerOptions = {
+const opcionsSwagger = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -58,14 +58,21 @@ const swaggerOptions = {
   },
   apis: ['./routes/angular/*.js'], // Rotas onde o paquete buscará os teus comentarios de documentación
 };
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
+const swaggerDocs = swaggerJsdoc(opcionsSwagger);
+const uiOptions = {
+  swaggerOptions: {
+    docExpansion: 'none', // 'list' | 'full' | 'none'  com none todas as listas aparecem colapsadas
+    tagsSorter: 'alpha', // Ordena as secçons (tags) alfabeticamente
+    // operationsSorter: 'alpha' // ordena também os endpoints dentro de cada secçom alfabeticamente
+  }
+};
 
 // Ruta para servir a especificación en JSON puro
 app.get('/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerDocs);
 });
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, uiOptions));
 
 app.use(middleware.requestLogger);
 app.use('/api/login', loginRouter);
