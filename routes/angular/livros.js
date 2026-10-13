@@ -27,8 +27,9 @@ router.get('/', LivroController.getAll);
  * /Livros/LivrosParaMovel:
  *   get:
  *     tags: [Livros]
- *     summary: Obtem os livros para a aplicaçom móvel.
- *     description: Devolve o listado de livros no formato que precisa o móvel móvel. Cháma-se dende paginasHTML\taboaLivrosHtml.js.
+ *     summary: Obtem os livros para o json do móvel.
+ *     description: Devolve o listado de livros no formato que se precisa para crear o json
+ *                  que leerá o móvel no caso de nom ter acceso à base de dados.
  *     responses:
  *       200:
  *         description: Consulta realizada correctamente.

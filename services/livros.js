@@ -52,6 +52,8 @@ const camposLivrosPorRxxx = `
     , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
   `;
 
+// Devolve o listado de livros no formato que se precisa para crear o json
+// que leerá o móvel no caso de nom ter acceso à base de dados.
 async function getLivrosParaListadoMovel(idUsuario){
   console.log('💬 Petiçom de getLivros');
   let select = `SELECT ${camposLivrosPorLxxx}
