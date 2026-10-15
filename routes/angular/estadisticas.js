@@ -21,7 +21,7 @@ import estadisticasController from '../../controllers/estadisticas.js';
  *         required: true
  *         schema:
  *           type: integer
- *         description: tipo de estadíscas que se quere 1 por idioma, 2 por géneros e 3 por anos. 
+ *         description: tipo de estadíscas que se quere 1 por idioma, 2 por géneros, 3 por anos e 4 por autor. 
  *         example: 1
  *     responses:
  *       200:

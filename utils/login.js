@@ -8,8 +8,6 @@ loginRouter.post('/', async (request, response) => {
   let { nome, contrasinal } = request.body
   const { username, password } = request.body; // Swagger enviará isto no body
 
-  console.log(nome, contrasinal);
-  console.log(username, password);
   if (username && password) {
     nome = username;
     contrasinal = password;
@@ -36,8 +34,7 @@ loginRouter.post('/', async (request, response) => {
     }
     // o token expira em uma hora (60*60 segundos)
     const token = jwt.sign(userForToken, process.env.SEGREDO_PARA_O_TOKEN, { expiresIn: 60*60 });
-    const token_type = 'bearer';
-
+    
     response.status(200).send({
       ...(username ? { access_token: token } : { token: token }),
       ...(username ? { token_type: 'bearer' } : { }),

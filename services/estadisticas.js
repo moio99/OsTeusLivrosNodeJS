@@ -123,7 +123,6 @@ async function getEstadisticas(idUsuario, tipo){
           };
         }
       );
-console.log(dados);
       break;
     case '3':
       const rowsAnos = await db.query(queryPorAno, [idUsuario, idUsuario]);

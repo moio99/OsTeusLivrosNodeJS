@@ -40,21 +40,27 @@ const controlUsuario = (request, response, next) => {
     const authorization = request.get('authorization') || request.get('Authorization');
     console.log('authorization: ' + authorization);
     if (authorization && authorization.startsWith('Bearer ')) {
-      request.token  = authorization.replace('Bearer ', '')
-      console.log('request.token: ' + request.token);
+      const token = authorization.replace('Bearer ', '')
+      // console.log('token: ' + token);
 
-      let decodedToken
       try {
-        decodedToken = jwt.verify(request.token, process.env.SEGREDO_PARA_O_TOKEN)
-        if (!decodedToken.id) {
-          return response.status(401).json({ error: 'token invalid' })
-        } else {
-          // console.log('decodedToken: ', decodedToken);
-          // console.log('decodedToken.id: ', decodedToken.id);
-          // console.log('decodedToken.nome: ', decodedToken.nome);
-          // console.log('decodedToken.idioma: ', decodedToken.idioma);
-          request.idUsuario = decodedToken.id
-        }
+        jwt.verify(token, process.env.SEGREDO_PARA_O_TOKEN, (err, decodedToken) => {
+          if (err) {
+            // Se o token expirou, err.name será 'TokenExpiredError'
+            console.error(err.name);
+            return res.status(403).json({ error: 'Token inválido ou expirado' });
+          }
+          
+          if (!decodedToken.id) {
+            return response.status(401).json({ error: 'token invalid' })
+          } else {
+            // console.log('decodedToken: ', decodedToken);
+            // console.log('decodedToken.id: ', decodedToken.id);
+            // console.log('decodedToken.nome: ', decodedToken.nome);
+            // console.log('decodedToken.idioma: ', decodedToken.idioma);
+            request.idUsuario = decodedToken.id
+          }
+        });
       } catch(exception) {
         return response.status(401).json({ error: 'invalid signature' })
       }
