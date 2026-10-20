@@ -50,7 +50,7 @@ export class GeneroController {
     try {
       res.json(await generos.postGenero(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando crear un xenero`, err.message);
+      console.error(`Erro tentando crear um genero`, err.message);
       next(err);
     }
   }
@@ -59,7 +59,7 @@ export class GeneroController {
     try {
       res.json(await generos.putGenero(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando actualizar un xenero`, err.message);
+      console.error(`Erro tentando actualizar um genero`, err.message);
       next(err);
     }
   }
@@ -71,7 +71,7 @@ export class GeneroController {
       }
       res.json(await generos.borrarGenero(req.idUsuario, req.query.id));
     } catch (err) {
-      console.error(`Erro tentando eliminar un xenero`, err.message);
+      console.error(`Erro tentando eliminar um genero`, err.message);
       next(err);
     }
   }

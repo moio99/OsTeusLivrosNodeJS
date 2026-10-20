@@ -125,7 +125,7 @@ export class LivroController {
     try {
       res.json(await livros.postLivro(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando crear un libro`, err.message);
+      console.error(`Erro tentando crear um libro`, err.message);
       next(err);
     }
   }
@@ -134,7 +134,7 @@ export class LivroController {
     try {
       res.json(await livros.putLivro(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando actualizar un libro`, err.message);
+      console.error(`Erro tentando actualizar um libro`, err.message);
       next(err);
     }
   }
@@ -146,7 +146,7 @@ export class LivroController {
       }
       res.json(await livros.borrarLivro(req.idUsuario, req.query.id));
     } catch (err) {
-      console.error(`Erro tentando eliminar un libro`, err.message);
+      console.error(`Erro tentando eliminar um libro`, err.message);
       next(err);
     }
   }

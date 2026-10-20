@@ -103,7 +103,6 @@ async function getGenerosCosLivros(idUsuario){
   }
 }
 
-// FUNCIONA O PUT mas o post nom porque dá um erro de geraçom do autonumérico para idgenero
 async function postGenero(idUsuario, genero){
   console.log('💬 Petiçom de postGenero ' + genero.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
