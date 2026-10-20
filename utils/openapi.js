@@ -26,7 +26,7 @@ const setConfiguracom = (port) => {
             flows: {
                 password: {
                 // ⚠️ AQUÍ A CLAVE: A URL de produción ou local onde fas o login (POST)
-                tokenUrl: `http://localhost:${port}/api/login`, 
+                tokenUrl: `http://localhost:${port}/api/Usuarios`, 
                 scopes: {
                     // Podes deixalo baleiro se non usas roles baseados en scopes
                     'ler': 'Permite ler datos',

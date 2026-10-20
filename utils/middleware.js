@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const requestLogger = (request, response, next) => {
   console.info('Method:', request.method)
   console.info('Path:  ', request.path)
-  if (!request.path.includes('/login') && process.env.NODE_ENTORNO === 'local') {
+  if (!request.path.includes('/Usuarios') && process.env.NODE_ENTORNO === 'local') {
     console.info('Body:  ', request.body)
   }
   console.info('---------------------------------------------------FIM')
