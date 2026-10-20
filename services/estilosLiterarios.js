@@ -30,7 +30,7 @@ async function getEstilosLiterario(idUsuario, id){
   );
   
   const estiloLiterario = helper.emptyOrRows(dadosEstiloLiterario);
-  console.log(estiloLiterario.length + ' elementos obtidos');
+  console.log(`✅ ${estiloLiterario.length} elementos obtidos`);
 
   const meta = {'id': id};
 
@@ -50,7 +50,7 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
   );
   
   const estiloLiterario = helper.emptyOrRows(dadosEstiloLiterario);
-  console.log(estiloLiterario.length + ' elementos obtidos');
+  console.log(`✅ ${estiloLiterario.length} elementos obtidos`);
 
   const meta = {'id': estiloLiterario.length > 0 ? estiloLiterario[0].id : 0, 'quantidade': estiloLiterario.length};
 

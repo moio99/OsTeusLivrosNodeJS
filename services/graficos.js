@@ -34,7 +34,7 @@ async function getPaginasPorIdiomaEAno(idUsuario){
   
     const data = await db.query(query);
     const dataRows = helper.emptyOrRows(query);
-    console.log(dataRows.length + ' elementos obtidos');
+    console.log(`✅ ${dataRows.length} elementos obtidos`);
   
     const meta = {'info': 'nada'};
     return {

@@ -38,7 +38,7 @@ async function getAutorPorNome(idUsuario, nome){
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
-  console.log(autor.length + ' elementos obtidos');
+  console.log(`✅ ${autor.length} elementos obtidos`);
 
   const meta = {'id': autor.length > 0 ? autor[0].id : 0, 'quantidade': autor.length};
 
@@ -148,7 +148,7 @@ async function getAutor(idUsuario, id){
   );
   
   const autor = helper.emptyOrRows(dadosAutor);
-  console.log(autor.length + ' elementos obtidos');
+  console.log(`✅ ${autor.length} elementos obtidos`);
 
   const meta = {'id': id, 'quantidade': autor.length};
 

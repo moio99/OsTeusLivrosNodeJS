@@ -30,7 +30,7 @@ async function getGenero(idUsuario, id){
   );
   
   const genero = helper.emptyOrRows(dadosGenero);
-  console.log(genero.length + ' elementos obtidos');
+  console.log(`✅ ${genero.length} elementos obtidos`);
 
   const meta = {'id': id};
 
@@ -50,7 +50,7 @@ async function getGeneroPorNome(idUsuario, nome){
   );
   
   const genero = helper.emptyOrRows(dadosGenero);
-  console.log(genero.length + ' elementos obtidos');
+  console.log(`✅ ${genero.length} elementos obtidos`);
 
   const meta = {'id': genero.length > 0 ? genero[0].id : 0, 'quantidade': genero.length};
 

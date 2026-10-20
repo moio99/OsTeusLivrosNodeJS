@@ -79,7 +79,7 @@ async function getLivrosParaListadoMovel(idUsuario){
     data = await LerFicheiroJSON();
     origemDados = 'Ficheiro JSON';
   }
-  console.log(data.length + ' elementos obtidos. ' + origemDados);
+  console.log(`✅ ${data.length} elementos obtidos. ${origemDados}`);
 
   const date = new Date();
   const dateFormatada = date.toLocaleDateString('es-ES', {
@@ -134,7 +134,7 @@ async function getLivroPorTitulo(idUsuario, titulo){
   );
   
   const livro = helper.emptyOrRows(dadosLivro);
-  console.log(livro.length + ' elementos obtidos');
+  console.log(`✅ ${livro.length} elementos obtidos`);
 
   const meta = {'id': livro.length > 0 ? livro[0].id : 0, 'quantidade': livro.length};
 

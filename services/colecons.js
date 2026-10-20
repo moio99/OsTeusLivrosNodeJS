@@ -30,7 +30,7 @@ async function getColecom(idUsuario, id){
   );
   
   const colecom = helper.emptyOrRows(dadosColecom);
-  console.log(colecom.length + ' elementos obtidos');
+  console.log(`✅ ${colecom.length} elementos obtidos`);
 
   const meta = {'id': id};
 
@@ -50,7 +50,7 @@ async function getColecomPorNome(idUsuario, nome){
   );
   
   const colecom = helper.emptyOrRows(dadosColecom);
-  console.log(colecom.length + ' elementos obtidos');
+  console.log(`✅ ${colecom.length} elementos obtidos`);
 
   const meta = {'id': colecom.length > 0 ? colecom[0].id : 0, 'quantidade': colecom.length};
 

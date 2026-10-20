@@ -38,7 +38,7 @@ async function getEditorial(idUsuario, id){
     }
   }
 
-  console.log(editorial.length + ' elementos obtidos');
+  console.log(`✅ ${editorial.length} elementos obtidos`);
   return {
     data: editorial,
     meta: {'id': id}
@@ -56,7 +56,7 @@ async function getEditorialPorNome(idUsuario, nome){
   );
   
   const editorial = helper.emptyOrRows(dadosEditorial);
-  console.log(editorial.length + ' elementos obtidos');
+  console.log(`✅ ${editorial.length} elementos obtidos`);
 
   const meta = {'id': editorial.length > 0 ? editorial[0].id : 0, 'quantidade': editorial.length};
 
