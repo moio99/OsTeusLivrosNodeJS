@@ -17,7 +17,7 @@ async function getBibliotecas(idUsuario){
   console.log(`✅ ${rows.length} elementos obtidos`);
   const data = rows.map(row => new Biblioteca.Biblioteca(row));
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,
@@ -98,7 +98,7 @@ async function getBibliotecasCosLivros(idUsuario){
   console.log(`✅ ${rows.length} elementos obtidos`);
   const data = rows.map(row => new Biblioteca.BibliotecaCosLivros(row));
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,

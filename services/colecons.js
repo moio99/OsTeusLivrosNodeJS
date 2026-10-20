@@ -13,7 +13,7 @@ async function getColecons(idUsuario){
   const data = helper.emptyOrRows(dadosLivro);
   console.log(`✅ ${data.length} elementos obtidos`);
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,
@@ -74,7 +74,7 @@ async function getColeconsCosLivros(idUsuario){
   const data = helper.emptyOrRows(dadosLivro);
   console.log(`✅ ${data.length} elementos obtidos`);
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,

@@ -13,7 +13,7 @@ async function getEstilosLiterarios(idUsuario){
   const data = helper.emptyOrRows(dadosLivro);
   console.log(`✅ ${data.length} elementos obtidos`);
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,
@@ -79,7 +79,7 @@ async function getEstilosLiterariosCosLivros(idUsuario){
   const data = helper.emptyOrRows(dadosLivro);
   console.log(`✅ ${data.length} elementos obtidos`);
 
-  const meta = {'nada': 'nada'};
+  const meta = {'info': 'nada'};
 
   return {
     data,
