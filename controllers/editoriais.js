@@ -5,7 +5,7 @@ export class EditorialController {
     try {
       res.json(await editoriais.getEditoriais(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as editoriais `, err.message);
+      console.error(`Erro ao obter as editoriais .`, err.message);
       next(err);
     }
   }
@@ -14,7 +14,7 @@ export class EditorialController {
     try {
       res.json(await editoriais.getEditorialPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter a editorial polo nome `, err.message);
+      console.error(`Erro ao obter a editorial polo nome .`, err.message);
       next(err);
     }
   }
@@ -23,7 +23,7 @@ export class EditorialController {
     try {
       res.json(await editoriais.getEditoriaisCosLivros(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as editoriais cos livros`, err.message);
+      console.error(`Erro ao obter as editoriais cos livros.`, err.message);
       next(err);
     }
   }
@@ -41,7 +41,7 @@ export class EditorialController {
   
       res.json(editorialResponse);
     } catch (err) {
-      console.error(`Erro ao obter a editorial `, err.message);
+      console.error(`Erro ao obter a editorial .`, err.message);
       next(err);
     }
   }
@@ -50,7 +50,7 @@ export class EditorialController {
     try {
       res.json(await editoriais.postEditorial(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando criar umha editorial`, err.message);
+      console.error(`Erro tentando criar umha editorial.`, err.message);
       next(err);
     }
   }
@@ -59,7 +59,7 @@ export class EditorialController {
     try {
       res.json(await editoriais.putEditorial(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando actualizar umha editorial`, err.message);
+      console.error(`Erro tentando actualizar umha editorial.`, err.message);
       next(err);
     }
   }
@@ -71,7 +71,7 @@ export class EditorialController {
       else
         console.error('Nom chegou o id');
     } catch (err) {
-      console.error(`Erro tentando borrar umha editorial`, err.message);
+      console.error(`Erro tentando borrar umha editorial.`, err.message);
       next(err);
     }
   }

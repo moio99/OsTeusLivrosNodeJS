@@ -39,7 +39,7 @@ router.get('/ProbaAa', async function(req, res, next) {
     const resultado = await estadisticas.getEstadisticas('2', '3');
     res.json(resultado);
   } catch (err) {
-    console.error(`Erro ao obter os dados de Outros`, err.message);
+    console.error(`Erro ao obter os dados de Outros.`, err.message);
     next(err);
   }
 });
@@ -51,7 +51,7 @@ router.get('/ProbaA', async function(req, res, next) {
       'SELECT * FROM casas'
     ));
   } catch (err) {
-    console.error(`Erro ao obter os dados de Outros`, err.message);
+    console.error(`Erro ao obter os dados de Outros.`, err.message);
     next(err);
   } finally {
     pgClient.release();
@@ -70,7 +70,7 @@ router.get('/ProbaC', async function(req, res, next) {
       [nome, email, idade]
     ));
   } catch (err) {
-    console.error(`Erro ao obter os dados de Outros`, err.message);
+    console.error(`Erro ao obter os dados de Outros.`, err.message);
     next(err);
   }
 });
@@ -87,7 +87,7 @@ router.get('/ProbaU', async function(req, res, next) {
         ['primeiro', 300]
     ));
   } catch (err) {
-    console.error(`Erro ao obter os dados de Outros`, err.message);
+    console.error(`Erro ao obter os dados de Outros.`, err.message);
     next(err);
   }
 });
@@ -104,7 +104,7 @@ router.get('/SubidaAWeb', async function(req, res, next) {
     console.log('✅ Dados subidos à web com sucesso');
     res.json(resultado);
   } catch (err) {
-    console.error(`Erro subindo os dados à web `, err.message);
+    console.error(`Erro subindo os dados à web .`, err.message);
     next(err);
   }
 });
@@ -120,7 +120,7 @@ router.get('/CiarSQLsBD', async function(req, res, next) {
     console.log('✅ Arquivos criados com sucesso');
     res.json(resultado);
   } catch (err) {
-    console.error(`Erro guardando os dados `, err.message);
+    console.error(`Erro guardando os dados .`, err.message);
     next(err);
   }
 });
@@ -136,7 +136,7 @@ router.get('/CiarSQLsInsercom', async function(req, res, next) {
     console.log('✅ Arquivos criados com sucesso');
     res.json(resultado);
   } catch (err) {
-    console.error(`Erro guardando os dados `, err.message);
+    console.error(`Erro guardando os dados .`, err.message);
     next(err);
   }
 });

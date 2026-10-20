@@ -56,6 +56,7 @@ async function query(sql, params, isMigracom = false) {
     }
   } catch (err) {
     console.error('Erro ao realiçar o GET:', err);
+    throw new Error('Erro sobre a base de dados');
   } finally {
     // Fecha a conexom
     if (connection) {

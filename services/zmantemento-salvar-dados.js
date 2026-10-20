@@ -308,7 +308,7 @@ async function salvarDadosSQL(nomeBD = getFilenamePrefix()) {
       registrosEstilosLiterarios: linhasEstilosLiterarios.length
     };
   } catch (err) {
-    console.error(`Erro ao executar salvarDadosSQL em zmantementos-salvar-dados.js`, err.message);
+    console.error(`Erro ao executar salvarDadosSQL em zmantementos-salvar-dados.js.`, err.message);
     return false;
   }
 }

@@ -5,7 +5,7 @@ export class AutorController {
     try {
       res.json(await autores.getAutores(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter os autores`, err.message);
+      console.error(`Erro ao obter os autores.`, err.message);
       next(err);
     }
   }
@@ -14,7 +14,7 @@ export class AutorController {
     try {
       res.json(await autores.getAutorPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter o autor polo nome`, err.message);
+      console.error(`Erro ao obter o autor polo nome.`, err.message);
       next(err);
     }
   }
@@ -23,7 +23,7 @@ export class AutorController {
     try {
       res.json(await autores.getAutoresFiltrados(req.idUsuario, req.query.id, req.query.tipo));
     } catch (err) {
-      console.error(`Erro ao obter os autores filtrados`, err.message);
+      console.error(`Erro ao obter os autores filtrados.`, err.message);
       next(err);
     }
   }
@@ -32,7 +32,7 @@ export class AutorController {
     try {
       res.json(await autores.getAutoresPorNacons(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as autores por naçons`, err.message);
+      console.error(`Erro ao obter as autores por naçons.`, err.message);
       next(err);
     }
   }
@@ -41,7 +41,7 @@ export class AutorController {
     try {
       res.json(await autores.getAutoresPorPaises(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as autores por paises`, err.message);
+      console.error(`Erro ao obter as autores por paises.`, err.message);
       next(err);
     }
   }
@@ -59,7 +59,7 @@ export class AutorController {
   
       res.json(autoresResponse);
     } catch (err) {
-      console.error(`Erro ao obter o autor`, err.message);
+      console.error(`Erro ao obter o autor.`, err.message);
       next(err);
     }
   }
@@ -73,7 +73,7 @@ export class AutorController {
         res.json(await autores.postAutor(req.idUsuario, req.body));
 
     } catch (err) {
-      console.error(`Erro tentando criar um autor`, err.message);
+      console.error(`Erro tentando criar um autor.`, err.message);
       next(err);
     }
   }
@@ -88,7 +88,7 @@ export class AutorController {
       
   
     } catch (err) {
-      console.error(`Erro tentando actualizar um autor`, err.message);
+      console.error(`Erro tentando actualizar um autor.`, err.message);
       next(err);
     }
   }
@@ -102,7 +102,7 @@ export class AutorController {
         res.json(await autores.borrarAutor(req.idUsuario, req.query.id));
 
     } catch (err) {
-      console.error(`Erro tentando borrar um autor`, err.message);
+      console.error(`Erro tentando borrar um autor.`, err.message);
       next(err);
     }
   }

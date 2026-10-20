@@ -124,7 +124,7 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
       });
     }
   } catch (err) {
-    console.error(`Erro ao obter os livros:`, err.message);
+    console.error(`Erro ao obter os livros:.`, err.message);
     next(err);
   }
 });

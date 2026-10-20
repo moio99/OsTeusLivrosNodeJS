@@ -5,7 +5,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.getEstilosLiterarios(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter os estilos literarios`, err.message);
+      console.error(`Erro ao obter os estilos literarios.`, err.message);
       next(err);
     }
   }
@@ -14,7 +14,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.getEstilosLiterariosCosLivros(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter os estilos literarios cos livros`, err.message);
+      console.error(`Erro ao obter os estilos literarios cos livros.`, err.message);
       next(err);
     }
   }
@@ -23,7 +23,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.getEstilosLiterario(req.idUsuario, req.query.id));
     } catch (err) {
-      console.error(`Erro ao obter o estilo literario`, err.message);
+      console.error(`Erro ao obter o estilo literario.`, err.message);
       next(err);
     }
   }
@@ -32,7 +32,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.getEstiloLiterarioPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter o estilo literario polo nome`, err.message);
+      console.error(`Erro ao obter o estilo literario polo nome.`, err.message);
       next(err);
     }
   }
@@ -41,7 +41,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.postEstiloLiterario(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando crear um estilo literario`, err.message);
+      console.error(`Erro tentando crear um estilo literario.`, err.message);
       next(err);
     }
   }
@@ -50,7 +50,7 @@ export class EstiloLiterarioController {
     try {
       res.json(await estilosLiterarios.putEstiloLiterario(req.idUsuario, req.body));
     } catch (err) {
-      console.error(`Erro tentando actualizar um estilo literario`, err.message);
+      console.error(`Erro tentando actualizar um estilo literario.`, err.message);
       next(err);
     }
   }
@@ -62,7 +62,7 @@ export class EstiloLiterarioController {
       }
       res.json(await estilosLiterarios.borrarEstiloLiterario(req.idUsuario, req.query.id));
     } catch (err) {
-      console.error(`Erro tentando eliminar um estilo literario`, err.message);
+      console.error(`Erro tentando eliminar um estilo literario.`, err.message);
       next(err);
     }
   }

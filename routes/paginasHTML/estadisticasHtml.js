@@ -66,7 +66,7 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
       );
     }
   } catch (err) {
-    console.error(`Erro ao obter as estadísticas `, err.message);
+    console.error(`Erro ao obter as estadísticas .`, err.message);
     next(err);
   }
 });

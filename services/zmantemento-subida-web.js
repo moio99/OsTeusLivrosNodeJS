@@ -57,7 +57,7 @@ async function subidaWeb(idUsuario){
       estilosLiterarios: resEstilosLiterarios
     };
   } catch (err) {
-    console.error(`Erro ao realizar a migraçom em zmantemento-subida-web`, err.message);
+    console.error(`Erro ao realizar a migraçom em zmantemento-subida-web.`, err.message);
     next(err);
   } finally {
     pgClient.release();

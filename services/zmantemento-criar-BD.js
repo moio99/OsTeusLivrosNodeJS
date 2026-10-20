@@ -65,7 +65,7 @@ async function ciarSQLsCriacomBD(nomeBD = getFilenamePrefix()) {
     console.log(`Ficheiro escrito: ${outPath}`);
     return outPath;
   } catch (err) {
-    console.error(`Erro ao executar ciarSQLsCriacomBD em zmantemento-salvar-dados.js`, err.message);
+    console.error(`Erro ao executar ciarSQLsCriacomBD em zmantemento-salvar-dados.js.`, err.message);
     return false;
   }
 }

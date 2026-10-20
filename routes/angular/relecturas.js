@@ -14,7 +14,7 @@ import RelecturaController from '../../controllers/relecturas.js';
     // res.json(await programmingLanguages.getMultiple(req.query.page));
     res.json(await relecturas.getColecons(req.idUsuario));
   } catch (err) {
-    console.error(`Erro ao obter as relecturas `, err.message);
+    console.error(`Erro ao obter as relecturas .`, err.message);
     next(err);
   }
 }); */

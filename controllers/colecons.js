@@ -5,7 +5,7 @@ export class ColecomController {
     try {
       res.json(await colecons.getColecons(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as coleçons `, err.message);
+      console.error(`Erro ao obter as coleçons .`, err.message);
       next(err);
     }
   }
@@ -14,7 +14,7 @@ export class ColecomController {
     try {
       res.json(await colecons.getColecomPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter a coleçons polo nome `, err.message);
+      console.error(`Erro ao obter a coleçons polo nome .`, err.message);
       next(err);
     }
   }
@@ -23,7 +23,7 @@ export class ColecomController {
     try {
       res.json(await colecons.getColeconsCosLivros(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as coleçons cos livros`, err.message);
+      console.error(`Erro ao obter as coleçons cos livros.`, err.message);
       next(err);
     }
   }
@@ -41,7 +41,7 @@ export class ColecomController {
   
       res.json(coleconsResponse);
     } catch (err) {
-      console.error(`Erro ao obter a coleçom`, err.message);
+      console.error(`Erro ao obter a coleçom.`, err.message);
       next(err);
     }
   }
@@ -55,7 +55,7 @@ export class ColecomController {
         res.json(await colecons.postColecom(req.idUsuario, req.body));
 
     } catch (err) {
-      console.error(`Erro tentando criar umha coleçom`, err.message);
+      console.error(`Erro tentando criar umha coleçom.`, err.message);
       next(err);
     }
   }
@@ -70,7 +70,7 @@ export class ColecomController {
       
   
     } catch (err) {
-      console.error(`Erro tentando actualizar umha coleçom`, err.message);
+      console.error(`Erro tentando actualizar umha coleçom.`, err.message);
       next(err);
     }
   }
@@ -84,7 +84,7 @@ export class ColecomController {
         res.json(await colecons.borrarColecom(req.idUsuario, req.query.id));
 
     } catch (err) {
-      console.error(`Erro tentando borrar umha coleçom`, err.message);
+      console.error(`Erro tentando borrar umha coleçom.`, err.message);
       next(err);
     }
   }

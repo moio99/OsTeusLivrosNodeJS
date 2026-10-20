@@ -5,7 +5,7 @@ export class BibliotecaController {
     try {
       res.json(await bibliotecas.getBibliotecas(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as bibliotecas `, err.message);
+      console.error(`Erro ao obter as bibliotecas .`, err.message);
       next(err);
     }
   }
@@ -14,7 +14,7 @@ export class BibliotecaController {
     try {
       res.json(await bibliotecas.getBibliotecaPorNome(req.idUsuario, req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter a biblioteca polo nome `, err.message);
+      console.error(`Erro ao obter a biblioteca polo nome .`, err.message);
       next(err);
     }
   }
@@ -23,7 +23,7 @@ export class BibliotecaController {
     try {
       res.json(await bibliotecas.getBibliotecasCosLivros(req.idUsuario));
     } catch (err) {
-      console.error(`Erro ao obter as bibliotecas cos livros`, err.message);
+      console.error(`Erro ao obter as bibliotecas cos livros.`, err.message);
       next(err);
     }
   }
@@ -41,7 +41,7 @@ export class BibliotecaController {
   
       res.json(bibliotecasResponse);
     } catch (err) {
-      console.error(`Erro ao obter a biblioteca`, err.message);
+      console.error(`Erro ao obter a biblioteca.`, err.message);
       next(err);
     }
   }
@@ -55,7 +55,7 @@ export class BibliotecaController {
         res.json(await bibliotecas.postBiblioteca(req.idUsuario, req.body));
 
     } catch (err) {
-      console.error(`Erro tentando criar umha biblioteca`, err.message);
+      console.error(`Erro tentando criar umha biblioteca.`, err.message);
       next(err);
     }
   }
@@ -70,7 +70,7 @@ export class BibliotecaController {
       
   
     } catch (err) {
-      console.error(`Erro tentando actualizar umha biblioteca`, err.message);
+      console.error(`Erro tentando actualizar umha biblioteca.`, err.message);
       next(err);
     }
   }
@@ -84,7 +84,7 @@ export class BibliotecaController {
         res.json(await bibliotecas.borrarBiblioteca(req.idUsuario, req.query.id));
 
     } catch (err) {
-      console.error(`Erro tentando borrar umha biblioteca`, err.message);
+      console.error(`Erro tentando borrar umha biblioteca.`, err.message);
       next(err);
     }
   }

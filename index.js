@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import middleware from './utils/middleware.js';
-import loginRouter from "./utils/login.js";
+import usuariosRouter from "./routes/angular/usuarios.js";
 import estadisticasRouter from "./routes/angular/estadisticas.js";
 import graficosRouter from "./routes/angular/graficos.js";
 import livrosRouter from "./routes/angular/livros.js";
@@ -59,7 +59,7 @@ if (process.env.NODE_ENTORNO === 'local') {
 }
 
 app.use(middleware.requestLogger);
-app.use('/api/login', loginRouter);
+app.use('/api/Usuarios', usuariosRouter);
 app.use("/api/Estadisticas", middleware.controlUsuario, estadisticasRouter);
 app.use("/api/Graficos", middleware.controlUsuario, graficosRouter);
 app.use("/api/Livros", middleware.controlUsuario, livrosRouter);
