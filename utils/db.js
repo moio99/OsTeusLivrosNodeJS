@@ -74,6 +74,19 @@ function ePosgreSQL() {
     return posgre;
 }
 
+/**
+ * Quando é posgreSQL retorna $1, $2, $3 etc, se é mySQL retorna ?, ?, ? etc.
+ * @param {*} contador 
+ * @returns 
+ */
+function qId(contador) {
+  if (ePosgreSQL()) {
+    return '$' + ++contador.indice;
+  } else {
+    return '?';
+  }
+}
+
 function stringOuNull(value) {
   if (value == null || value == '')
     return null;
@@ -103,5 +116,5 @@ function numberOu0(value) {
 }
 
 export default {
-  query, ePosgreSQL, stringOuNull, stringOuNullSimple, numberOuNull, numberOu0, pool
+  query, ePosgreSQL, qId, stringOuNull, stringOuNullSimple, numberOuNull, numberOu0, pool
 }

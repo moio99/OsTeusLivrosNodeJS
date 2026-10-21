@@ -1,15 +1,6 @@
 import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
-queryIndex = 0;
-function qId() {
-  if (db.ePosgreSQL()) {
-    return '$' + ++queryIndex;
-  } else {
-    return '?';
-  }
-}
-
 async function getColecons(idUsuario){
   console.log('💬 Petiçom de getColecons ' + new Date().toJSON());
   const dadosLivro = await db.query(
@@ -94,11 +85,11 @@ async function getColeconsCosLivros(idUsuario){
 async function postColecom(idUsuario, colecom){
   console.log('💬 Petiçom de postColecom ' + colecom.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   const queryInsert = `INSERT INTO Colecom
     (fkUsuario, Nome, ISBN, web, Comentario)
-    ${db.ePosgreSQL() ? 
-        'VALUES ($1, $2, $3, $4, $5) RETURNING idcolecom' 
-      : 'VALUES (?, ?, ?, ?, ?)'}`;
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
+    ${db.ePosgreSQL() ? 'RETURNING idcolecom' : ''}`;
   
   /**
    * posgreSQL
@@ -137,10 +128,10 @@ async function postColecom(idUsuario, colecom){
 async function putColecom(idUsuario, colecom){
   console.log('💬 Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  queryIndex = 0;
+  const c = { indice: 0 };
   const queryInsert = `UPDATE Colecom SET
-      Nome = ${qId()}, ISBN = ${qId()}, web = ${qId()}, Comentario = ${qId()}
-    WHERE idColecom = ${qId()} AND fkUsuario = ${qId()};`;
+      Nome = ${db.qId(c)}, ISBN = ${db.qId(c)}, web = ${db.qId(c)}, Comentario = ${db.qId(c)}
+    WHERE idColecom = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
 
   const dadosInsert = [
     db.stringOuNullSimple(colecom.nome),    
