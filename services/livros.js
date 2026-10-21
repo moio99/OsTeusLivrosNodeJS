@@ -580,15 +580,35 @@ async function getLivro(idUsuario, id){
 async function postLivro(idUsuario, livro){
   console.log('💬 Petiçom de postLivro ' + livro.titulo + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   const queryInsert = `
     INSERT INTO Livro
-      (fkUsuario, Titulo, TituloOriginal, fkBiblioteca, fkEditorial, fkColecom, fkEstilo, ISBN, 
-       Electronico, Paginas, PaginasLidas, Lido, TempoLeitura, DataFimLeitura, fkIdioma, fkIdiomaOriginal, DataCriacom, 
-       DataEdicom, NumeroEdicom, Premios, Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, idSerie)
+      (fkUsuario, Titulo, TituloOriginal, fkBiblioteca, fkEditorial, 
+       fkColecom, fkEstilo, ISBN, Electronico, Paginas, 
+       PaginasLidas, Lido, TempoLeitura, DataFimLeitura, fkIdioma, 
+       fkIdiomaOriginal, DataCriacom, DataEdicom, NumeroEdicom, Premios, 
+       Descricom, Comentario, Pontuacom, fkIdiomaDaEntrada, SomSerie, 
+       idSerie)
      VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?,
-       ?, ?, ?, ?, ?, ?, ?, ?, ?,
-       ?, ?, ?, ?, ?, ?, 3, ?, ?);`;
+      (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+       ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+       ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+       ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+       ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+       ${db.qId(c)});
+      ${db.ePosgreSQL() ? 'RETURNING idLivro' : ''}`;
+
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('Livro', 'idLivro'), 
+          (SELECT COALESCE(MAX(idLivro), 0) + 1 FROM Livro), 
+          false
+      );
+ */
 
   const dadosInsert = [
     idUsuario,
@@ -616,6 +636,7 @@ async function postLivro(idUsuario, livro){
     db.stringOuNullSimple(livro.descricom),
     db.stringOuNullSimple(livro.comentario),
     db.numberOuNull(livro.pontuacom),
+    db.numberOuNull(livro.idiomaDaEntrada),
     livro.somSerie ? 1 : 0,
     db.numberOuNull(livro.idSerie)
   ];
@@ -659,35 +680,36 @@ async function putLivro(idUsuario, livro){
     await db.query(qGeneros);
   }
   
-  let queryInsert = `UPDATE Livro SET
-    Titulo = ?,
-    TituloOriginal = ?,
-    fkBiblioteca = ?,
-    fkEditorial = ?,
-    fkColecom = ?,
-    fkEstilo = ?,
-    ISBN = ?,
-    Electronico = ?,
-    Paginas = ?,
-    PaginasLidas = ?,
-    Lido = ?,
-    TempoLeitura = ?,
-    DataFimLeitura = ?,
-    fkIdioma = ?,
-    fkIdiomaOriginal = ?,
-    DataCriacom = ?,
-    DataEdicom = ?,
-    NumeroEdicom = ?,
-    Premios = ?,
-    Descricom = ?,
-    Comentario = ?,
-    Pontuacom = ?,
-    fkIdiomaDaEntrada = 3,
-    SomSerie = ?,
-    idSerie = ?
-    WHERE idLivro = ? AND fkUsuario = ?;`;
+  const c = { indice: 0 };
+  let queryUpdate = `UPDATE Livro SET
+    Titulo = ${db.qId(c)},
+    TituloOriginal = ${db.qId(c)},
+    fkBiblioteca = ${db.qId(c)},
+    fkEditorial = ${db.qId(c)},
+    fkColecom = ${db.qId(c)},
+    fkEstilo = ${db.qId(c)},
+    ISBN = ${db.qId(c)},
+    Electronico = ${db.qId(c)},
+    Paginas = ${db.qId(c)},
+    PaginasLidas = ${db.qId(c)},
+    Lido = ${db.qId(c)},
+    TempoLeitura = ${db.qId(c)},
+    DataFimLeitura = ${db.qId(c)},
+    fkIdioma = ${db.qId(c)},
+    fkIdiomaOriginal = ${db.qId(c)},
+    DataCriacom = ${db.qId(c)},
+    DataEdicom = ${db.qId(c)},
+    NumeroEdicom = ${db.qId(c)},
+    Premios = ${db.qId(c)},
+    Descricom = ${db.qId(c)},
+    Comentario = ${db.qId(c)},
+    Pontuacom = ${db.qId(c)},
+    fkIdiomaDaEntrada = ${db.qId(c)},
+    SomSerie = ${db.qId(c)},
+    idSerie = ${db.qId(c)}
+    WHERE idLivro = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
     
-  const dadosInsert = [
+  const dadosUpdate = [
     livro.titulo,
     db.stringOuNullSimple(livro.tituloOriginal),
     db.numberOuNull(livro.idBiblioteca),
@@ -710,13 +732,14 @@ async function putLivro(idUsuario, livro){
     db.stringOuNullSimple(livro.descricom),
     db.stringOuNullSimple(livro.comentario),
     db.numberOuNull(livro.pontuacom),
+    db.numberOuNull(livro.idiomaDaEntrada),
     livro.somSerie ? 1 : 0,
     livro.idSerie,
     livro.id,
     idUsuario
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       console.log(ResultSetHeader);
       if (ResultSetHeader.affectedRows == 1)
         idResult = livro.id;
