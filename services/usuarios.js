@@ -27,13 +27,11 @@ async function postUsuario(usuario){
   let idResult = 0;
   let queryInsert = `INSERT INTO usuario
     (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma)
-    VALUES (?, ?, ?, ?, ?, ?)`;
-  if (db.ePosgreSQL()) {
-    queryInsert = `INSERT INTO usuario
-      (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING idUsuario`;
-  }
+    ${db.ePosgreSQL() ? 
+        'VALUES ($1, $2, $3, $4, $5, $6) RETURNING idUsuario' 
+      : 'VALUES (?, ?, ?, ?, ?, ?)'}`;
+  console.log('db.ePosgreSQL()', db.ePosgreSQL());
+  console.log('queryInsert', queryInsert);
 
   const dadosInsert = [
     usuario.nome,
