@@ -33,7 +33,7 @@ async function getBiblioteca(idUsuario, id){
 
   const dadosBiblioteca = await db.query(
     `SELECT b.idBiblioteca as id, b.Nome as nome, b.Endereco as endereco, b.Localidade as localidade
-      , b.Telefone as telefone, b.DataAsociamento as dataasociamento, b.DataRenovacom as datarenovacom
+      , b.Telefone as telefone, b.DataAsociamento as dataAsociamento, b.DataRenovacom as dataRenovacom
       , b.Comentario as comentario
       FROM Biblioteca b
       WHERE b.fkUsuario = ${p1} AND b.idBiblioteca = ${p2} ;`,
@@ -42,12 +42,7 @@ async function getBiblioteca(idUsuario, id){
 
   const rows = helper.emptyOrRows(dadosBiblioteca);
   console.log(`✅ ${rows.length} elementos obtidos`);
-  console.log(`✅ ${JSON.stringify(rows)}`);
   const data = rows.map(row => new Biblioteca.BibliotecaDetalhe(row));   // Precisso voltar um listado inda que só tenha um elemento
-
-  console.log(`💬 ${JSON.stringify(data)}`);
-  console.log(`✅ ${data.dataAsociamento} dataAsociamento`);
-  console.log(`✅ ${data.dataRenovacom} dataRenovacom`);
 
   const meta = {'id': id};
 
