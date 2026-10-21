@@ -42,9 +42,11 @@ async function getBiblioteca(idUsuario, id){
 
   const rows = helper.emptyOrRows(dadosBiblioteca);
   console.log(`✅ ${rows.length} elementos obtidos`);
-  console.log(`✅ ${rows[0].dataAsociamento} dataAsociamento`);
-  console.log(`✅ ${rows[0].dataRenovacom} dataRenovacom`);
+  console.log(`✅ ${rows}`);
   const data = rows.map(row => new Biblioteca.BibliotecaDetalhe(row));   // Precisso voltar um listado inda que só tenha um elemento
+
+  console.log(`✅ ${data.dataAsociamento} dataAsociamento`);
+  console.log(`✅ ${data.dataRenovacom} dataRenovacom`);
 
   const meta = {'id': id};
 

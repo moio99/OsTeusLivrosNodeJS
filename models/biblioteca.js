@@ -26,7 +26,6 @@ class BibliotecaDetalhe extends Biblioteca {
     this.localidade = row.localidade;
     this.telefone = row.telefone;
     this.dataAsociamento = row.dataAsociamento;
-    this.dataRenovacom = row.dataRenovacom;
     this.comentario = row.comentario;
   }
 }
