@@ -1,6 +1,15 @@
 import db from '../utils/db.js';
 import helper from '../utils/helper.js';
 
+queryIndex = 0;
+function qId() {
+  if (db.ePosgreSQL()) {
+    return '$' + ++queryIndex;
+  } else {
+    return '?';
+  }
+}
+
 async function getColecons(idUsuario){
   console.log('💬 Petiçom de getColecons ' + new Date().toJSON());
   const dadosLivro = await db.query(
@@ -87,7 +96,21 @@ async function postColecom(idUsuario, colecom){
   let idResult = 0;
   const queryInsert = `INSERT INTO Colecom
     (fkUsuario, Nome, ISBN, web, Comentario)
-  VALUES (?, ?, ?, ?, ?)`;
+    ${db.ePosgreSQL() ? 
+        'VALUES ($1, $2, $3, $4, $5) RETURNING idcolecom' 
+      : 'VALUES (?, ?, ?, ?, ?)'}`;
+  
+  /**
+   * posgreSQL
+   * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+   * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+   * 
+        SELECT setval(
+            pg_get_serial_sequence('colecom', 'idcolecom'), 
+            (SELECT COALESCE(MAX(idcolecom), 0) + 1 FROM colecom), 
+            false
+        );
+   */
 
   const dadosInsert = [
     idUsuario,
@@ -114,12 +137,10 @@ async function postColecom(idUsuario, colecom){
 async function putColecom(idUsuario, colecom){
   console.log('💬 Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  queryIndex = 0;
   const queryInsert = `UPDATE Colecom SET
-      Nome = ?,
-      ISBN = ?,
-      web = ?,
-      Comentario = ?
-    WHERE idColecom = ? AND fkUsuario = ?;`;
+      Nome = ${qId()}, ISBN = ${qId()}, web = ${qId()}, Comentario = ${qId()}
+    WHERE idColecom = ${qId()} AND fkUsuario = ${qId()};`;
 
   const dadosInsert = [
     db.stringOuNullSimple(colecom.nome),    
