@@ -595,7 +595,7 @@ async function postLivro(idUsuario, livro){
        ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
        ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
        ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
-       ${db.qId(c)});
+       ${db.qId(c)})
       ${db.ePosgreSQL() ? 'RETURNING idLivro' : ''}`;
 
 /**

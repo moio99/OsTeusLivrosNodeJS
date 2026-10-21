@@ -8,7 +8,7 @@ class Biblioteca extends ElementoId {
   constructor(row) {
     super(row);
     this.nome = row.nome;
-    this.dataRenovacom = row.dataRenovacom; 
+    this.datarenovacom = row.datarenovacom; 
   }
 }
 
@@ -25,7 +25,7 @@ class BibliotecaDetalhe extends Biblioteca {
     this.endereco = row.endereco;
     this.localidade = row.localidade;
     this.telefone = row.telefone;
-    this.dataAsociamento = row.dataAsociamento;
+    this.dataasociamento = row.dataasociamento;
     this.comentario = row.comentario;
   }
 }
