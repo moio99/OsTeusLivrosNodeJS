@@ -25,11 +25,12 @@ async function getUsuarioPorNome(nome){
 async function postUsuario(usuario){
   console.log('💬 Petiçom de postUsuario ' + usuario.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   let queryInsert = `INSERT INTO usuario
     (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma, ativado)
-    ${db.ePosgreSQL() ? 
-        'VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING idusuario' 
-      : 'VALUES (?, ?, ?, ?, ?, ?, ?)'}`;
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
+            ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
+    ${db.ePosgreSQL() ? 'RETURNING idusuario' : ''}`;
 
 /**
  * posgreSQL
@@ -94,45 +95,3 @@ async function postLogin(nome, contrasinal, loginSwagger){
 }
 
 export default { getUsuarioPorNome, postUsuario, postLogin }
-
-
-// loginRouter.post('/', async (request, response) => {
-//   let { nome, contrasinal } = request.body
-//   const { username, password } = request.body; // Swagger enviará isto no body
-
-//   if (username && password) {
-//     nome = username;
-//     contrasinal = password;
-//   }
-
-//   if (!(nome && contrasinal)) {
-//     return response.status(401).json({
-//       error: 'inválidos nome do usuario ou contrasinal'
-//     })
-//   }
-
-//   const rows = await db.query(
-//     `SELECT Nome AS nome, idUsuario AS idusuario, fkIdioma AS fkidioma FROM usuario WHERE Nome = '${nome}' AND pass = '${contrasinal}' AND ativado = true;`
-//   );
-//   if (rows.length === 0) {
-//     return response.status(401).json({
-//       error: 'inválidos nome do usuario ou contrasinal'
-//     })
-//   } else {
-//     const userForToken = {
-//       nome: rows[0].nome,
-//       id: rows[0].idusuario,
-//       idioma: rows[0].fkidioma
-//     }
-//     // o token expira em uma hora (60*60 segundos)
-//     const token = jwt.sign(userForToken, process.env.SEGREDO_PARA_O_TOKEN, { expiresIn: 60*60 });
-    
-//     response.status(200).send({
-//      // Os dous seguintes só som necesarios para o login do swagger
-//       ...(username ? { access_token: token } : { token: token }),
-//       ...(username ? { token_type: 'bearer' } : { }),
-//       usuario: userForToken
-//     });
-
-//   }
-// })

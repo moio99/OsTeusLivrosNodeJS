@@ -181,6 +181,18 @@ async function postAutor(idUsuario, autor){
           (SELECT COALESCE(MAX(idautor), 0) + 1 FROM Autor), 
           false
       );
+
+      SELECT setval(
+          pg_get_serial_sequence('Autores', 'idautores'), 
+          (SELECT COALESCE(MAX(idautores), 0) + 1 FROM Autores), 
+          false
+      );
+
+      SELECT setval(
+          pg_get_serial_sequence('Generos', 'idgeneros'), 
+          (SELECT COALESCE(MAX(idgeneros), 0) + 1 FROM Generos), 
+          false
+      );
  */
 
   const dadosInsert = [
