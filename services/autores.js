@@ -162,12 +162,26 @@ async function postAutor(idUsuario, autor){
   console.log('💬 Petiçom de postAutor ' + autor.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
+  const c = { indice: 0 };
   const queryInsert = `INSERT INTO Autor
     (fkUsuario, Nome, NomeReal, LugarNacemento, DataNacemento, dataDefuncom, Premios, web, Comentario
       , fkNacionalidade, fkPais)
     VALUES
-      (${idUsuario}, ?, ?, ?, ?, ?, ?, ?, ?
-      , ?, ?);`;
+      (${idUsuario}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)},
+                     ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
+    ${db.ePosgreSQL() ? 'RETURNING idautor' : ''}`;
+
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('Autor', 'idautor'), 
+          (SELECT COALESCE(MAX(idautor), 0) + 1 FROM Autor), 
+          false
+      );
+ */
 
   const dadosInsert = [
     autor.nome,
@@ -200,12 +214,16 @@ async function putAutor(idUsuario, autor){
   console.log('💬 Petiçom de putAutor ' + autor.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  const queryInsert = `UPDATE Autor SET
-      Nome = ?, NomeReal = ?, LugarNacemento = ?, DataNacemento = ?, DataDefuncom = ?, Premios = ?
-    , Web = ?, Comentario = ?, fkNacionalidade = ?, fkPais = ?
-    WHERE idAutor = ? AND fkUsuario = ?;`;
+  const c = { indice: 0 };
+  const queryUpdate = `UPDATE Autor SET
+      Nome = ${db.qId(c)}, NomeReal = ${db.qId(c)}, 
+      LugarNacemento = ${db.qId(c)}, 
+      DataNacemento = ${db.qId(c)}, DataDefuncom = ${db.qId(c)}, 
+      Premios = ${db.qId(c)}, Web = ${db.qId(c)}, Comentario = ${db.qId(c)}, 
+      fkNacionalidade = ${db.qId(c)}, fkPais = ${db.qId(c)}
+    WHERE idAutor = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
 
-  const dadosInsert = [
+  const dadosUpdate = [
     autor.nome,
     db.stringOuNullSimple(autor.nomeReal),
     db.stringOuNullSimple(autor.lugarNacemento),
@@ -220,7 +238,7 @@ async function putAutor(idUsuario, autor){
     idUsuario
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
         idResult = autor.id;
     }

@@ -112,6 +112,18 @@ async function postGenero(idUsuario, genero){
     VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
     ${db.ePosgreSQL() ? 'RETURNING idgenero' : ''}`;
 
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('Genero', 'idgenero'), 
+          (SELECT COALESCE(MAX(idgenero), 0) + 1 FROM Genero), 
+          false
+      );
+ */
+
   const dadosInsert = [
     idUsuario,
     genero.nome,

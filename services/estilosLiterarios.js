@@ -96,6 +96,18 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
     VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
     ${db.ePosgreSQL() ? 'RETURNING idestilo' : ''}`;
 
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('EstiloLiterario', 'idestilo'), 
+          (SELECT COALESCE(MAX(idestilo), 0) + 1 FROM EstiloLiterario), 
+          false
+      );
+ */
+
   const dadosInsert = [
     idUsuario,
     EstiloLiterario.nome,
