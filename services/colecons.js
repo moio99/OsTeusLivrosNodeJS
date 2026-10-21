@@ -86,9 +86,9 @@ async function postColecom(idUsuario, colecom){
   console.log('💬 Petiçom de postColecom ' + colecom.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const c = { indice: 0 };
-  const queryInsert = `INSERT INTO Colecom
+  const queryUpdate = `INSERT INTO Colecom
     (fkUsuario, Nome, ISBN, web, Comentario)
-    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
     ${db.ePosgreSQL() ? 'RETURNING idcolecom' : ''}`;
   
   /**
@@ -103,7 +103,7 @@ async function postColecom(idUsuario, colecom){
         );
    */
 
-  const dadosInsert = [
+  const dadosUpdate = [
     idUsuario,
     colecom.nome,
     db.stringOuNullSimple(colecom.isbn),
@@ -111,7 +111,7 @@ async function postColecom(idUsuario, colecom){
     db.stringOuNullSimple(colecom.comentario)
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1)
         idResult = ResultSetHeader.insertId
       }

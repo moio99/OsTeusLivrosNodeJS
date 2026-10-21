@@ -109,11 +109,12 @@ async function getBibliotecasCosLivros(idUsuario){
 async function postBiblioteca(idUsuario, biblioteca){
   console.log('💬 Petiçom de postBiblioteca ' + biblioteca.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   const queryInsert = `INSERT INTO Biblioteca
     (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
-    ${db.ePosgreSQL() ? 
-        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING idbiblioteca' 
-      : 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'}`;
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)},
+            ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
+    ${db.ePosgreSQL() ? 'RETURNING idbiblioteca' : ''}`;
 
 /**
  * posgreSQL
@@ -156,28 +157,16 @@ async function putBiblioteca(idUsuario, biblioteca){
   console.log('💬 Petiçom de putBiblioteca ' + biblioteca.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  let queryUpdate = '';
-  if (db.ePosgreSQL()) {
-    queryUpdate = `UPDATE Biblioteca SET
-      Nome = $1,
-      Endereco = $2,
-      Localidade = $3,
-      Telefone = $4,
-      DataAsociamento = $5,
-      DataRenovacom = $6,
-      Comentario = $7
-    WHERE idBiblioteca = $8 AND fkUsuario = $9;`;
-  } else {
-    queryUpdate = `UPDATE Biblioteca SET
-      Nome = ?,
-      Endereco = ?,
-      Localidade = ?,
-      Telefone = ?,
-      DataAsociamento = ?,
-      DataRenovacom = ?,
-      Comentario = ?
-    WHERE idBiblioteca = ? AND fkUsuario = ?;`;
-  }
+  const c = { indice: 0 };
+  const queryUpdate = `UPDATE Biblioteca SET
+      Nome = ${db.qId(c)},
+      Endereco = ${db.qId(c)},
+      Localidade = ${db.qId(c)},
+      Telefone = ${db.qId(c)},
+      DataAsociamento = ${db.qId(c)},
+      DataRenovacom = ${db.qId(c)},
+      Comentario = ${db.qId(c)}
+    WHERE idBiblioteca = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
 
   const dadosUpdate = [
     db.stringOuNullSimple(biblioteca.nome),    

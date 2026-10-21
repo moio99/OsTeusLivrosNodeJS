@@ -106,15 +106,11 @@ async function getGenerosCosLivros(idUsuario){
 async function postGenero(idUsuario, genero){
   console.log('💬 Petiçom de postGenero ' + genero.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   let queryInsert = `INSERT INTO Genero
     (fkUsuario, Nome, Comentario)
-    VALUES (?, ?, ?)`;
-  if (db.ePosgreSQL()) {
-    queryInsert = `INSERT INTO Genero
-      (fkUsuario, Nome, Comentario)
-      VALUES ($1, $2, $3)
-      RETURNING idgenero`;
-  }
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
+    ${db.ePosgreSQL() ? 'RETURNING idgenero' : ''}`;
 
   const dadosInsert = [
     idUsuario,
@@ -142,24 +138,19 @@ async function putGenero(idUsuario, genero){
   console.log('💬 Petiçom de putGenero ' + genero.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  let queryInsert = `UPDATE Genero SET
-      Nome = ?,
-      Comentario = ?
-    WHERE idGenero = ? AND fkUsuario = ?;`;
-  if (db.ePosgreSQL()) {
-    queryInsert = `UPDATE Genero SET
-        Nome = $1,
-        Comentario = $2
-      WHERE idGenero = $3 AND fkUsuario = $4
-      RETURNING idgenero`;
-  }
-  const dadosInsert = [
+  const c = { indice: 0 };
+  let queryUpdate = `UPDATE Genero SET
+      Nome = ${db.qId(c)},
+      Comentario = ${db.qId(c)}
+    WHERE idGenero = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+
+  const dadosUpdate = [
     db.stringOuNullSimple(genero.nome),
     db.stringOuNullSimple(genero.comentario),
     genero.id,
     idUsuario
   ];
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
     if (db.ePosgreSQL()) {
       idResult = ResultSetHeader[0].idgenero;
     } else if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)

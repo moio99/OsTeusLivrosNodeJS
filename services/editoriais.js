@@ -91,11 +91,11 @@ async function getEditoriaisCosLivros(idUsuario){
 async function postEditorial(idUsuario, editorial){
   console.log('💬 Petiçom de postEditorial ' + editorial.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   const queryInsert = `INSERT INTO Editorial
     (fkUsuario, Nome, Direicom, web, Comentario)
-    ${db.ePosgreSQL() ? 
-        'VALUES ($1, $2, $3, $4, $5) RETURNING idEditorial' 
-      : 'VALUES (?, ?, ?, ?, ?)'}`;
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
+    ${db.ePosgreSQL() ? 'RETURNING idEditorial' : ''}`;
 
 /**
  * posgreSQL
@@ -135,13 +135,14 @@ async function putEditorial(idUsuario, editorial){
   console.log('💬 Petiçom de putEditorial ' + editorial.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
 
-  const queryInsert = `UPDATE Editorial SET
-      Nome = ?,
-      Direicom = ?,
-      web = ?,
-      Comentario = ?
-    WHERE idEditorial = ? AND fkUsuario = ?;`;
-  const dadosInsert = [
+  const c = { indice: 0 };
+  const queryUpdate = `UPDATE Editorial SET
+      Nome =  ${db.qId(c)},
+      Direicom =  ${db.qId(c)},
+      web =  ${db.qId(c)},
+      Comentario =  ${db.qId(c)}
+    WHERE idEditorial =  ${db.qId(c)} AND fkUsuario =  ${db.qId(c)};`;
+  const dadosUpdate = [
     db.stringOuNullSimple(editorial.nome),
     db.stringOuNullSimple(editorial.direicom),
     db.stringOuNullSimple(editorial.web),
@@ -149,7 +150,7 @@ async function putEditorial(idUsuario, editorial){
     editorial.id,
     idUsuario
   ];
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
         idResult = editorial.id;
     }
