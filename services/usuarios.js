@@ -26,12 +26,22 @@ async function postUsuario(usuario){
   console.log('💬 Petiçom de postUsuario ' + usuario.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
   let queryInsert = `INSERT INTO usuario
-    (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma)
+    (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma, ativado)
     ${db.ePosgreSQL() ? 
-        'VALUES ($1, $2, $3, $4, $5, $6) RETURNING idUsuario' 
-      : 'VALUES (?, ?, ?, ?, ?, ?)'}`;
-  console.log('db.ePosgreSQL()', db.ePosgreSQL());
-  console.log('queryInsert', queryInsert);
+        'VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING idusuario' 
+      : 'VALUES (?, ?, ?, ?, ?, ?, ?)'}`;
+
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('usuario', 'idusuario'), 
+          (SELECT COALESCE(MAX(idusuario), 0) + 1 FROM usuario), 
+          false
+      );
+ */
 
   const dadosInsert = [
     usuario.nome,
@@ -40,6 +50,7 @@ async function postUsuario(usuario){
     usuario.contestacom,
     usuario.correio,
     usuario.idIdioma,
+    usuario.ativado,
   ];
 
   await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {

@@ -93,9 +93,12 @@ async function postEditorial(idUsuario, editorial){
   let idResult = 0;
   const queryInsert = `INSERT INTO Editorial
     (fkUsuario, Nome, Direicom, web, Comentario)
-  VALUES (${idUsuario}, ?, ?, ?, ?)`;
+    ${db.ePosgreSQL() ? 
+        'VALUES ($1, $2, $3, $4, $5) RETURNING idEditorial' 
+      : 'VALUES (?, ?, ?, ?, ?)'}`;
 
   const dadosInsert = [
+    idUsuario,
     editorial.nome,
     editorial.direicom,
     editorial.web,
