@@ -94,7 +94,7 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
   const queryInsert = `INSERT INTO EstiloLiterario
     (fkUsuario, Nome, Comentario)
     VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
-    ${db.ePosgreSQL() ? 'RETURNING idestiloliterario' : ''}`;
+    ${db.ePosgreSQL() ? 'RETURNING idestilo' : ''}`;
 
   const dadosInsert = [
     idUsuario,
