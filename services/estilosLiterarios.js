@@ -90,9 +90,11 @@ async function getEstilosLiterariosCosLivros(idUsuario){
 async function postEstiloLiterario(idUsuario, EstiloLiterario){
   console.log('💬 Petiçom de postEstiloLiterario ' + EstiloLiterario.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
+  const c = { indice: 0 };
   const queryInsert = `INSERT INTO EstiloLiterario
     (fkUsuario, Nome, Comentario)
-  VALUES (?, ?, ?)`;
+    VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)})
+    ${db.ePosgreSQL() ? 'RETURNING idestiloliterario' : ''}`;
 
   const dadosInsert = [
     idUsuario,
@@ -117,18 +119,19 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
 async function putEstiloLiterario(idUsuario, EstiloLiterario){
   console.log('💬 Petiçom de putEstiloLiterario ' + EstiloLiterario.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  const queryInsert = `UPDATE EstiloLiterario SET
-      Nome = ?,
-      Comentario = ?
-    WHERE idEstilo = ? AND fkUsuario = ?`;
+  const c = { indice: 0 };
+  const queryUpdate = `UPDATE EstiloLiterario SET
+      Nome = ${db.qId(c)},
+      Comentario = ${db.qId(c)}
+    WHERE idEstilo = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}`;
 
-  const dadosInsert = [
+  const dadosUpdate = [
     db.stringOuNullSimple(EstiloLiterario.nome),
     db.stringOuNullSimple(EstiloLiterario.comentario),    
     EstiloLiterario.id,
     idUsuario
   ];
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
       if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
         idResult = EstiloLiterario.id;
     }
