@@ -109,16 +109,23 @@ async function getBibliotecasCosLivros(idUsuario){
 async function postBiblioteca(idUsuario, biblioteca){
   console.log('💬 Petiçom de postBiblioteca ' + biblioteca.nome + ' data: ' + new Date().toJSON());
   let idResult = 0;
-  let queryInsert = '';
-  if (db.ePosgreSQL()) {
-    queryInsert = `INSERT INTO Biblioteca
-      (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
-  } else {
-    queryInsert = `INSERT INTO Biblioteca
-      (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-  }
+  const queryInsert = `INSERT INTO Biblioteca
+    (fkUsuario, Nome, Endereco, Localidade, Telefone, DataAsociamento, DataRenovacom, Comentario)
+    ${db.ePosgreSQL() ? 
+        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING idbiblioteca' 
+      : 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'}`;
+
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('biblioteca', 'idbiblioteca'), 
+          (SELECT COALESCE(MAX(idbiblioteca), 0) + 1 FROM biblioteca), 
+          false
+      );
+ */
 
   const dadosInsert = [
     idUsuario,

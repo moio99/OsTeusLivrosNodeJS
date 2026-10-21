@@ -97,6 +97,18 @@ async function postEditorial(idUsuario, editorial){
         'VALUES ($1, $2, $3, $4, $5) RETURNING idEditorial' 
       : 'VALUES (?, ?, ?, ?, ?)'}`;
 
+/**
+ * posgreSQL
+ * Para que o índice de idusuario tenha o último valor logo da carrega maxiva ejecutar o seguinte 
+ * Erro no log:  duplicate key value violates unique constraint "usuario_pkey"
+ * 
+      SELECT setval(
+          pg_get_serial_sequence('editorial', 'ideditorial'), 
+          (SELECT COALESCE(MAX(ideditorial), 0) + 1 FROM editorial), 
+          false
+      );
+ */
+
   const dadosInsert = [
     idUsuario,
     editorial.nome,
