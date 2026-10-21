@@ -29,8 +29,8 @@ async function postUsuario(usuario){
     (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma)
     VALUES (?, ?, ?, ?, ?, ?)`;
   if (db.ePosgreSQL()) {
-    queryInsert = `INSERT INTO Genero
-      (fkUsuario, Nome, Comentario)
+    queryInsert = `INSERT INTO usuario
+      (Nome, pass, Pergunta, Contestacom, Correio, fkIdioma)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING idUsuario`;
   }
