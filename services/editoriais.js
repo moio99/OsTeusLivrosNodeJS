@@ -95,7 +95,7 @@ async function postEditorial(idUsuario, editorial){
   const queryInsert = `INSERT INTO Editorial
     (fkUsuario, Nome, Direicom, web, Comentario)
     VALUES (${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}) 
-    ${db.ePosgreSQL() ? 'RETURNING idEditorial' : ''}`;
+    ${db.ePosgreSQL() ? 'RETURNING ideditorial' : ''}`;
 
 /**
  * posgreSQL
@@ -120,7 +120,7 @@ async function postEditorial(idUsuario, editorial){
   const resultado = await db.query(queryInsert, dadosInsert);
   if (db.ePosgreSQL()) {
     if (resultado && resultado.length > 0) {
-      idResult = resultado[0].idEditorial;
+      idResult = resultado[0].ideditorial;
     }
   } else {
     idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);

@@ -130,13 +130,14 @@ async function postGenero(idUsuario, genero){
     genero.comentario
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-    if (db.ePosgreSQL()) {
-      idResult = ResultSetHeader[0].idgenero;
-    } else if (ResultSetHeader.affectedRows == 1)
-      idResult = ResultSetHeader.insertId
-    }  
-  );
+  const resultado = await db.query(queryInsert, dadosInsert);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idgenero;
+    }
+  } else {
+    idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
+  }
   
   console.log('✅ id: ' + idResult + ' genero creado');
   const meta = {'id': idResult};
