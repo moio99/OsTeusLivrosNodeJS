@@ -485,7 +485,7 @@ async function getLivro(idUsuario, id){
       , b.idBiblioteca AS "idBiblioteca", b.Nome as biblioteca
       , e.idEditorial AS "idEditorial", e.Nome as editorial
       , c.idColecom AS "idColecom", c.Nome as colecom
-      , el.idEstilo, el.Nome as "estilo"
+      , el.idEstilo AS "idEstilo", el.Nome as "estilo"
       , l.fkBiblioteca, l.fkEditorial, l.fkColecom, l.fkEstilo, l.ISBN AS "ISBN"
       , l.Paginas AS "Paginas", l.PaginasLidas AS "PaginasLidas", l.Lido AS "Lido", l.TempoLeitura AS "TempoLeitura"
       ${dataSelect}
