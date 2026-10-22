@@ -647,9 +647,7 @@ async function postLivro(idUsuario, livro){
     const resultado = await db.query(queryInsert, dadosInsert);
     
     if (ePostgreSQL) {
-      console.log('>>>>>>>>>>>>>>>', resultado);
       if (resultado && resultado.length > 0) {
-        console.log('>>>>>>>>>>>>>>> resultado[0]', resultado[0].idlivro);
         idResult = resultado[0].idlivro;
       }
     } else {
