@@ -579,6 +579,7 @@ async function getLivro(idUsuario, id){
 
 async function postLivro(idUsuario, livro){
   console.log('💬 Petiçom de postLivro ' + livro.titulo + ' data: ' + new Date().toJSON());
+  const ePostgreSQL = db.ePosgreSQL();
   let idResult = 0;
   const c = { indice: 0 };
   const queryInsert = `
@@ -596,7 +597,7 @@ async function postLivro(idUsuario, livro){
        ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
        ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, ${db.qId(c)}, 
        ${db.qId(c)})
-      ${db.ePosgreSQL() ? ' RETURNING idLivro' : ''}`;
+      ${ePostgreSQL ? ' RETURNING idLivro' : ''}`;
 
 /**
  * posgreSQL
@@ -641,24 +642,44 @@ async function postLivro(idUsuario, livro){
     db.numberOuNull(livro.idSerie)
   ];
 
-  await db.query(queryInsert, dadosInsert)
-    .then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = ResultSetHeader.insertId
-      }
-    );
-
-  if (livro.autores.length > 0) {
-    let qAutores = guardarAutores(idUsuario, livro.autores, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
-    await db.query(qAutores);
-  }
-  if (livro.generos.length > 0) {
-    let qGeneros = guardarGeneros(idUsuario, livro.generos, '(SELECT MAX(idLivro) as idLivro FROM Livro)');
-    await db.query(qGeneros);
-  }
+  try {
+    if (ePostgreSQL) await db.query('BEGIN');
+    const resultado = await db.query(queryInsert, dadosInsert);
     
-  console.log('✅ id: ' + idResult + ' livro creado');
-  
+    if (ePostgreSQL) {
+      if (resultado && resultado.rows && resultado.rows.length > 0) {
+        idResult = resultado.rows[0].idlivro || resultado.rows[0].idLivro;
+      }
+    } else {
+      idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
+    }
+
+    if (idResult > 0) {
+      if (livro.autores && livro.autores.length > 0) {
+        let qAutores = guardarAutores(idUsuario, livro.autores, idResult);
+        await db.query(qAutores);
+      }
+      
+      if (livro.generos && livro.generos.length > 0) {
+        let qGeneros = guardarGeneros(idUsuario, livro.generos, idResult);
+        await db.query(qGeneros);
+      }
+    
+      if (ePostgreSQL) await db.query('COMMIT');
+      console.log('✅ id: ' + idResult + ' livro creado');
+    } else {
+      throw new Error('Nom se puido obter o ID do livro inserido.');
+    }
+  } catch (error) {
+    try {
+      if (ePostgreSQL) await db.query('ROLLBACK');
+      console.log('🔄 Transaçom cancelada (ROLLBACK) debido a um erro.');
+    } catch (rollbackError) {
+      console.error('❌ Erro crítico ao intentar fazer ROLLBACK:', rollbackError);
+    }
+    throw error;
+  }
+
   return {
     idResult
   }
@@ -666,19 +687,8 @@ async function postLivro(idUsuario, livro){
 
 async function putLivro(idUsuario, livro){
   console.log('💬 Petiçom de putLivro ' + livro.id + ' data: ' + new Date().toJSON());
+  const ePostgreSQL = db.ePosgreSQL();
   let idResult = 0;
-  
-  await borrarAutoresAsigandos(idUsuario, livro.id);
-  if (livro.autores.length > 0) {
-    let qAutores = guardarAutores(idUsuario, livro.autores, livro.id);
-    await db.query(qAutores);
-  }
-  await borrarGenerosAsigandos(idUsuario, livro.id);
-  if (livro.generos.length > 0) {
-    let qGeneros = guardarGeneros(idUsuario, livro.generos, livro.id);
-    console.log(qGeneros)
-    await db.query(qGeneros);
-  }
   
   const c = { indice: 0 };
   let queryUpdate = `UPDATE Livro SET
@@ -739,13 +749,41 @@ async function putLivro(idUsuario, livro){
     idUsuario
   ];
 
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-      console.log(ResultSetHeader);
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = livro.id;
+  try {
+    if (ePostgreSQL) await db.query('BEGIN');
+    
+    await borrarAutoresAsigandos(idUsuario, livro.id);
+    if (livro.autores.length > 0) {
+      let qAutores = guardarAutores(idUsuario, livro.autores, livro.id);
+      await db.query(qAutores);
     }
-  );
-  
+    await borrarGenerosAsigandos(idUsuario, livro.id);
+    if (livro.generos.length > 0) {
+      let qGeneros = guardarGeneros(idUsuario, livro.generos, livro.id);
+      await db.query(qGeneros);
+    }
+    
+    const resultado = await db.query(queryUpdate, dadosUpdate);
+    console.log(resultado);
+
+    const filasAfectadas = ePostgreSQL
+      ? resultado.rowCount          // Se é Postgres
+      : (resultado.affectedRows || (resultado[0] && resultado[0].affectedRows)); // Se é MySQL
+
+    if (filasAfectadas === 1) {
+      idResult = livro.id;
+    }
+    
+    if (ePostgreSQL) await db.query('COMMIT');
+  } catch (error) {
+    try {
+      if (ePostgreSQL) await db.query('ROLLBACK');
+      console.log('🔄 Transaçom cancelada (ROLLBACK) debido a um erro.');
+    } catch (rollbackError) {
+      console.error('❌ Erro crítico ao intentar fazer ROLLBACK:', rollbackError);
+    }
+    throw error;
+  }
   console.log('✅ id: ' + idResult + ' livro actualizado');
   return {
     idResult
@@ -754,12 +792,12 @@ async function putLivro(idUsuario, livro){
 
 async function borrarAutoresAsigandos(idUsuario, id) {  
   await db.query(`DELETE FROM Autores WHERE fkLivro = ${id} AND fkUsuario = ${idUsuario};`);
-  console.log('borrados autores');
+  console.log('🔴 borrados autores');
 }
 
 async function borrarGenerosAsigandos(idUsuario, id) {  
   await db.query(`DELETE FROM Generos WHERE fkLivro = ${id} AND fkUsuario = ${idUsuario};`);
-  console.log('borrados generos');
+  console.log('🔴 borrados generos');
 }
 
 function guardarAutores(idUsuario, autores, idLivro) {
@@ -801,7 +839,7 @@ async function borrarLivro(idUsuario, id) {
     }
   );
 
-  console.log('✅ id: ' + idResult + ' livro borrado');
+  console.log(`✅ id: ${idResult} livro borrado 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,
