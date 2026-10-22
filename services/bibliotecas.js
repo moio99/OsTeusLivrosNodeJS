@@ -139,11 +139,19 @@ async function postBiblioteca(idUsuario, biblioteca){
     db.stringOuNullSimple(biblioteca.comentario)
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = ResultSetHeader.insertId
-      }
-    );
+  const resultado = await db.query(queryInsert, dadosInsert);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idbiblioteca;
+    }
+  } else {
+    idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
+  }
+  // await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
+  //     if (ResultSetHeader.affectedRows == 1)
+  //       idResult = ResultSetHeader.insertId
+  //     }
+  //   );
   
   console.log(`✅ id: ${idResult} biblioteca creada`);
   const meta = {'id': idResult};
