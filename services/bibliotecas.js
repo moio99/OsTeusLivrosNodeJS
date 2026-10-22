@@ -147,12 +147,7 @@ async function postBiblioteca(idUsuario, biblioteca){
   } else {
     idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
   }
-  // await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-  //     if (ResultSetHeader.affectedRows == 1)
-  //       idResult = ResultSetHeader.insertId
-  //     }
-  //   );
-  
+
   console.log(`✅ id: ${idResult} biblioteca creada`);
   const meta = {'id': idResult};
   return {

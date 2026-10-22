@@ -117,11 +117,13 @@ async function postEditorial(idUsuario, editorial){
     editorial.comentario
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = ResultSetHeader.insertId
-      }
-    );
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idEditorial;
+    }
+  } else {
+    idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
+  }
   
   console.log('✅ id: ' + idResult + ' editorial creada');
   const meta = {'id': idResult};
