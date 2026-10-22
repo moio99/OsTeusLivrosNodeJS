@@ -648,9 +648,9 @@ async function postLivro(idUsuario, livro){
     
     if (ePostgreSQL) {
       console.log('>>>>>>>>>>>>>>>', resultado);
-      if (resultado && resultado.rows && resultado.rows.length > 0) {
-        console.log('>>>>>>>>>>>>>>> resultado.rows[0]', resultado.rows[0]);
-        idResult = resultado.rows[0].idlivro || resultado.rows[0].idLivro;
+      if (resultado && resultado.length > 0) {
+        console.log('>>>>>>>>>>>>>>> resultado[0]', resultado[0].idlivro);
+        idResult = resultado[0].idlivro;
       }
     } else {
       idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
