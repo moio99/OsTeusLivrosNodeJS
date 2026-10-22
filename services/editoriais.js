@@ -117,6 +117,7 @@ async function postEditorial(idUsuario, editorial){
     editorial.comentario
   ];
 
+  const resultado = await db.query(queryInsert, dadosInsert);
   if (db.ePosgreSQL()) {
     if (resultado && resultado.length > 0) {
       idResult = resultado[0].idEditorial;
