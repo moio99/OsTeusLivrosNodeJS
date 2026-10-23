@@ -187,15 +187,22 @@ async function putBiblioteca(idUsuario, biblioteca){
   ];
 
   const resultado = await db.query(queryUpdate, dadosUpdate);
-  console.log(resultado)
-  console.log(resultado.rowCount)
-  const filasAfectadas = db.ePosgreSQL() 
-    ? resultado.rowCount
-    : (resultado.affectedRows || (resultado && resultado.affectedRows));
-
-  if (filasAfectadas === 1) {
-    idResult = id;
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idbiblioteca;
+    }
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
   }
+  console.log(resultado)
+  // console.log(resultado.rowCount)
+  // const filasAfectadas = db.ePosgreSQL() 
+  //   ? resultado.rowCount
+  //   : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  // if (filasAfectadas === 1) {
+  //   idResult = id;
+  // }
   
   console.log(`✅ id: ${idResult} biblioteca actualizada`);
   const meta = {'id': idResult};
