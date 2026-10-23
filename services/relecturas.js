@@ -167,7 +167,7 @@ async function putRelectura(idUsuario, relectura){
     idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
   }
   
-  console.log('✅ id: ' + idResult + ' relectura actualizada');
+  console.log('✅ id: ' + idResult + ' da relectura actualizada');
   return {
     idResult
   }
