@@ -51,14 +51,14 @@ async function getAutorPorNome(idUsuario, nome){
 async function getAutoresFiltrados(idUsuario, id, tipo){
   console.log('💬 Petiçom de getAutoresFiltrados id: ' + id + ' tipo: ' + tipo + ' tempo: ' + new Date().toJSON());
   const quantidade = db.ePosgreSQL() ?
-      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
-  const queryA = `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos", COUNT(l.idLivro)::integer as "quantidadeLivros"`
+    : 'SUM(l.Lido) as quantidadeLidos, COUNT(l.idLivro) as quantidadeLivros';
+  const queryA = `SELECT a.idAutor as id, a.Nome as nome, ${quantidade} 
     FROM Autor a
     LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
     LEFT JOIN Livro l ON ars.fkLivro = l.idLivro`;
   let queryB = ` WHERE a.fkUsuario = ${idUsuario}`;
-  const queryC = ` GROUP BY a.idAutor
+  const queryC = ` GROUP BY a.idAutor, a.Nome
     ORDER BY lower(a.Nome) ASC;`;
 
   if (tipo == 1) 
