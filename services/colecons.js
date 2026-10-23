@@ -135,12 +135,12 @@ async function putColecom(idUsuario, colecom){
   console.log('💬 Petiçom de putColecom ' + colecom.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const c = { indice: 0 };
-  const queryInsert = `UPDATE Colecom SET
+  const queryUpdate = `UPDATE Colecom SET
       Nome = ${db.qId(c)}, ISBN = ${db.qId(c)}, web = ${db.qId(c)}, Comentario = ${db.qId(c)}
     WHERE idColecom = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
     ${db.ePosgreSQL() ? 'RETURNING idcolecom;' : ';'}`;
 
-  const dadosInsert = [
+  const dadosUpdate = [
     db.stringOuNullSimple(colecom.nome),    
     db.stringOuNullSimple(colecom.isbn),
     db.stringOuNullSimple(colecom.web),
