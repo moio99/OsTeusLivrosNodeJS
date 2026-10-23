@@ -29,7 +29,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Lanzar co Nodemon",
+            "name": "dev local",
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/app.js",
             "restart": true,
@@ -38,6 +38,20 @@
             "env": {
                 "QUAL_SQL": "mySQL",
                 "NODE_ENTORNO": "local"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "pro supabase",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}/app.js",
+            "restart": true,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "QUAL_SQL": "PosgreSQLsupabase",
+                "NODE_ENTORNO": "pro"
             }
         }
     ]
