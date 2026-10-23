@@ -831,13 +831,19 @@ async function borrarLivro(idUsuario, id) {
   borrarAutoresAsigandos(idUsuario, id);
   borrarGenerosAsigandos(idUsuario, id);
 
-  await db.query(
-    `DELETE FROM Livro WHERE idLivro = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const c = { indice: 0 };
+  const resultado = await db.query(
+    `DELETE FROM Livro WHERE idLivro = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
+
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
 
   console.log(`✅ id: ${idResult} livro borrado 🔴`);
   const meta = {'id': idResult};

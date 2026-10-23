@@ -182,15 +182,22 @@ async function putGenero(idUsuario, genero){
 async function borrarGenero(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
-  await db.query(
-    `DELETE FROM Genero WHERE idGenero = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const c = { indice: 0 };
+
+  const resultado = await db.query(
+    `DELETE FROM Genero WHERE idGenero = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
 
-  console.log('✅ id: ' + idResult + ' genero borrado');
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
+
+  console.log(`✅ id: ${idResult} Genero borrado 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

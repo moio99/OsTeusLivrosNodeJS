@@ -173,15 +173,22 @@ async function putEditorial(idUsuario, editorial){
 async function borrarEditorial(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
-  await db.query(
-    `DELETE FROM Editorial WHERE idEditorial = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const c = { indice: 0 };
+
+  const resultado = await db.query(
+    `DELETE FROM Editorial WHERE idEditorial = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
 
-  console.log('✅ id: ' + idResult + ' editorial borrada');
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
+
+  console.log(`✅ id: ${idResult} editorial borrada 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

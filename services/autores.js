@@ -270,6 +270,7 @@ async function putAutor(idUsuario, autor){
 async function borrarAutor(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
+  const c = { indice: 0 };
 
   let dados = livro.getLivrosPorAutor(id);
   if (dados.quantidade > 0) {
@@ -280,16 +281,21 @@ async function borrarAutor(idUsuario, id) {
     }
   }
   else {
-    await db.query(
-      `DELETE FROM Autor WHERE idAutor = ${id} AND fkUsuario = ${idUsuario};`
-    ).then(ResultSetHeader => {
-        if (ResultSetHeader.affectedRows == 1)
-          idResult = id;
-      }
+    const resultado = await db.query(
+      `DELETE FROM Autor WHERE idAutor = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+      [id, idUsuario]
     );
+
+    const filasBorradas = db.ePosgreSQL() 
+      ? resultado.rowCount
+      : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+    if (filasBorradas === 1) {
+      idResult = id;
+    }
   }
 
-  console.log(`✅ id: ${idResult} autor borrado`);
+  console.log(`✅ id: ${idResult} autor borrado 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

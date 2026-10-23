@@ -173,16 +173,22 @@ async function putRelectura(idUsuario, relectura){
 async function borrarRelectura(idUsuario, id) {
   console.log('id para borrar: ' + id);
   let idResult = 0;
+  const c = { indice: 0 };
 
-  await db.query(
-    `DELETE FROM Relectura WHERE idRelectura = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const resultado = await db.query(
+    `DELETE FROM Relectura WHERE idRelectura = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
 
-  console.log('✅ id: ' + idResult + ' relectura borrada');
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
+
+  console.log(`✅ id: ${idResult} relectura borrada 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

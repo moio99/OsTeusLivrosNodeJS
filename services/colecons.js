@@ -164,15 +164,22 @@ async function putColecom(idUsuario, colecom){
 async function borrarColecom(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
-  await db.query(
-    `DELETE FROM Colecom WHERE idColecom = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const c = { indice: 0 };
+
+  const resultado = await db.query(
+    `DELETE FROM Colecom WHERE idColecom = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
 
-  console.log('✅ id: ' + idResult + ' coleçom borrada');
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
+
+  console.log(`✅ id: ${idResult} coleçom borrada 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

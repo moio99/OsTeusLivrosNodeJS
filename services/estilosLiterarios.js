@@ -163,15 +163,22 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
 async function borrarEstiloLiterario(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
   let idResult = 0;
-  await db.query(
-    `DELETE FROM EstiloLiterario WHERE idEstilo = ${id} AND fkUsuario = ${idUsuario};`
-  ).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = id;
-    }
+  const c = { indice: 0 };
+
+  const resultado = await db.query(
+    `DELETE FROM EstiloLiterario WHERE idEstilo = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
+    [id, idUsuario]
   );
 
-  console.log('✅ id: ' + idResult + ' EstiloLiterario borrada');
+  const filasBorradas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasBorradas === 1) {
+    idResult = id;
+  }
+
+  console.log(`✅ id: ${idResult} EstiloLiterario borrado 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,

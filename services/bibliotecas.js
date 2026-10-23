@@ -201,25 +201,23 @@ async function putBiblioteca(idUsuario, biblioteca){
 
 async function borrarBiblioteca(idUsuario, id) {
   console.log(`💬 id pra borrar: ${id}`);
-  
   let idResult = 0;
-  const p1 = db.ePosgreSQL() ? '$1' : '?';
-  const p2 = db.ePosgreSQL() ? '$2' : '?';
+  const c = { indice: 0 };
 
   const resultado = await db.query(
-    `DELETE FROM Biblioteca WHERE idBiblioteca = ${p1} AND fkUsuario = ${p2};`,
+    `DELETE FROM Biblioteca WHERE idBiblioteca = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`,
     [id, idUsuario]
   );
 
   const filasBorradas = db.ePosgreSQL() 
-    ? resultado.rowCount          // Se é Postgres
-    : (resultado.affectedRows || (resultado && resultado.affectedRows)); // Se é MySQL
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
 
   if (filasBorradas === 1) {
     idResult = id;
   }
 
-  console.log(`✅ id: ${idResult} biblioteca borrada`);
+  console.log(`✅ id: ${idResult} biblioteca borrada 🔴`);
   const meta = {'id': idResult};
   return {
     idResult,
