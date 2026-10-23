@@ -172,7 +172,8 @@ async function putBiblioteca(idUsuario, biblioteca){
       DataAsociamento = ${db.qId(c)},
       DataRenovacom = ${db.qId(c)},
       Comentario = ${db.qId(c)}
-    WHERE idBiblioteca = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+    WHERE idBiblioteca = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idbiblioteca' : ''}`;
 
   const dadosUpdate = [
     db.stringOuNullSimple(biblioteca.nome),    
