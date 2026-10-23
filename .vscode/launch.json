@@ -29,7 +29,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "dev local",
+            "name": "dev local mySQL",
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/app.js",
             "restart": true,
