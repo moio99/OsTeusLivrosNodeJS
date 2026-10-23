@@ -185,11 +185,15 @@ async function putBiblioteca(idUsuario, biblioteca){
     biblioteca.id,
     idUsuario
   ];
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = biblioteca.id;
-    }
-  );
+
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  const filasAfectadas = db.ePosgreSQL() 
+    ? resultado.rowCount
+    : (resultado.affectedRows || (resultado && resultado.affectedRows));
+
+  if (filasAfectadas === 1) {
+    idResult = id;
+  }
   
   console.log(`✅ id: ${idResult} biblioteca actualizada`);
   const meta = {'id': idResult};
