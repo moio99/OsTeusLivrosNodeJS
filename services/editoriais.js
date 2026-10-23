@@ -147,7 +147,9 @@ async function putEditorial(idUsuario, editorial){
       Direicom =  ${db.qId(c)},
       web =  ${db.qId(c)},
       Comentario =  ${db.qId(c)}
-    WHERE idEditorial =  ${db.qId(c)} AND fkUsuario =  ${db.qId(c)};`;
+    WHERE idEditorial =  ${db.qId(c)} AND fkUsuario =  ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING ideditorial;' : ';'}`;
+
   const dadosUpdate = [
     db.stringOuNullSimple(editorial.nome),
     db.stringOuNullSimple(editorial.direicom),
@@ -156,11 +158,14 @@ async function putEditorial(idUsuario, editorial){
     editorial.id,
     idUsuario
   ];
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = editorial.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].ideditorial;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log('✅ id: ' + idResult + ' editorial actualizada');
   const meta = {'id': idResult};

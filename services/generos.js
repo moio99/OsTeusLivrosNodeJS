@@ -155,7 +155,8 @@ async function putGenero(idUsuario, genero){
   let queryUpdate = `UPDATE Genero SET
       Nome = ${db.qId(c)},
       Comentario = ${db.qId(c)}
-    WHERE idGenero = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+    WHERE idGenero = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idgenero;' : ';'}`;
 
   const dadosUpdate = [
     db.stringOuNullSimple(genero.nome),
@@ -163,13 +164,14 @@ async function putGenero(idUsuario, genero){
     genero.id,
     idUsuario
   ];
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-    if (db.ePosgreSQL()) {
-      idResult = ResultSetHeader[0].idgenero;
-    } else if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-      idResult = genero.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idgenero;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log('✅ id: ' + idResult + ' genero actualizado');
   const meta = {'id': idResult};

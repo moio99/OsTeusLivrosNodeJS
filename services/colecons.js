@@ -137,7 +137,8 @@ async function putColecom(idUsuario, colecom){
   const c = { indice: 0 };
   const queryInsert = `UPDATE Colecom SET
       Nome = ${db.qId(c)}, ISBN = ${db.qId(c)}, web = ${db.qId(c)}, Comentario = ${db.qId(c)}
-    WHERE idColecom = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+    WHERE idColecom = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idcolecom;' : ';'}`;
 
   const dadosInsert = [
     db.stringOuNullSimple(colecom.nome),    
@@ -147,11 +148,14 @@ async function putColecom(idUsuario, colecom){
     colecom.id,
     idUsuario
   ];
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = colecom.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idcolecom;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log('✅ id: ' + idResult + ' coleçom actualizado');
   const meta = {'id': idResult};

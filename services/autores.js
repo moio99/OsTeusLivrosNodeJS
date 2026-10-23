@@ -236,7 +236,8 @@ async function putAutor(idUsuario, autor){
       DataNacemento = ${db.qId(c)}, DataDefuncom = ${db.qId(c)}, 
       Premios = ${db.qId(c)}, Web = ${db.qId(c)}, Comentario = ${db.qId(c)}, 
       fkNacionalidade = ${db.qId(c)}, fkPais = ${db.qId(c)}
-    WHERE idAutor = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+    WHERE idAutor = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idautor;' : ';'}`;
 
   const dadosUpdate = [
     autor.nome,
@@ -253,11 +254,14 @@ async function putAutor(idUsuario, autor){
     idUsuario
   ];
 
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = autor.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idautor;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log(`✅ id: ${idResult} autor actualizado`);
   const meta = {'id': idResult};

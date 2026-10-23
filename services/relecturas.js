@@ -132,7 +132,8 @@ async function putRelectura(idUsuario, relectura){
     fkIdiomaDaEntrada = 3,
     SomSerie = ?,
     idSerie = ?
-    WHERE idRelectura = ? AND fkUsuario = ?;`;
+    WHERE idRelectura = ? AND fkUsuario = ?
+    ${db.ePosgreSQL() ? 'RETURNING idrelectura;' : ';'}`;
 
   const dadosInsert = [
     relectura.titulo,
@@ -157,12 +158,14 @@ async function putRelectura(idUsuario, relectura){
     idUsuario
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      console.log(ResultSetHeader);
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = relectura.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idrelectura;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log('✅ id: ' + idResult + ' relectura actualizada');
   return {

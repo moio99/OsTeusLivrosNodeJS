@@ -717,7 +717,8 @@ async function putLivro(idUsuario, livro){
     fkIdiomaDaEntrada = ${db.qId(c)},
     SomSerie = ${db.qId(c)},
     idSerie = ${db.qId(c)}
-    WHERE idLivro = ${db.qId(c)} AND fkUsuario = ${db.qId(c)};`;
+    WHERE idLivro = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idlivro;' : ';'}`;
     
   const dadosUpdate = [
     livro.titulo,
@@ -764,14 +765,12 @@ async function putLivro(idUsuario, livro){
     }
     
     const resultado = await db.query(queryUpdate, dadosUpdate);
-    console.log(resultado);
-
-    const filasAfectadas = ePostgreSQL
-      ? resultado.rowCount          // Se é Postgres
-      : (resultado.affectedRows || (resultado[0] && resultado[0].affectedRows)); // Se é MySQL
-
-    if (filasAfectadas === 1) {
-      idResult = livro.id;
+    if (db.ePosgreSQL()) {
+      if (resultado && resultado.length > 0) {
+        idResult = resultado[0].idlivro;
+      }
+    } else {
+      idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
     }
     
     if (ePostgreSQL) await db.query('COMMIT');

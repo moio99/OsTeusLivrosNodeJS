@@ -138,7 +138,8 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
   const queryUpdate = `UPDATE EstiloLiterario SET
       Nome = ${db.qId(c)},
       Comentario = ${db.qId(c)}
-    WHERE idEstilo = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}`;
+    WHERE idEstilo = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idestilo;' : ';'}`;
 
   const dadosUpdate = [
     db.stringOuNullSimple(EstiloLiterario.nome),
@@ -146,11 +147,14 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
     EstiloLiterario.id,
     idUsuario
   ];
-  await db.query(queryUpdate, dadosUpdate).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1 && ResultSetHeader.changedRows == 1)
-        idResult = EstiloLiterario.id;
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idestilo;
     }
-  );
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
   
   console.log('✅ id: ' + idResult + ' EstiloLiterario actualizado');
   const meta = {'id': idResult};

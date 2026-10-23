@@ -173,7 +173,7 @@ async function putBiblioteca(idUsuario, biblioteca){
       DataRenovacom = ${db.qId(c)},
       Comentario = ${db.qId(c)}
     WHERE idBiblioteca = ${db.qId(c)} AND fkUsuario = ${db.qId(c)}
-    ${db.ePosgreSQL() ? 'RETURNING idbiblioteca' : ''}`;
+    ${db.ePosgreSQL() ? 'RETURNING idbiblioteca;' : ';'}`;
 
   const dadosUpdate = [
     db.stringOuNullSimple(biblioteca.nome),    
@@ -195,15 +195,6 @@ async function putBiblioteca(idUsuario, biblioteca){
   } else {
     idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
   }
-  console.log(resultado)
-  // console.log(resultado.rowCount)
-  // const filasAfectadas = db.ePosgreSQL() 
-  //   ? resultado.rowCount
-  //   : (resultado.affectedRows || (resultado && resultado.affectedRows));
-
-  // if (filasAfectadas === 1) {
-  //   idResult = id;
-  // }
   
   console.log(`✅ id: ${idResult} biblioteca actualizada`);
   const meta = {'id': idResult};
