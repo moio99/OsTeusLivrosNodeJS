@@ -84,12 +84,15 @@ async function getBibliotecaPorNome(idUsuario, nome){
 async function getBibliotecasCosLivros(idUsuario){
   console.log('💬 Petiçom de getBibliotecasCosLivros ' + new Date().toJSON());
   const p1 = db.ePosgreSQL() ? '$1' : '?';
+  const quantidade = db.ePosgreSQL() ?
+      `COUNT(l.idLivro)::integer as "quantidadeLivros"`
+    : `COUNT(l.idLivro) as "quantidadeLivros"`;
   const dadosLivro = await db.query(
-    `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as "dataRenovacom", COUNT(l.idLivro) as "quantidadeLivros"
+    `SELECT b.idBiblioteca as id, b.Nome as nome, b.DataRenovacom as "dataRenovacom", ${quantidade}
       FROM Biblioteca b
       LEFT JOIN Livro l on l.fkBiblioteca = b.idBiblioteca
       WHERE b.fkUsuario = ${p1}
-      GROUP BY b.idBiblioteca
+      GROUP BY b.idBiblioteca, b.Nome, b.DataRenovacom
       ORDER BY lower(b.Nome) ASC;`,
       [idUsuario]
   );

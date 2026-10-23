@@ -68,12 +68,15 @@ async function getEditorialPorNome(idUsuario, nome){
 
 async function getEditoriaisCosLivros(idUsuario){
   console.log('💬 Petiçom de getEditoriaisCosLivros ' + new Date().toJSON());
+  const quantidade = db.ePosgreSQL() ?
+      `COUNT(l.idLivro)::integer as "quantidadeLivros"`
+    : `COUNT(l.idLivro) as "quantidadeLivros"`;
   const dadosLivro = await db.query(
-    `SELECT e.idEditorial as id, e.Nome as nome, e.web, COUNT(l.idLivro) as "quantidadeLivros" 
+    `SELECT e.idEditorial as id, e.Nome as nome, e.web, ${quantidade}
       FROM Editorial e
       LEFT JOIN Livro l on l.fkEditorial = e.idEditorial
       WHERE e.fkUsuario = ${idUsuario}
-      GROUP BY e.idEditorial
+      GROUP BY e.idEditorial, e.Nome,  e.web
       ORDER BY lower(e.Nome) ASC;`
   );
   

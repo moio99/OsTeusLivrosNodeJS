@@ -80,15 +80,15 @@ async function getGeneroNome(idUsuario, id){
 async function getGenerosCosLivros(idUsuario){
   console.log('💬 Petiçom de getGenerosCosLivros ' + new Date().toJSON());
   const quantidade = db.ePosgreSQL() ?
-      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
+      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos", COUNT(l.idLivro)::integer as "quantidadeLivros"`
+    : 'SUM(l.Lido) as quantidadeLidos, COUNT(l.idLivro) as quantidadeLivros';
   const dadosGeneros = await db.query(
-    `SELECT g.idGenero as id, g.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade} 
+    `SELECT g.idGenero as id, g.Nome as nome, ${quantidade} 
       FROM Genero g
       LEFT JOIN Generos gs ON gs.fkGenero = g.idGenero
       LEFT JOIN Livro l on l.idLivro = gs.fkLivro
       WHERE g.fkUsuario = ${idUsuario}
-      GROUP BY g.idGenero
+      GROUP BY g.idGenero, g.Nome
       ORDER BY lower(g.Nome) ASC;`
   );
   
