@@ -16,7 +16,7 @@ async function getLivros(idUsuario){
     , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
     , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
     FROM Livro l
-    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
     WHERE l.fkUsuario = ${idUsuario} 
     ORDER BY lower(l.titulo) ASC;`;
@@ -62,7 +62,7 @@ async function getLivrosParaListadoMovel(idUsuario){
     FROM Livro l
     LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
     LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
     WHERE l.fkUsuario = ${idUsuario}
     ORDER BY lower(l.titulo) ASC;`;
@@ -151,7 +151,7 @@ async function getLivrosUltimaLectura(idUsuario){
     , ar.idAutor, ar.Nome as "nomeAutor"
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} AND l.Lido = true
       ORDER BY "dataFimLeitura" DESC;`
@@ -176,7 +176,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         FROM Livro l
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma} AND l.Lido = true
@@ -187,7 +187,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
         INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario}
         AND i.idIdioma = ${idioma} AND r.Lido = true
@@ -214,7 +214,7 @@ async function getLivrosPorAno(idUsuario, ano){
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", ${ano} as "nomeFiltro"
         FROM Livro l
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
@@ -225,7 +225,7 @@ async function getLivrosPorAno(idUsuario, ano){
         , r.idRelectura as "idRelectura", ${ano} as "nomeFiltro"
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON r.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
@@ -254,11 +254,11 @@ async function getLivrosPorGenero(idUsuario, genero){
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", g.Nome as "nomeFiltro"
         FROM Livro l
-        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro AND l.fkUsuario = gs.fkUsuario 
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero} AND l.Lido = true
@@ -267,11 +267,11 @@ async function getLivrosPorGenero(idUsuario, genero){
         , r.idRelectura as "idRelectura", g.Nome as "nomeFiltro"
         FROM Relectura r
         LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
-        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
+        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro AND l.fkUsuario = gs.fkUsuario
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
         INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario} 
         AND gs.fkGenero = ${genero} AND r.Lido = true
@@ -300,7 +300,7 @@ async function getLivrosPorAutor(idUsuario, id){
       , ar.idAutor as "idAutor", ar.Nome as "nomeAutor"
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
-      INNER JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      INNER JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       INNER JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
       AND ar.idAutor = ${id} 
@@ -326,7 +326,7 @@ async function getLivrosPorEditorial(idUsuario, id){
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Editorial e ON l.fkEditorial = e.idEditorial 
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
       AND e.idEditorial = ${id}
@@ -352,7 +352,7 @@ async function getLivrosPorBiblioteca(idUsuario, id){
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
       AND b.idBiblioteca = ${id} 
@@ -378,7 +378,7 @@ async function getLivrosPorColecom(idUsuario, id){
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Colecom c ON l.fkColecom = c.idColecom
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
       AND c.idColecom = ${id} 
@@ -404,7 +404,7 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
       , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN estiloLiterario e ON l.fkEstilo = e.idEstilo
-      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+      LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
       WHERE l.fkUsuario = ${idUsuario} 
       AND e.idEstilo = ${id}
@@ -496,9 +496,9 @@ async function getLivro(idUsuario, id){
       , ar.idAutor AS "idAutor", ar.Nome as "nomeAutor"
       , gn.idGenero AS "idGenero", gn.Nome as "nomeGenero"
     FROM Livro l
-    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro 
+    LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-    LEFT JOIN Generos gns ON l.idLivro = gns.fkLivro 
+    LEFT JOIN Generos gns ON l.idLivro = gns.fkLivro AND l.fkUsuario = gns.fkUsuario 
     LEFT JOIN Genero gn ON gns.fkGenero = gn.idGenero  
     LEFT JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca 
     LEFT JOIN Editorial e ON l.fkEditorial = e.idEditorial 
