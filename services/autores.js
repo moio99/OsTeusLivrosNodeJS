@@ -208,11 +208,14 @@ async function postAutor(idUsuario, autor){
     db.numberOuNull(autor.idPais)
   ];
 
-  await db.query(queryInsert, dadosInsert).then(ResultSetHeader => {
-      if (ResultSetHeader.affectedRows == 1)
-        idResult = ResultSetHeader.insertId
-      }
-    );
+  const resultado = await db.query(queryInsert, dadosInsert);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idautor;
+    }
+  } else {
+    idResult = resultado.insertId || (resultado[0] && resultado[0].insertId);
+  }
   
   console.log(`✅ id: ${idResult} autor creado`);
   const meta = {'id': idResult};
