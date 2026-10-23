@@ -187,6 +187,8 @@ async function putBiblioteca(idUsuario, biblioteca){
   ];
 
   const resultado = await db.query(queryUpdate, dadosUpdate);
+  console.log(resultado)
+  console.log(resultado.rowCount)
   const filasAfectadas = db.ePosgreSQL() 
     ? resultado.rowCount
     : (resultado.affectedRows || (resultado && resultado.affectedRows));
