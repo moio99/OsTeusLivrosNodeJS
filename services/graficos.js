@@ -27,14 +27,14 @@ async function getPaginasPorIdiomaEAno(idUsuario){
         FROM Livro l
             RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
         WHERE l.fkUsuario = ${idUsuario}
-        AND l.Lido = true
+        AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
         GROUP BY ${anoLivro}, idioma, idIdioma, fkidioma 
       UNION ALL
       SELECT ${anoRelectura} AS id, i.Nome AS idioma, r.fkIdioma AS idIdioma ${quantidadepaginasR}
         FROM Relectura r
             RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
         WHERE r.fkUsuario = ${idUsuario}
-        AND r.Lido = true
+        AND r.Lido = true AND r.DataFimLeitura IS NOT NULL
         GROUP BY ${anoRelectura}, idioma, idIdioma, fkidioma
       ) AS uu
     GROUP BY uu.id, uu.idioma, uu.idIdioma

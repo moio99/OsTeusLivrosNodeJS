@@ -25,14 +25,14 @@ const queryPorIdioma = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quan
       FROM Livro l
           RIGHT JOIN Idioma i ON l.fkIdioma = i.idIdioma
       WHERE l.fkUsuario = ${p1}
-      AND l.Lido = true
+      AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
       SELECT r.fkIdioma AS id, i.Nome AS nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
           RIGHT JOIN Idioma i ON r.fkIdioma = i.idIdioma
       WHERE r.fkUsuario = ${p2}
-      AND r.Lido = true
+      AND r.Lido = true AND r.DataFimLeitura IS NOT NULL
       -- AND (r.idSerie IS NULL OR r.idSerie =  0)
     ) AS uu
   GROUP BY uu.id, uu.nome
@@ -45,7 +45,7 @@ const queryPorGenero = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenac
       FROM Livro l
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-      WHERE l.fkUsuario = ${p1} AND l.Lido = true
+      WHERE l.fkUsuario = ${p1} AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
     UNION ALL
       SELECT g.idGenero as id, g.Nome as nome, r.PaginasLidas, YEAR(r.DataFimLeitura) as ano
         , 1 as numRelecturas -- se fosem mais de um sumarase
@@ -54,7 +54,7 @@ const queryPorGenero = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenac
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = ${p2}
-      AND l.Lido = true
+      AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
   ) as uu
   GROUP BY uu.id, uu.nome
   ORDER BY quantidade DESC, lower(uu.nome) ASC`;
@@ -68,7 +68,7 @@ const queryPorAno = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenacom}
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE l.fkUsuario = ${p1}
-      AND l.Lido = true
+      AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
       GROUP BY l.DataFimLeitura, l.paginaslidas
     UNION ALL
       SELECT YEAR(r.DataFimLeitura) as id, YEAR(r.DataFimLeitura) as nome
@@ -78,7 +78,7 @@ const queryPorAno = `SELECT uu.id${idIntegerPosgreSQL}, uu.nome, ${concatenacom}
         INNER JOIN Generos gs ON gs.fkLivro = l.idLivro
         INNER JOIN Genero g ON g.idGenero = gs.fkGenero
       WHERE r.fkUsuario = ${p2}
-      AND r.Lido = true
+      AND r.Lido = true AND r.DataFimLeitura IS NOT NULL
       GROUP BY r.DataFimLeitura, r.PaginasLidas
     ) AS uu
   GROUP BY uu.id, uu.nome
@@ -90,14 +90,14 @@ const queryPorAutor = `SELECT uu.id, uu.nome, count(uu.id) AS quantidade ${quant
       FROM Livro l
       RIGHT JOIN Autores ars ON l.idLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE l.fkUsuario = ${p1} AND l.Lido = true
+      WHERE l.fkUsuario = ${p1} AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
       -- AND (l.idSerie IS NULL OR l.idSerie =  0)
     UNION ALL
     SELECT ar.idAutor as id, ar.Nome as nome, r.PaginasLidas, 1 AS numRelecturas -- se fosem mais de um sumarase
       FROM Relectura r
       RIGHT JOIN Autores ars ON r.fkLivro = ars.fkLivro
       RIGHT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-      WHERE r.fkUsuario = ${p2} AND r.Lido = true
+      WHERE r.fkUsuario = ${p2} AND r.Lido = true AND r.DataFimLeitura IS NOT NULL
       -- AND (r.idSerie IS NULL OR r.idSerie =  0)
   ) as uu
   GROUP BY uu.id, uu.nome
@@ -125,6 +125,7 @@ async function getEstadisticas(idUsuario, tipo){
       );
       break;
     case '3':
+      console.log(queryPorAno)
       const rowsAnos = await db.query(queryPorAno, [idUsuario, idUsuario]);
       dados = rowsAnos.map(value => {
           const matrizGeneros = value.generos 

@@ -153,8 +153,8 @@ async function getLivrosUltimaLectura(idUsuario){
       FROM Livro l
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-      WHERE l.fkUsuario = ${idUsuario} AND l.Lido = true
-      ORDER BY "dataFimLeitura" DESC;`
+      WHERE l.fkUsuario = ${idUsuario} AND l.Lido = true AND l.DataFimLeitura IS NOT NULL
+      ORDER BY "DataFimLeitura" DESC;`
   );
 
   let data = helper.emptyOrRows(dados);
@@ -218,7 +218,7 @@ async function getLivrosPorAno(idUsuario, ano){
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        WHERE l.fkUsuario = ${idUsuario} 
+        WHERE l.fkUsuario = ${idUsuario} AND l.DataFimLeitura IS NOT NULL
         AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = true
     UNION ALL
       SELECT ${camposLivrosPorRxxx}
@@ -229,7 +229,7 @@ async function getLivrosPorAno(idUsuario, ano){
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
         LEFT JOIN Idioma i ON r.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        WHERE r.fkUsuario = ${idUsuario} 
+        WHERE r.fkUsuario = ${idUsuario} AND l.DataFimLeitura IS NOT NULL
         AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = true
     ) AS uu`;
   query += db.ePosgreSQL() ? 
