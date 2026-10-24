@@ -36,8 +36,7 @@ const controlUsuario = (request, response, next) => {
 
   console.log('process.env.NODE_ENTORNO: ' + process.env.NODE_ENTORNO
        , '  |  process.env.QUAL_SQL: ' + process.env.QUAL_SQL);
-  if (process.env.NODE_ENTORNO === 'local' && request.originalUrl !== '/api/Outros/Idiomas') {
-  // if (process.env.NODE_ENTORNO !== 'local' && request.originalUrl !== '/api/Outros/Idiomas') {
+  if (process.env.NODE_ENTORNO !== 'local' && request.originalUrl !== '/api/Outros/Idiomas') {
     const authorization = request.get('authorization') || request.get('Authorization');
     console.log('authorization: ' + authorization);
     if (authorization && authorization.startsWith('Bearer ')) {
