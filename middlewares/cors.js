@@ -2,7 +2,7 @@ import cors from 'cors';
 
 const allowedOrigins = [
   'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
-  'https://osteuslivrosangular.onrender.com', // Frontend de render.com
+  'https://osteuslivrosapp.onrender.com', // Frontend de render.com
   'http://localhost:4210',
   'http://localhost:4211',  // Para Java
   'http://localhost:4230',
