@@ -6,7 +6,16 @@ export class UsuarioController {
     try {
       res.json(await usuarios.getUsuarioPorNome(req.query.nome));
     } catch (err) {
-      console.error(`Erro ao obter o usuario polo nome..`, err.message);
+      console.error(`Erro ao obter o usuario polo nome.`, err.message);
+      next(err);
+    }
+  }
+  
+  static async getUsuarioPorId(req, res, next) {
+    try {
+      res.json(await usuarios.getUsuarioPorId(req.query.id));
+    } catch (err) {
+      console.error(`Erro ao obter o usuario polo id.`, err.message);
       next(err);
     }
   }
@@ -15,7 +24,7 @@ export class UsuarioController {
     try {
       res.json(await usuarios.postUsuario(req.body));
     } catch (err) {
-      console.error(`Erro tentando crear um usuario..`, err.message);
+      console.error(`Erro tentando crear um usuario.`, err.message);
       next(err);
     }
   }
@@ -41,6 +50,15 @@ export class UsuarioController {
       res.json(await usuarios.postLogin(nome, contrasinal, loginSwagger));
     } catch (err) {
       console.error(`Erro tentando fazer o login.`, err.message);
+      next(err);
+    }
+  }
+
+  static async putUsuario(req, res, next) {
+    try {
+      res.json(await usuarios.putUsuario(req.body));
+    } catch (err) {
+      console.error(`Erro tentando actualizar um usuario.`, err.message);
       next(err);
     }
   }

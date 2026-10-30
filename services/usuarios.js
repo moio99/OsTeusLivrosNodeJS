@@ -4,11 +4,38 @@ import jwt from 'jsonwebtoken';
 // const bcrypt = require('bcrypt')
 
 async function getUsuarioPorNome(nome){
-  console.log('💬 Petiçom de getUsuarioNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getUsuarioPorNome ' + new Date().toJSON());
   const dadosUsuario = await db.query(
-    `SELECT u.Nome as nome
+    `SELECT u.idUsuario as id
       FROM usuario u
       WHERE LOWER(u.Nome) = LOWER('${nome}') ;`
+  );
+  
+  const usuario = helper.emptyOrRows(dadosUsuario);
+  console.log(`✅ ${usuario.length} elementos obtidos`);
+
+  const meta = {'id': usuario.length > 0 ? usuario[0].id : 0, 'quantidade': usuario.length};
+
+  return {
+    data: usuario,
+    meta
+  }
+}
+
+async function getUsuarioPorId(id){
+  console.log('💬 Petiçom de getUsuarioNome ' + new Date().toJSON());
+  const dadosUsuario = await db.query(
+    `SELECT 
+      u.idUsuario AS 'idUsuario',
+      u.pass,
+      u.Nome AS nome,
+      u.Pergunta AS pergunta,
+      u.Contestacom AS contestacom,
+      u.Correio AS correio,
+      u.fkIdioma AS 'idIdioma',
+      u.Ativado AS ativado
+      FROM usuario u
+      WHERE u.idUsuario = ${id};`
   );
   
   const usuario = helper.emptyOrRows(dadosUsuario);
@@ -69,6 +96,47 @@ async function postUsuario(usuario){
     meta
   }
 }
+  
+async function putUsuario(usuario){
+  console.log('💬 Petiçom de putUsuario id: ' + usuario.id + ' data: ' + new Date().toJSON());
+  let idResult = 0;
+
+  const c = { indice: 0 };
+  let queryUpdate = `UPDATE usuario SET
+      Nome = ${db.qId(c)},
+      pass = ${db.qId(c)},
+      Pergunta = ${db.qId(c)},
+      Contestacom = ${db.qId(c)},
+      Correio = ${db.qId(c)},
+      fkIdioma = ${db.qId(c)}
+    WHERE idUsuario = ${db.qId(c)}
+    ${db.ePosgreSQL() ? 'RETURNING idUsuario;' : ';'}`;
+
+  const dadosUpdate = [
+    db.stringOuNullSimple(usuario.nome),
+    db.stringOuNullSimple(usuario.pass),
+    db.stringOuNullSimple(usuario.pergunta),
+    db.stringOuNullSimple(usuario.contestacom),
+    db.stringOuNullSimple(usuario.correio),
+    db.stringOuNullSimple(usuario.idIdioma),
+    usuario.id
+  ];
+  const resultado = await db.query(queryUpdate, dadosUpdate);
+  if (db.ePosgreSQL()) {
+    if (resultado && resultado.length > 0) {
+      idResult = resultado[0].idUsuario;
+    }
+  } else {
+    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+  }
+  
+  console.log('✅ id: ' + idResult + ' usuario actualizado');
+  const meta = {'id': idResult};
+  return {
+    idResult,
+    meta
+  }
+}
 
 async function postLogin(nome, contrasinal, loginSwagger){
   const rows = await db.query(
@@ -94,4 +162,4 @@ async function postLogin(nome, contrasinal, loginSwagger){
   }
 }
 
-export default { getUsuarioPorNome, postUsuario, postLogin }
+export default { getUsuarioPorNome, getUsuarioPorId, postUsuario, postLogin, putUsuario }
