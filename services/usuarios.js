@@ -23,16 +23,16 @@ async function getUsuarioPorNome(nome){
 }
 
 async function getUsuarioPorId(id){
-  console.log('💬 Petiçom de getUsuarioNome ' + new Date().toJSON());
+  console.log('💬 Petiçom de getUsuarioPorId ' + new Date().toJSON());
   const dadosUsuario = await db.query(
     `SELECT 
-      u.idUsuario AS 'idUsuario',
+      u.idUsuario AS "idUsuario",
       u.pass,
       u.Nome AS nome,
       u.Pergunta AS pergunta,
       u.Contestacom AS contestacom,
       u.Correio AS correio,
-      u.fkIdioma AS 'idIdioma',
+      u.fkIdioma AS "idIdioma",
       u.Ativado AS ativado
       FROM usuario u
       WHERE u.idUsuario = ${id};`
