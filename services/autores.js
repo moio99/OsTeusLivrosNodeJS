@@ -276,7 +276,7 @@ async function borrarAutor(idUsuario, id) {
   let idResult = 0;
   const c = { indice: 0 };
 
-  let dados = livro.getLivrosPorAutor(id);
+  let dados = await livro.getLivrosPorAutor(idUsuario, id);
   if (dados.quantidade > 0) {
     const meta = {'livrosAutor': dados};
     return {
