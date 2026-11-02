@@ -4,11 +4,11 @@ import livro from './livros.js';
 
 async function getAutores(idUsuario){
   console.log('💬 Petiçom de getAutores ' + new Date().toJSON());
-  const quantidade = db.ePosgreSQL() ?
-      `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
-    : 'CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
+  const quantidades = db.ePosgreSQL() ?
+      `COUNT(l.idLivro)::integer as "quantidadeLivros", SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos"`
+    : 'COUNT(l.idLivro) as "quantidadeLivros", CONVERT(SUM(l.Lido), UNSIGNED) as quantidadeLidos';
   const dadosAutores = await db.query(
-    `SELECT a.idAutor as id, a.Nome as nome, COUNT(l.idLivro) as "quantidadeLivros", ${quantidade}
+    `SELECT a.idAutor as id, a.Nome as nome, ${quantidades}
       FROM Autor a
       LEFT JOIN Autores ars ON a.idAutor = ars.fkAutor
       LEFT JOIN Livro l ON ars.fkLivro = l.idLivro

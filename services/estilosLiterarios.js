@@ -63,11 +63,11 @@ async function getEstiloLiterarioPorNome(idUsuario, nome){
 async function getEstilosLiterariosCosLivros(idUsuario){
   console.log('💬 Petiçom de getEstilosLiterariosCosLivros ' + new Date().toJSON());
   const p1 = db.ePosgreSQL() ? '$1' : '?';
-  const quantidade = db.ePosgreSQL() ?
+  const quantidades = db.ePosgreSQL() ?
       `SUM(CASE WHEN l.Lido THEN 1 ELSE 0 END)::integer as "quantidadeLidos", COUNT(l.idLivro)::integer as "quantidadeLivros"`
     : 'SUM(l.Lido) as "quantidadeLidos", COUNT(l.idLivro) as "quantidadeLivros"';
   const dadosLivro = await db.query(
-    `SELECT e.idEstilo as id, e.Nome as nome, ${quantidade} 
+    `SELECT e.idEstilo as id, e.Nome as nome, ${quantidades} 
       FROM EstiloLiterario e
       LEFT JOIN Livro l on l.fkEstilo = e.idEstilo
       WHERE e.fkUsuario = ${p1}

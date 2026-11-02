@@ -13,8 +13,8 @@ async function getLivros(idUsuario){
   let select = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
     , l.DataFimLeitura as "dataFimLeitura"
     , ar.idAutor as "idAutor", ar.Nome as "nomeAutor"
-    , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
-    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
+    , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+    , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
     FROM Livro l
     LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
     LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
@@ -33,14 +33,15 @@ async function getLivros(idUsuario){
   }
 }
 
+const convertPosgreSQL = db.ePosgreSQL() ? '::integer' : '';
 const camposLivrosPorLxxx = `
     l.idLivro as "id", l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
     , l.DataFimLeitura as "dataFimLeitura"
     , l.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
     , l.Pontuacom AS "Pontuacom", l.lido, l.Electronico AS "Electronico"
     , ar.idAutor AS "idAutor", ar.Nome as "nomeAutor"
-    , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
-    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
+    , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+    , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
   `;
 const camposLivrosPorRxxx = `
     l.idLivro as "id", r.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", r.Paginas as "paginas"
@@ -48,17 +49,18 @@ const camposLivrosPorRxxx = `
     , r.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
     , r.Pontuacom AS "Pontuacom", r.lido, r.Electronico AS "Electronico"
     , ar.idAutor AS "idAutor", ar.Nome as "nomeAutor"
-    , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
-    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
+    , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+    , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
   `;
 
 // Devolve o listado de livros no formato que se precisa para crear o json
 // que leerá o móvel no caso de nom ter acceso à base de dados.
 async function getLivrosParaListadoMovel(idUsuario){
   console.log('💬 Petiçom de getLivros');
+
   let select = `SELECT ${camposLivrosPorLxxx}
-    , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
-    , (SELECT COUNT(rr.idRelectura) FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
+    , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+    , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
     FROM Livro l
     LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
     LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
@@ -149,7 +151,7 @@ async function getLivrosUltimaLectura(idUsuario){
   const dados = await db.query(
     `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, l.DataFimLeitura as "dataFimLeitura"
     , ar.idAutor, ar.Nome as "nomeAutor"
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as quantidadeSerie
       FROM Livro l
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
@@ -298,7 +300,7 @@ async function getLivrosPorAutor(idUsuario, id){
     `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.DataFimLeitura as "dataFimLeitura"
       , l.lido
       , ar.idAutor as "idAutor", ar.Nome as "nomeAutor"
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
       INNER JOIN Autor ar ON ars.fkAutor = ar.idAutor  
@@ -323,7 +325,7 @@ async function getLivrosPorEditorial(idUsuario, id){
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Editorial e ON l.fkEditorial = e.idEditorial 
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
@@ -349,7 +351,7 @@ async function getLivrosPorBiblioteca(idUsuario, id){
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Biblioteca b ON l.fkBiblioteca = b.idBiblioteca
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
@@ -375,7 +377,7 @@ async function getLivrosPorColecom(idUsuario, id){
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN Colecom c ON l.fkColecom = c.idColecom
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
@@ -401,7 +403,7 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
   let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal"
       , l.DataFimLeitura as "dataFimLeitura"
       , ar.idAutor, ar.Nome as "nomeAutor"      
-      , (SELECT COUNT(ll.idSerie) FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
+      , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
       FROM Livro l
       INNER JOIN estiloLiterario e ON l.fkEstilo = e.idEstilo
       LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
