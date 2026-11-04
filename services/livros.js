@@ -772,7 +772,7 @@ async function putLivro(idUsuario, livro){
         idResult = resultado[0].idlivro;
       }
     } else {
-      idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+      idResult = livro.id;
     }
     
     if (ePostgreSQL) await db.query('COMMIT');

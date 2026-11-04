@@ -193,7 +193,7 @@ async function putBiblioteca(idUsuario, biblioteca){
       idResult = resultado[0].idbiblioteca;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = biblioteca.id;
   }
   
   console.log(`✅ id: ${idResult} biblioteca actualizada`);

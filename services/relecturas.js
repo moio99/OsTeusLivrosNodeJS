@@ -164,7 +164,7 @@ async function putRelectura(idUsuario, relectura){
       idResult = resultado[0].idrelectura;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = relectura.id;
   }
   
   console.log('✅ id: ' + idResult + ' relectura actualizada');

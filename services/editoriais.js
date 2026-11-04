@@ -164,7 +164,7 @@ async function putEditorial(idUsuario, editorial){
       idResult = resultado[0].ideditorial;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = editorial.id;
   }
   
   console.log('✅ id: ' + idResult + ' editorial actualizada');

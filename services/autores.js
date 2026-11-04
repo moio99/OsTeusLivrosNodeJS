@@ -260,7 +260,7 @@ async function putAutor(idUsuario, autor){
       idResult = resultado[0].idautor;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = autor.id;
   }
   
   console.log(`✅ id: ${idResult} autor actualizado`);

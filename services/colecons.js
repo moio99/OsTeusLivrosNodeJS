@@ -154,7 +154,7 @@ async function putColecom(idUsuario, colecom){
       idResult = resultado[0].idcolecom;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = colecom.id;
   }
   
   console.log('✅ id: ' + idResult + ' coleçom actualizado');

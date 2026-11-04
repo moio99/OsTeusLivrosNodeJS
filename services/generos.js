@@ -170,7 +170,7 @@ async function putGenero(idUsuario, genero){
       idResult = resultado[0].idgenero;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = genero.id;
   }
   
   console.log('✅ id: ' + idResult + ' genero actualizado');

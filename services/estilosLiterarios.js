@@ -131,8 +131,8 @@ async function postEstiloLiterario(idUsuario, EstiloLiterario){
   }
 }
 
-async function putEstiloLiterario(idUsuario, EstiloLiterario){
-  console.log('💬 Petiçom de putEstiloLiterario ' + EstiloLiterario.id + ' data: ' + new Date().toJSON());
+async function putEstiloLiterario(idUsuario, estiloLiterario){
+  console.log('💬 Petiçom de putEstiloLiterario ' + estiloLiterario.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   const c = { indice: 0 };
   const queryUpdate = `UPDATE EstiloLiterario SET
@@ -142,9 +142,9 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
     ${db.ePosgreSQL() ? 'RETURNING idestilo;' : ';'}`;
 
   const dadosUpdate = [
-    db.stringOuNullSimple(EstiloLiterario.nome),
-    db.stringOuNullSimple(EstiloLiterario.comentario),    
-    EstiloLiterario.id,
+    db.stringOuNullSimple(estiloLiterario.nome),
+    db.stringOuNullSimple(estiloLiterario.comentario),    
+    estiloLiterario.id,
     idUsuario
   ];
   const resultado = await db.query(queryUpdate, dadosUpdate);
@@ -153,7 +153,7 @@ async function putEstiloLiterario(idUsuario, EstiloLiterario){
       idResult = resultado[0].idestilo;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = estiloLiterario.id;
   }
   
   console.log('✅ id: ' + idResult + ' EstiloLiterario actualizado');

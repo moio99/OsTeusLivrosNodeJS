@@ -127,7 +127,7 @@ async function putUsuario(usuario){
       idResult = resultado[0].idUsuario;
     }
   } else {
-    idResult = resultado.updatedId || (resultado[0] && resultado[0].updatedId);
+    idResult = usuario.id;
   }
   
   console.log('✅ id: ' + idResult + ' usuario actualizado');
