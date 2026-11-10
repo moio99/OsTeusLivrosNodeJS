@@ -424,19 +424,16 @@ async function getLivrosPorEstiloLiterario(idUsuario, id){
   }
 }
 
+// Para evitar que o primeiro de da serie deije de selo quando há outros livros que o tenhem como primeiro.
 async function getLivrosSerie(idUsuario, id){
   console.log('💬 Petiçom de getLivrosSerie para o idLivro: ' + id);
-  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal, ar.idAutor, ar.Nome as "nomeAutor"
+  let query = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as tituloOriginal
       FROM Livro l
       WHERE l.fkUsuario = ${idUsuario} 
       AND l.idSerie = ${id} `;
-  query += db.ePosgreSQL() ? 
-      ' ORDER BY l.titulo, lower(ar."nomeAutor") ASC;'
-    : ' ORDER BY l.titulo, lower(ar.nomeAutor) ASC;';
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
-  data = LivroComMaisDumAutor(data);
   console.log(`✅ ${data.length} elementos obtidos`);
   const meta = {'id': id, 'quantidade': data.length};
 
@@ -857,6 +854,6 @@ async function borrarLivro(idUsuario, id) {
 export default {
   getLivros, getLivrosParaListadoMovel: getLivrosParaListadoMovel, 
   getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
-  getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, 
+  getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, getLivrosSerie,
   getLivro, postLivro, putLivro, borrarLivro
 }

@@ -112,6 +112,15 @@ export class LivroController {
     }
   }
 
+  static async getPorSerie(req, res, next) {
+    try {
+      res.json(await livros.getLivrosSerie(req.idUsuario, req.query.id));
+    } catch (err) {
+      console.error(`Erro ao obter os libros polo id do primeiro da serie.`, err.message);
+      next(err);
+    }
+  }
+
   static async getLivro(req, res, next) {
     try {
       res.json(await livros.getLivro(req.idUsuario, req.query.id));

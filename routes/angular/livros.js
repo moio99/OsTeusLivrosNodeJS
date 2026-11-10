@@ -242,6 +242,27 @@ router.get('/PorEstiloLiterario', LivroController.getPorEstiloLiterario);
 
 /**
  * @openapi
+ * /Livros/PorIdSerie:
+ *   get:
+ *     tags: [Livros]
+ *     summary: Filtra os livros polo id dumha serie.
+ *     description: Passando como id o do livro que inicia a serie se obtenem os livros que o tenhem como primeiro.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador do primeiro livro da serie.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/PorIdSerie', LivroController.getPorSerie);
+
+/**
+ * @openapi
  * /Livros/Livro:
  *   get:
  *     tags: [Livros]
