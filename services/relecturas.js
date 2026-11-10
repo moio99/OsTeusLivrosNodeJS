@@ -112,7 +112,7 @@ async function putRelectura(idUsuario, relectura){
   console.log('💬 Petiçom de putRelectura ' + relectura.id + ' data: ' + new Date().toJSON());
   let idResult = 0;
   
-  const queryInsert = `UPDATE Relectura SET
+  const queryUpdate = `UPDATE Relectura SET
     Titulo = ?,
     fkBiblioteca = ?,
     fkEditorial = ?,
@@ -135,7 +135,7 @@ async function putRelectura(idUsuario, relectura){
     WHERE idRelectura = ? AND fkUsuario = ?
     ${db.ePosgreSQL() ? 'RETURNING idrelectura;' : ';'}`;
 
-  const dadosInsert = [
+  const dadosUpdate = [
     relectura.titulo,
     db.numberOuNull(relectura.idBiblioteca),
     db.numberOuNull(relectura.idEditorial),
