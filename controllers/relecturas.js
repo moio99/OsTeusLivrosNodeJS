@@ -18,6 +18,27 @@ export class RelecturaController {
       next(err);
     }
   }
+  
+  static async getRelecturasPorTitulo(req, res, next) {
+    try {
+      res.json(await relecturas.getRelecturasPorTitulo (
+        req.idUsuario, 
+        Number(req.query.idLivro), 
+        req.query.titulo));
+    } catch (err) {
+      console.error(`Erro ao obter a relectura polo titulo.`, err.message);
+      next(err);
+    }
+  }
+  
+  static async getPorSerie(req, res, next) {
+    try {
+      res.json(await relecturas.getRelecturasSerie(req.idUsuario, req.query.id));
+    } catch (err) {
+      console.error(`Erro ao obter as relecturas polo id da primeira da serie.`, err.message);
+      next(err);
+    }
+  }
 
   static async postRelectura(req, res, next) {
     try {

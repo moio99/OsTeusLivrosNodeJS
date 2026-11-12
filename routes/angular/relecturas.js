@@ -63,6 +63,55 @@ router.get('/Relecturas', RelecturaController.getRelecturas);
 
 /**
  * @openapi
+ * /Relecturas/RelecturasPorTitulo:
+ *   get:
+ *     tags: [Relecturas]
+ *     summary: Busca relecturas polo título e o id do livro.
+ *     description: Devolve as relecturas do usuario cuxo título coincide coa búsqueda indicada pero que tenham um livro como base da releitura diferente.
+  *     parameters:
+ *       - in: query
+ *         name: idLivro
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Id do livro base do que saem as relecturas.
+ *         example: 161
+ *       - in: query
+ *         name: titulo
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Título ou texto que se quere buscar.
+ *         example: A illa
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/RelecturasPorTitulo', RelecturaController.getRelecturasPorTitulo);
+
+/**
+ * @openapi
+ * /Relecturas/PorIdSerie:
+ *   get:
+ *     tags: [Relecturas]
+ *     summary: Filtra as relecturas polo id dumha serie.
+ *     description: Passando como id o da relectura que inicia a serie se obtenem as relecturas que o tenhem como primeiro.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Identificador da primeira relectura da serie.
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/PorIdSerie', RelecturaController.getPorSerie);
+
+/**
+ * @openapi
  * /Relecturas/Relectura:
  *   post:
  *     tags: [Relecturas]

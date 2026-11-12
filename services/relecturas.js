@@ -56,6 +56,45 @@ async function getRelecturas(idUsuario, idLivro){
   }
 }
 
+// Para evitar ter na BD dous co mesmo Titulo para dous livros diferentes.
+async function getRelecturasPorTitulo(idUsuario, idLivro, titulo){
+  console.log('💬 Petiçom de getRelecturaPorTitulo ' + new Date().toJSON());
+  const dadosRelectura = await db.query(
+    `SELECT r.idRelectura as id
+      FROM Relectura r
+      WHERE r.fkUsuario = ${idUsuario} AND r.fkLivro = ${idLivro} AND r.Titulo like '${titulo}' ;`
+  );
+  
+  const relectura = helper.emptyOrRows(dadosRelectura);
+  console.log(`✅ ${relectura.length} elementos obtidos getRelecturaPorTitulo`);
+
+  const meta = {'id': relectura.length > 0 ? relectura[0].id : 0, 'quantidade': relectura.length};
+
+  return {
+    data: relectura,
+    meta
+  }
+}
+
+// Para evitar que a primeira da serie deije de selo quando há outras relecturas que a tenhem como primeira.
+async function getRelecturasSerie(idUsuario, id){
+  console.log('💬 Petiçom de getRelecturasSerie para o idRelectura: ' + id);
+  const query = `SELECT r.idRelectura as id, r.Titulo as "titulo"
+      FROM Relectura r
+      WHERE r.fkUsuario = ${idUsuario} 
+      AND r.idSerie = ${id} `;
+  const dados = await db.query(query);
+
+  const data = helper.emptyOrRows(dados);
+  console.log(`✅ ${data.length} elementos obtidos getRelecturasSerie`);
+  const meta = {'id': id, 'quantidade': data.length};
+
+  return {
+    data,
+    meta
+  }
+}
+
 async function postRelectura(idUsuario, relectura){
   console.log('💬 Petiçom de postRelectura ' + relectura.titulo + ' data: ' + new Date().toJSON());
   let idResult = 0;
@@ -200,5 +239,5 @@ async function borrarRelectura(idUsuario, id) {
 }
 
 export default {
-  getRelectura, getRelecturas, postRelectura, putRelectura, borrarRelectura
+  getRelectura, getRelecturas, getRelecturasPorTitulo, getRelecturasSerie, postRelectura, putRelectura, borrarRelectura
 }

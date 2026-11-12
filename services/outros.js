@@ -174,6 +174,18 @@ async function getSeriesLivro(idUsuario){
   return getGenerico(dados);
 }
 
+async function getSeriesRelectura(idUsuario){
+  console.log('💬 Petiçom OUTROS para getSeriesRelectura ' + new Date().toJSON());
+  const dados = await db.query(
+    `SELECT r.idRelectura id, r.Titulo as "titulo"
+      FROM Relectura r
+      WHERE r.fkUsuario = ${idUsuario} AND r.SomSerie = true AND r.idSerie = 0
+      ORDER BY lower(r.titulo) ASC;`
+  );
+  
+  return getGenerico(dados);
+}
+
 async function getUltimaLeitura(idUsuario){
   console.log('💬 Petiçom OUTROS para getUltimaLeitura ' + new Date().toJSON());
   const dados = await db.query(
@@ -230,6 +242,7 @@ async function getTodo(idUsuario) {
   const estilos = await getEstilosLiterarios(idUsuario);
   const idiomas = await getIdiomas();
   const seriesLivro = await getSeriesLivro(idUsuario);
+  const seriesRelectura = await getSeriesRelectura(idUsuario);
   const ultimaLeitura = await getUltimaLeitura(idUsuario);
   const ultimasLeituras = await getUltimasLeituras(idUsuario);
   console.log('ultimaLeitura ' + ultimaLeitura);
@@ -245,6 +258,7 @@ async function getTodo(idUsuario) {
     estilos: estilos,
     idiomas: idiomas,
     seriesLivro: seriesLivro,
+    seriesRelectura: seriesRelectura,
     ultimaLeitura: ultimaLeitura,
     ultimasLeituras: ultimasLeituras
   }
@@ -264,5 +278,5 @@ async function getGenerico(datos){
 
 export default {
   getNacionalidades, getNacionalidadeNome, getPaises, getPaisNome, getAutores, getBibliotecas, getEditoriais
-  , getGeneros, getColecons, getIdiomas, getIdiomaNome, getSeriesLivro, getTodo
+  , getGeneros, getColecons, getIdiomas, getIdiomaNome, getSeriesLivro, getSeriesRelectura, getTodo
 }

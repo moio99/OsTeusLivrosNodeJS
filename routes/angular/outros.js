@@ -191,6 +191,19 @@ router.get('/SeriesLivro', OutrosController.getSeriesLivro);
 
 /**
  * @openapi
+ * /Outros/SeriesRelectura:
+ *   get:
+ *     tags: [Outros]
+ *     summary: Obtem as releituras que som cabeceira dumha serie.
+ *     description: Devolve as releituras do usuario que começam umha serie.
+ *     responses:
+ *       200:
+ *         description: Consulta realizada correctamente.
+ */
+router.get('/SeriesRelectura', OutrosController.getSeriesRelectura);
+
+/**
+ * @openapi
  * /Outros/Todo:
  *   get:
  *     tags: [Outros]

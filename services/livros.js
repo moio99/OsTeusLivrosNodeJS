@@ -136,7 +136,7 @@ async function getLivroPorTitulo(idUsuario, titulo){
   );
   
   const livro = helper.emptyOrRows(dadosLivro);
-  console.log(`✅ ${livro.length} elementos obtidos`);
+  console.log(`✅ ${livro.length} elementos obtidos getLivroPorTitulo`);
 
   const meta = {'id': livro.length > 0 ? livro[0].id : 0, 'quantidade': livro.length};
 
@@ -434,7 +434,7 @@ async function getLivrosSerie(idUsuario, id){
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
-  console.log(`✅ ${data.length} elementos obtidos`);
+  console.log(`✅ ${data.length} elementos obtidos getLivrosSerie`);
   const meta = {'id': id, 'quantidade': data.length};
 
   return {
@@ -853,7 +853,8 @@ async function borrarLivro(idUsuario, id) {
 
 export default {
   getLivros, getLivrosParaListadoMovel: getLivrosParaListadoMovel, 
-  getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, getLivrosPorGenero, getLivrosPorEditorial, 
+  getLivroPorTitulo, getLivrosUltimaLectura, getLivrosPorIdioma, getLivrosPorAno, 
+  getLivrosPorGenero, getLivrosPorEditorial, 
   getLivrosPorBiblioteca, getLivrosPorColecom, getLivrosPorEstiloLiterario, getLivrosPorAutor, getLivrosSerie,
   getLivro, postLivro, putLivro, borrarLivro
 }

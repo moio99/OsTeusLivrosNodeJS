@@ -109,6 +109,15 @@ export class OutrosController {
     }
   }
 
+  static async getSeriesRelectura(req, res, next) {
+    try {
+      res.json(await outros.getSeriesRelectura(req.idUsuario));
+    } catch (err) {
+      console.error(`Erro ao obter as series de relecturas.`, err.message);
+      next(err);
+    }
+  }
+
   static async getTodo(req, res, next) {
     try {
       res.json(await outros.getTodo(req.idUsuario));
