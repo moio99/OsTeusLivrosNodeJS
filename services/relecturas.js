@@ -56,7 +56,7 @@ async function getRelecturas(idUsuario, idLivro){
   }
 }
 
-// Para evitar ter na BD dous co mesmo Titulo para dous livros diferentes.
+// Para evitar ter na BD dous co mesmo Titulo para duas relecturas diferentes.
 async function getRelecturasPorTitulo(idUsuario, idLivro, titulo){
   console.log('💬 Petiçom de getRelecturaPorTitulo ' + new Date().toJSON());
   const dadosRelectura = await db.query(
