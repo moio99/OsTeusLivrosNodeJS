@@ -99,7 +99,7 @@ function renderTaboa(data) {
     
     mainRow.innerHTML = `
       <td>${livro.titulo}</td>
-      <td>${livro.paginas}</td>
+      <td>${livro.paginasLidas}</td>
       <td>${livro.Pontuacom}</td>
       <td class="coluna4">${dataForma}</td>
       <td class="coluna5">${livro.nomeIdioma}</td>
@@ -150,8 +150,8 @@ function applyFilters() {
       valA = new Date(a.dataFimLeitura).getTime();
       valB = new Date(b.dataFimLeitura).getTime();
     } else if (sortField === 'paginas') {
-      valA = a.paginas;
-      valB = b.paginas;
+      valA = a.paginasLidas;
+      valB = b.paginasLidas;
     } else if (sortField === 'Pontuacom') {
       valA = a.Pontuacom;
       valB = b.Pontuacom;

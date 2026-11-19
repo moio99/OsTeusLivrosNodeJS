@@ -100,13 +100,13 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
               <p><strong>ISBN:</strong> ${livrosData.isbn}</p>
               <p><strong>Estilo:</strong> ${livrosData.estilo}</p>
               ${livrosData.premios ? "<p><strong>Premios: </strong>" + livrosData.premios + "</p>" : ""}
-              <p><strong>Páginas:</strong> ${livrosData.paginas}</p>
+              <p><strong>Páginas:</strong> ${livrosData.paginas}, lidas:</strong> ${livrosData.paginasLidas}</p>
               <p><strong>Días da lectura:</strong> ${livrosData.diasLeitura}</p>
               <p><strong>Lido:</strong>
                 ${livrosData.lido ? "sim <strong>Fim da lectura:</strong> " + livrosData.dataFimLeitura : "nom" }</p>
               <p><strong>Descriçom:</strong> ${livrosData.descricom}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario}</p>
-              <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom}/10</p>
+              <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom} de 10</p>
             </td>
         `;
 

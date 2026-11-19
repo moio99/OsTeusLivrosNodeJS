@@ -35,7 +35,7 @@ async function getLivros(idUsuario){
 
 const convertPosgreSQL = db.ePosgreSQL() ? '::integer' : '';
 const camposLivrosPorLxxx = `
-    l.idLivro as "id", l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
+    l.idLivro as "id", l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.PaginasLidas as "paginasLidas"
     , l.DataFimLeitura as "dataFimLeitura"
     , l.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
     , l.Pontuacom AS "Pontuacom", l.lido, l.Electronico AS "Electronico"
@@ -44,7 +44,7 @@ const camposLivrosPorLxxx = `
     , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
   `;
 const camposLivrosPorRxxx = `
-    l.idLivro as "id", r.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", r.Paginas as "paginas"
+    l.idLivro as "id", r.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", r.PaginasLidas as "paginasLidas"
     , r.DataFimLeitura as "dataFimLeitura"
     , r.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
     , r.Pontuacom AS "Pontuacom", r.lido, r.Electronico AS "Electronico"
