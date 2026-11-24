@@ -92,8 +92,10 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
                 <div>Título Original: ${livrosData.tituloOriginal ?? "N/A"}</div>
                 <div class="botom-fechar" onclick="borrarDetalhes(${dados.data[0].id})">❌Pechar</div>
               </div>
-              <p><strong>Autores:</strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
-              <p><strong>Géneros:</strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
+              <p><strong>Autor${livrosData.autores > 0 ? 'es' : ''}:
+                </strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
+              <p><strong>Género${livrosData.generos > 0 ? 's' : ''}:
+                </strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
               <p><strong>Editorial:</strong> ${livrosData.editorial ?? '-'}</p>
               ${livrosData.electronico ? "<p><strong>Livro electrónico</strong></p>" : ""}
               <p><strong>Biblioteca:</strong> ${livrosData.biblioteca ?? '-'}</p>

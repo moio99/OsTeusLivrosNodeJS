@@ -1,13 +1,19 @@
 import cors from 'cors';
 
-const allowedOrigins = [
+const allowedOriginsPro = [
   'https://osteuslivrosangular-production.up.railway.app', // Frontend de railway
   'https://osteuslivrosapp.onrender.com', // Frontend de render.com
+];
+
+const allowedOriginsLocal = [
   'http://localhost:4210',
   'http://localhost:4211',  // Para Java
   'http://localhost:4230',
-  'http://localhost:5002'   // Para as chamdas dende o swagger (OpenApi)
+  'http://localhost:5002',  // Para as chamdas dende o swagger (OpenApi)
+  'http://localhost:5500'   // Para as chamdas dende react
 ];
+
+const allowedOrigins = process.env.NODE_ENTORNO === 'local' ? [...allowedOriginsLocal] : [...allowedOriginsPro];
 
 const corsMiddleware = () => cors({
   origin: function (origin, callback) {
