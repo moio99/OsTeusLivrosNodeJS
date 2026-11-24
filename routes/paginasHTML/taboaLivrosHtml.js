@@ -92,9 +92,9 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
                 <div>Título Original: ${livrosData.tituloOriginal ?? "N/A"}</div>
                 <div class="botom-fechar" onclick="borrarDetalhes(${dados.data[0].id})">❌Pechar</div>
               </div>
-              <p><strong>Autor${livrosData.autores > 0 ? 'es' : ''}:
+              <p><strong>Autor${livrosData.autores.length > 1 ? 'es' : ''}:
                 </strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
-              <p><strong>Género${livrosData.generos > 0 ? 's' : ''}:
+              <p><strong>Género${livrosData.generos.length > 1 ? 's' : ''}:
                 </strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
               <p><strong>Editorial:</strong> ${livrosData.editorial ?? '-'}</p>
               ${livrosData.electronico ? "<p><strong>Livro electrónico</strong></p>" : ""}
@@ -105,7 +105,7 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
               <p><strong>Páginas:</strong> 
                 ${livrosData.paginas ? `${livrosData.paginas}, lidas: ${livrosData.paginasLidas ?? 0}` : '-'}</p>
               <p><strong>Lido:</strong>
-                ${livrosData.lido ? `sim <strong>Fim da lectura:</strong> ${livrosData.dataFimLeitura}` : 'nom' }</p>
+                ${livrosData.lido ? ` sim, <strong>fim da lectura:</strong> ${livrosData.dataFimLeitura}` : 'nom' }</p>
               ${livrosData.lido ? `<p><strong>Días da lectura:</strong> ${livrosData.diasLeitura} </p>` : ''}
               <p><strong>Descriçom:</strong> ${livrosData.descricom ?? '-'}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario ?? '-'}</p>
