@@ -98,7 +98,7 @@ function renderTaboa(data) {
     mainRow.onclick = () => getDetalhesDoLivro(livro.id);
     
     mainRow.innerHTML = `
-      <td>${livro.titulo}</td>
+      <td id='titulo${livro.id}'>${livro.titulo}</td>
       <td>${livro.paginasLidas}</td>
       <td>${livro.Pontuacom}</td>
       <td class="coluna4">${dataForma}</td>
@@ -177,12 +177,15 @@ function normalizeText(text) {
 
 async function getDetalhesDoLivro(idLivro) {
   const detalhesDiv = document.getElementById('detalhesId' + idLivro);
+  const tituloTD = document.getElementById('titulo' + idLivro);
   if (detalhesDiv.innerHTML !== '') {
     borrarDetalhes(idLivro);
   }
   else {
     try {
       document.getElementById('carregando').style.display = 'block';
+      tituloTD.classList.add('titulo-negrita');
+
       const response = await fetch(`/api/Paginas/taboa/DetalhesDoLivro?idLivro=${idLivro}`)
         .finally(() => {
           document.getElementById('carregando').style.display = 'none';
@@ -204,9 +207,11 @@ async function getDetalhesDoLivro(idLivro) {
   }
 }
 
-function borrarDetalhes(idLivro) {
+function borrarDetalhes(idLivro) {      // Passo o id e nom o objeto porque também se chama dende o código devolto pola api
   const detalhesDiv = document.getElementById('detalhesId' + idLivro);
+  const tituloTD = document.getElementById('titulo' + idLivro);
   detalhesDiv.innerHTML = '';
+  tituloTD.classList.remove('titulo-negrita');
 }
 
 // Inicializar
