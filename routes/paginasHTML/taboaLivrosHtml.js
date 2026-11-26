@@ -89,24 +89,24 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
         const htmlContent = `
             <td colspan="6">
               <div class="titulo-detalhes">
-                <div>Título Original: ${livrosData.tituloOriginal ?? "N/A"}</div>
-                <div class="botom-fechar" onclick="borrarDetalhes(${dados.data[0].id})">❌Pechar</div>
+                <div><strong>Título Original:</strong> ${livrosData.tituloOriginal ?? "N/A"}</div>
+                <div class="botom-fechar" onclick="borrarDetalhes(${dados.data[0].id})">❌Fechar</div>
               </div>
               <p><strong>Autor${livrosData.autores.length > 1 ? 'es' : ''}:
-                </strong> ${livrosData.autores.map(autor => autor.nome).join(", ")}</p>
+                </strong> ${livrosData.autores.map(autor => autor.nome).join(', ')}</p>
               <p><strong>Género${livrosData.generos.length > 1 ? 's' : ''}:
-                </strong> ${livrosData.generos.map(genero => genero.nome).join(", ")}</p>
+                </strong> ${livrosData.generos.map(genero => genero.nome).join(', ')}</p>
               <p><strong>Editorial:</strong> ${livrosData.editorial ?? '-'}</p>
-              ${livrosData.electronico ? "<p><strong>Livro electrónico</strong></p>" : ""}
-              <p><strong>Biblioteca:</strong> ${livrosData.biblioteca ?? '-'}</p>
+              ${livrosData.electronico ? '<p><strong>Livro electrónico</strong></p>' : ''}
+              ${livrosData.biblioteca ? `<p><strong>Biblioteca:</strong> ${livrosData.biblioteca} </p>`: ''}
               <p><strong>ISBN:</strong> ${livrosData.isbn ?? '-'}</p>
-              <p><strong>Estilo:</strong> ${livrosData.estilo ?? '-'}</p>
+              ${livrosData.estilo ? `<p><strong>Estilo:</strong> ${livrosData.estilo} </p>`: ''}
               ${livrosData.premios ? `<p><strong>Premios: </strong> ${livrosData.premios} </p>` : ''}
               <p><strong>Páginas:</strong> 
-                ${livrosData.paginas ? `${livrosData.paginas}, lidas: ${livrosData.paginasLidas ?? 0}` : '-'}</p>
+                ${livrosData.paginas ? `${livrosData.paginas}, <strong>lidas:</strong> ${livrosData.paginasLidas ?? 0}` : '-'}</p>
               <p><strong>Lido:</strong>
                 ${livrosData.lido ? ` sim, <strong>fim da lectura:</strong> ${livrosData.dataFimLeitura}` : 'nom' }</p>
-              ${livrosData.lido ? `<p><strong>Días da lectura:</strong> ${livrosData.diasLeitura} </p>` : ''}
+              ${livrosData.lido ? `<p><strong>Dias da lectura:</strong> ${livrosData.diasLeitura} </p>` : ''}
               <p><strong>Descriçom:</strong> ${livrosData.descricom ?? '-'}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario ?? '-'}</p>
               <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom ? `${livrosData.pontuacom} de 10` : '-'}</p>

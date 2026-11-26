@@ -60,7 +60,7 @@ router.get('/DadosEstadisticas', async function(req, res, next) {
           </div>
           <div class="coluna-dereita botomFechar">
             <span>${resultado.meta.origemDados}</span>
-            <div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Pechar</div>
+            <div class="botom-fechar" onclick="borrarContido('${req.query.idDiv}')">❌Fechar</div>
           </div>
         </div>`
       );

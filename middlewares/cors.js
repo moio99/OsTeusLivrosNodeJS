@@ -10,7 +10,8 @@ const allowedOriginsLocal = [
   'http://localhost:4211',  // Para Java
   'http://localhost:4230',
   'http://localhost:5002',  // Para as chamdas dende o swagger (OpenApi)
-  'http://localhost:5500'   // Para as chamdas dende react
+  'http://localhost:5500',  // Para as chamdas dende react
+  'http://localhost:5173'   // Para as chamdas dende react OsMeusLivros
 ];
 
 const allowedOrigins = process.env.NODE_ENTORNO === 'local' ? [...allowedOriginsLocal] : [...allowedOriginsPro];
