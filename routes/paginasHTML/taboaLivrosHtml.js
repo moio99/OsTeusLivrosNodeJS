@@ -106,7 +106,7 @@ router.get('/DetalhesDoLivro', async function(req, res, next) {
                 ${livrosData.paginas ? `${livrosData.paginas}, <strong>lidas:</strong> ${livrosData.paginasLidas ?? 0}` : '-'}</p>
               <p><strong>Lido:</strong>
                 ${livrosData.lido ? ` sim, <strong>fim da lectura:</strong> ${livrosData.dataFimLeitura}` : 'nom' }</p>
-              ${livrosData.lido ? `<p><strong>Dias da lectura:</strong> ${livrosData.diasLeitura} </p>` : ''}
+              ${livrosData.lido ? `<p><strong>Dias de lectura:</strong> ${livrosData.diasLeitura} </p>` : ''}
               <p><strong>Descriçom:</strong> ${livrosData.descricom ?? '-'}</p>
               <p><strong>Comentario:</strong> ${livrosData.comentario ?? '-'}</p>
               <p><strong>Pontuaçom:</strong> ${livrosData.pontuacom ? `${livrosData.pontuacom} de 10` : '-'}</p>
