@@ -10,7 +10,7 @@ const DATA_FILE = path.join(__dirname, '../data/DadosLivros.json');
 
 async function getLivros(idUsuario){
   console.log('💬 Petiçom de getLivros');
-  let select = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
+  const select = `SELECT l.idLivro as id, l.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", l.Paginas as "paginas"
     , l.DataFimLeitura as "dataFimLeitura"
     , ar.idAutor as "idAutor", ar.Nome as "nomeAutor"
     , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
@@ -39,15 +39,6 @@ const camposLivrosPorLxxx = `
     , l.DataFimLeitura as "dataFimLeitura"
     , l.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
     , l.Pontuacom AS "Pontuacom", l.lido, l.Electronico AS "Electronico"
-    , ar.idAutor AS "idAutor", ar.Nome as "nomeAutor"
-    , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
-    , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
-  `;
-const camposLivrosPorRxxx = `
-    l.idLivro as "id", r.Titulo as "titulo", l.TituloOriginal as "tituloOriginal", r.PaginasLidas as "paginasLidas"
-    , r.DataFimLeitura as "dataFimLeitura"
-    , r.fkIdioma as "idioma", i.Nome as "nomeIdioma", io.Nome as "idiomaOriginal"
-    , r.Pontuacom AS "Pontuacom", r.lido, r.Electronico AS "Electronico"
     , ar.idAutor AS "idAutor", ar.Nome as "nomeAutor"
     , (SELECT COUNT(ll.idSerie)${convertPosgreSQL} FROM Livro ll WHERE ll.idSerie = l.idLivro) as "quantidadeSerie"
     , (SELECT COUNT(rr.idRelectura)${convertPosgreSQL} FROM Relectura rr WHERE rr.fkLivro = l.idLivro) as "quantidadeRelecturas"
@@ -172,8 +163,7 @@ async function getLivrosUltimaLectura(idUsuario){
 
 async function getLivrosPorIdioma(idUsuario, idioma){
   console.log('💬 Petiçom de getLivrosPorIdioma para o idioma: ' + idioma);
-  let query = `SELECT uu.* FROM (
-      SELECT ${camposLivrosPorLxxx}
+  let query = `SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", i.Nome as "nomeFiltro"
         FROM Livro l
         INNER JOIN Idioma i ON l.fkIdioma = i.idIdioma
@@ -181,22 +171,10 @@ async function getLivrosPorIdioma(idUsuario, idioma){
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario}
-        AND i.idIdioma = ${idioma} AND l.Lido = true
-    UNION ALL
-      SELECT ${camposLivrosPorRxxx}
-        , r.idRelectura as "idRelectura", i.Nome as "nomeFiltro"
-        FROM Relectura r
-        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
-        LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
-        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = ${idUsuario}
-        AND i.idIdioma = ${idioma} AND r.Lido = true
-    ) AS uu`;
+        AND i.idIdioma = ${idioma} AND l.Lido = true`;
   query += db.ePosgreSQL() ? 
-      ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
-    : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
+      ' ORDER BY titulo, lower("nomeFiltro") ASC;' 
+    : ' ORDER BY titulo, lower(nomeFiltro) ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -212,8 +190,7 @@ async function getLivrosPorIdioma(idUsuario, idioma){
 
 async function getLivrosPorAno(idUsuario, ano){
   console.log('💬 Petiçom de getLivrosPorAno para o ano: ' + ano);
-  let query = `SELECT uu.* FROM (
-      SELECT ${camposLivrosPorLxxx}
+  let query = `SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", ${ano} as "nomeFiltro"
         FROM Livro l
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
@@ -221,22 +198,10 @@ async function getLivrosPorAno(idUsuario, ano){
         LEFT JOIN Idioma i ON l.fkIdioma = i.idIdioma
         LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
         WHERE l.fkUsuario = ${idUsuario} AND l.DataFimLeitura IS NOT NULL
-        AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = true
-    UNION ALL
-      SELECT ${camposLivrosPorRxxx}
-        , r.idRelectura as "idRelectura", ${ano} as "nomeFiltro"
-        FROM Relectura r
-        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
-        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor  
-        LEFT JOIN Idioma i ON r.fkIdioma = i.idIdioma
-        LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        WHERE r.fkUsuario = ${idUsuario} AND l.DataFimLeitura IS NOT NULL
-        AND YEAR(r.DataFimLeitura) = ${ano} AND r.Lido = true
-    ) AS uu`;
+        AND YEAR(l.DataFimLeitura) = ${ano} AND l.Lido = true`;
   query += db.ePosgreSQL() ? 
-      ' ORDER BY uu."titulo" ASC;' 
-    : ' ORDER BY uu.titulo ASC;' 
+      ' ORDER BY "titulo" ASC;' 
+    : ' ORDER BY titulo ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
@@ -252,7 +217,7 @@ async function getLivrosPorAno(idUsuario, ano){
 
 async function getLivrosPorGenero(idUsuario, genero){
   console.log('💬 Petiçom de getLivrosPorGenero para o genero: ' + genero);
-  let query = `SELECT uu.* FROM (
+  let query = `
       SELECT ${camposLivrosPorLxxx}
         , '0' as "idRelectura", g.Nome as "nomeFiltro"
         FROM Livro l
@@ -263,24 +228,10 @@ async function getLivrosPorGenero(idUsuario, genero){
         LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
         LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
         WHERE l.fkUsuario = ${idUsuario} 
-        AND gs.fkGenero = ${genero} AND l.Lido = true
-    UNION ALL
-      SELECT ${camposLivrosPorRxxx}
-        , r.idRelectura as "idRelectura", g.Nome as "nomeFiltro"
-        FROM Relectura r
-        LEFT JOIN Livro l ON r.fkLivro = l.idLivro 
-        INNER JOIN Generos gs ON gs.fkLivro = l.idLivro AND l.fkUsuario = gs.fkUsuario
-        INNER JOIN Genero g ON g.idGenero = gs.fkGenero
-        INNER JOIN Idioma i ON r.fkIdioma = i.idIdioma
-        LEFT JOIN Idioma io ON l.fkIdiomaOriginal = io.idIdioma
-        LEFT JOIN Autores ars ON l.idLivro = ars.fkLivro AND l.fkUsuario = ars.fkUsuario 
-        LEFT JOIN Autor ar ON ars.fkAutor = ar.idAutor
-        WHERE l.fkUsuario = ${idUsuario} 
-        AND gs.fkGenero = ${genero} AND r.Lido = true
-    ) AS uu`;
+        AND gs.fkGenero = ${genero} AND l.Lido = true`;
   query += db.ePosgreSQL() ? 
-      ' ORDER BY uu.titulo, lower(uu."nomeFiltro") ASC;' 
-    : ' ORDER BY uu.titulo, lower(uu.nomeFiltro) ASC;' 
+      ' ORDER BY titulo, lower("nomeFiltro") ASC;' 
+    : ' ORDER BY titulo, lower(nomeFiltro) ASC;' 
   const dados = await db.query(query);
 
   let data = helper.emptyOrRows(dados);
